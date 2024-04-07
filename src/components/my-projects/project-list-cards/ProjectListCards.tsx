@@ -1,5 +1,6 @@
 import ProjectCard, {
   CardProps,
+  UserType,
 } from "@/components/my-projects/project-list-card/ProjectListCard";
 import * as S from "@/components/my-projects/project-list-cards/ProjectListCards.styles";
 import { Typography } from "@mui/material";
