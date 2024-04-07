@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
-import * as S from "@/components/project-list/ProjectCard/ProjectCard.styles";
-import { defaultImageUrl } from "@/dummyData/dummtData";
+import * as S from "@/components/project-list/project-card/ProjectCard.styles";
+import { defaultImageUrl } from "@/dummyData/dummyData";
 
 export interface CardProps {
   authors?: string[];

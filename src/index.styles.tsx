@@ -1,11 +1,13 @@
 import { styled } from "@mui/material/styles";
 
-export const StyledWrapper = styled("div")(({ theme }) => ({
+export const StyledContainer = styled("div")(({ theme }) => ({
   display: "flex",
-  flexGrow: 0,
-  justifyContent: "center",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "32px",
   margin: "auto",
-  width: "1254px",
+  maxWidth: "1254px",
+  width: "100%",
 
   [theme.breakpoints.between("tablet", "desktop")]: {
     width: "calc(100vw - 64px)",

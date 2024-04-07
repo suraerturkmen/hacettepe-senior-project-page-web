@@ -1,22 +1,21 @@
-import { Typography } from "@mui/material";
-
 import * as S from "@/reusable-components/accordions/Accordions.styles";
-import ExpandMoreIcon from "@/components/icons/ExpandMoreIcon";
+import Accordion, {
+  AnnouncementProps,
+} from "@/reusable-components/accordions/Accordion";
 
-export const Accordions = () => {
+interface Props {
+  annoncements: AnnouncementProps[];
+}
+
+export const Accordions = (props: Props) => {
+  const { annoncements } = props;
+
   return (
-    <S.StyledWrapper>
-      <S.StyledAccordion>
-        <S.StyledAccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <S.StyledTypography>Accordion 1</S.StyledTypography>
-        </S.StyledAccordionSummary>
-        <S.StyledAccordionDetails>
-          <S.StyledBox>
-            <Typography>Content 1</Typography>
-          </S.StyledBox>
-        </S.StyledAccordionDetails>
-      </S.StyledAccordion>
-    </S.StyledWrapper>
+    <S.StyledContainer>
+      {annoncements.map((announcement, index) => (
+        <Accordion key={index} {...announcement} />
+      ))}
+    </S.StyledContainer>
   );
 };
 

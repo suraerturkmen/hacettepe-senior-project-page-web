@@ -1,6 +1,32 @@
+import { Provider } from "react-redux";
+import { store } from "@/redux/store";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
+import { ReactNode } from "react";
+import { NextPage } from "next";
+import Theme from "@/utils/theme";
+import { ThemeProvider } from "@mui/material/styles";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />;
+export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: JSX.Element) => ReactNode;
+};
+
+export interface Props extends AppProps {
+  Component: NextPageWithLayout;
+}
+
+export default function App(props: Props) {
+  const { Component, pageProps } = props;
+
+  const getLayout = Component.getLayout || ((page) => page);
+
+  return (
+    <ThemeProvider theme={Theme}>
+      <Provider store={store}>
+        {getLayout(<Component {...pageProps} />)}
+      </Provider>
+    </ThemeProvider>
+  );
 }

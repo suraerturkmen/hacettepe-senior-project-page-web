@@ -1,7 +1,6 @@
 import Header from "@/components/header/Header";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/material/styles";
-import { useRouter } from "next/router";
 
 const StyledMain = styled(Box)(() => ({
   display: "flex",

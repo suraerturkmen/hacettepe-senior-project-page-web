@@ -27,15 +27,16 @@ const initialState: DataState = {
   loading: false,
 };
 
-export const getAllData = createAsyncThunk(
-  "data/getAllData",
-  async (_, { rejectWithValue }) => {
+export const getByTitle = createAsyncThunk(
+  //getbytitleandpagination olarak değiştir
+  "data/getByTitle",
+  async (title, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get<{
         success: boolean;
         message: string;
         data: ProjectData[];
-      }>("projects/getAll");
+      }>(`projects/getByTitle?title=${title}`);
       return response.data;
     } catch (error: any) {
       return rejectWithValue(error.response?.data);
@@ -49,16 +50,16 @@ const dataSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getAllData.pending, (state) => {
+      .addCase(getByTitle.pending, (state) => {
         state.loading = true;
       })
-      .addCase(getAllData.fulfilled, (state, action) => {
+      .addCase(getByTitle.fulfilled, (state, action) => {
         state.loading = false;
         state.isSuccess = action.payload.success;
         state.message = action.payload.message;
         state.data = action.payload.data;
       })
-      .addCase(getAllData.rejected, (state, action) => {
+      .addCase(getByTitle.rejected, (state, action) => {
         state.loading = false;
         state.isSuccess = false;
       });

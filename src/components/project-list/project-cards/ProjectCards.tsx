@@ -1,7 +1,7 @@
 import ProjectCard, {
   CardProps,
-} from "@/components/project-list/ProjectCard/ProjectCard";
-import * as S from "@/components/project-list/ProjectCards/ProjectCards.styles";
+} from "@/components/project-list/project-card/ProjectCard";
+import * as S from "@/components/project-list/project-cards/ProjectCards.styles";
 
 interface ProjectCardsProps {
   projects: CardProps[];

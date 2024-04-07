@@ -1,6 +1,7 @@
 import * as S from "@/components/header/Header.styles";
 import { Typography, Box } from "@mui/material";
-import { HacettepeLogo } from "@/dummyData/dummtData";
+import { HacettepeLogo } from "@/dummyData/dummyData";
+import Link from "next/link";
 
 export default function Header(): JSX.Element {
   return (
@@ -19,10 +20,17 @@ export default function Header(): JSX.Element {
             {"Computer Engineering - Artificial Intelligence Engineering"}
           </S.StyledTypography>
           <S.StyledButtonContainer>
-            <Typography variant="h5">{"Home"}</Typography>
-            <Typography variant="h5">{"Timelines"}</Typography>
-            <Typography variant="h5">{"Projects"}</Typography>
-            <Typography variant="h5">{"Visulizations"}</Typography>
+            <Link href="/">
+              <Typography variant="h5TaglineBold">{"Home"}</Typography>
+            </Link>
+            <Typography variant="h5TaglineBold">{"Timelines"}</Typography>
+            <Link href="/projects">
+              <Typography variant="h5TaglineBold">{"Projects"}</Typography>
+            </Link>
+            <Typography variant="h5TaglineBold">{"Visualizations"}</Typography>
+            <Link href="/login">
+              <Typography variant="h5TaglineBold">{"Login"}</Typography>
+            </Link>
           </S.StyledButtonContainer>
         </S.StyledContentContainer>
       </S.StyledAppBar>

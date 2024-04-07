@@ -256,7 +256,7 @@ const Theme: Theme = createTheme({
         {
           props: { variant: "h3TitleBold" },
           style: {
-            fontFamily: FONT_DAXPRO.style.fontFamily,
+            fontFamily: FONT_GILROY.style.fontFamily,
             fontSize: "35px",
             fontWeight: "bold",
             fontStretch: "normal",
