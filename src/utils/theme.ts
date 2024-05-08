@@ -125,7 +125,7 @@ const Theme: Theme = createTheme({
   },
   palette: {
     primary: {
-      main: "#A48656", // Brand Gold
+      main: "#D54949", // Brand Gold
     },
     secondary: {
       main: "#506270", // Brand Grey
@@ -243,7 +243,7 @@ const Theme: Theme = createTheme({
         {
           props: { variant: "h2HeadlineBold" },
           style: {
-            fontFamily: FONT_DAXPRO.style.fontFamily,
+            fontFamily: FONT_GILROY.style.fontFamily,
             fontSize: "42px",
             fontWeight: "bold",
             fontStretch: "normal",
@@ -269,7 +269,7 @@ const Theme: Theme = createTheme({
         {
           props: { variant: "h4SubtitleBold" },
           style: {
-            fontFamily: FONT_DAXPRO.style.fontFamily,
+            fontFamily: FONT_GILROY.style.fontFamily,
             fontSize: "29px",
             fontWeight: "bold",
             fontStretch: "normal",

@@ -1,8 +1,429 @@
+import { AllProjectsCardProps } from "@/components/all-projects/project-list-card/ProjectListCard";
 import {
   CardProps,
   ProjectType,
 } from "@/components/my-projects/project-list-card/ProjectListCard";
+import { TimelineDetail } from "@/components/professor-student-home-page/TermTimeline/TermTimeline";
+import { ProjectDetail } from "@/components/professor-student-home-page/my-project-overview/MyProjectOverview";
+import { ApplicationCardProps } from "@/components/professor-project-application/application-card/ApplicationCard";
+import {
+  ApplicationStatusType,
+  GroupCardProps,
+} from "@/components/student-groups/group-card/GroupCard";
 import { AnnouncementProps } from "@/reusable-components/accordions/Accordion";
+import { TermDetail } from "@/components/admin-home/project-type/ProjectTerms";
+import {
+  ScheduleDetail,
+  TermScheduleProps,
+} from "@/components/schedule/term-schedule/TermSchedule";
+import {
+  DocumentCardProps,
+  DocumentTypes,
+} from "@/components/submit-documents/document-card/DocumentCard";
+import { StudentOptionsType } from "@/components/create-student-groups/CreateStudentGroups";
+import { StudentProperties } from "@/components/professor-project-edit/ProfessorProjectEdit";
+
+export const dummyDefaulStudent: StudentProperties[] = [
+  {
+    name: "Student 1",
+    id: 1,
+  },
+  {
+    name: "Student 2",
+    id: 2,
+  },
+  {
+    name: "Student 3",
+    id: 3,
+  },
+];
+
+export const dummySelectStudent: StudentProperties[] = [
+  {
+    name: "Student 1",
+    id: 1,
+  },
+  {
+    name: "Student 2",
+    id: 2,
+  },
+  {
+    name: "Student 3",
+    id: 3,
+  },
+  {
+    name: "Student 4",
+    id: 4,
+  },
+  {
+    name: "Student 5",
+    id: 5,
+  },
+  {
+    name: "Student 6",
+    id: 6,
+  },
+  {
+    name: "Student 7",
+    id: 7,
+  },
+  {
+    name: "Student 8",
+    id: 8,
+  },
+  {
+    name: "Student 9",
+    id: 9,
+  },
+  {
+    name: "Student 10",
+    id: 10,
+  },
+  {
+    name: "Student 11",
+    id: 11,
+  },
+  {
+    name: "Student 12",
+    id: 12,
+  },
+  {
+    name: "Student 13",
+    id: 13,
+  },
+  {
+    name: "Student 14",
+    id: 14,
+  },
+  {
+    name: "Student 15",
+    id: 15,
+  },
+  {
+    name: "Student 16",
+    id: 16,
+  },
+  {
+    name: "Student 17",
+    id: 17,
+  },
+  {
+    name: "Student 18",
+    id: 18,
+  },
+  {
+    name: "Student 19",
+    id: 19,
+  },
+  {
+    name: "Student 20",
+    id: 20,
+  },
+];
+
+export const dummyStudentsOption: StudentOptionsType[] = [
+  {
+    studentName: "Student 1",
+    id: 1,
+  },
+  {
+    studentName: "Student 2",
+    id: 2,
+  },
+  {
+    studentName: "Student 3",
+    id: 3,
+  },
+  {
+    studentName: "Student 4",
+    id: 4,
+  },
+  {
+    studentName: "Student 5",
+    id: 5,
+  },
+  {
+    studentName: "Student 6",
+    id: 6,
+  },
+  {
+    studentName: "Student 7",
+    id: 7,
+  },
+  {
+    studentName: "Student 8",
+    id: 8,
+  },
+  {
+    studentName: "Student 9",
+    id: 9,
+  },
+  {
+    studentName: "Student 10",
+    id: 10,
+  },
+  {
+    studentName: "Student 11",
+    id: 11,
+  },
+  {
+    studentName: "Student 12",
+    id: 12,
+  },
+  {
+    studentName: "Student 13",
+    id: 13,
+  },
+  {
+    studentName: "Student 14",
+    id: 14,
+  },
+  {
+    studentName: "Student 15",
+    id: 15,
+  },
+  {
+    studentName: "Student 16",
+    id: 16,
+  },
+  {
+    studentName: "Student 17",
+    id: 17,
+  },
+  {
+    studentName: "Student 18",
+    id: 18,
+  },
+  {
+    studentName: "Student 19",
+    id: 19,
+  },
+  {
+    studentName: "Student 20",
+    id: 20,
+  },
+];
+
+export const dummyDocuments: DocumentCardProps[] = [
+  {
+    documentName: "Document 1",
+    dueDate: "2023-10-10",
+    projectName: "Project 1",
+    type: DocumentTypes.current,
+  },
+  {
+    documentName: "Document 2",
+    dueDate: "2023-10-10",
+    projectName: "Project 2",
+    type: DocumentTypes.passed,
+  },
+  {
+    documentName: "Document 3",
+    dueDate: "2023-10-10",
+    projectName: "Project 3",
+    type: DocumentTypes.next,
+  },
+  {
+    documentName: "Document 4",
+    dueDate: "2023-10-10",
+    projectName: "Project 4",
+    type: DocumentTypes.current,
+  },
+  {
+    documentName: "Document 5",
+    dueDate: "2023-10-10",
+    projectName: "Project 5",
+    type: DocumentTypes.passed,
+  },
+  {
+    documentName: "Document 6",
+    dueDate: "2023-10-10",
+    projectName: "Project 6",
+    type: DocumentTypes.next,
+  },
+];
+
+export const dummySchedules: TermScheduleProps[] = [
+  {
+    terms: [
+      {
+        termPeriod: "First Term",
+        timelines: [
+          { reportName: "Report 1", dueDate: new Date("2023-10-10") },
+          { reportName: "Report 2", dueDate: new Date("2023-11-10") },
+          { reportName: "Report 3", dueDate: new Date("2023-12-10") },
+          { reportName: "Report 4", dueDate: new Date("2024-01-10") },
+          { reportName: "Report 5", dueDate: new Date("2024-02-10") },
+        ],
+      },
+      {
+        termPeriod: "Second Term",
+        timelines: [
+          { reportName: "Report 1", dueDate: new Date("2023-10-10") },
+          { reportName: "Report 2", dueDate: new Date("2023-11-10") },
+          { reportName: "Report 3", dueDate: new Date("2023-12-10") },
+          { reportName: "Report 4", dueDate: new Date("2024-01-10") },
+          { reportName: "Report 5", dueDate: new Date("2024-02-10") },
+        ],
+      },
+    ],
+    termName: "Senior Project Timeline",
+  },
+  {
+    terms: [
+      {
+        termPeriod: "First Term",
+        timelines: [
+          { reportName: "Report 1", dueDate: new Date("2023-10-10") },
+          { reportName: "Report 2", dueDate: new Date("2023-11-10") },
+          { reportName: "Report 3", dueDate: new Date("2023-12-10") },
+          { reportName: "Report 4", dueDate: new Date("2024-01-10") },
+          { reportName: "Report 5", dueDate: new Date("2024-02-10") },
+        ],
+      },
+    ],
+    termName: "Senior Project Timeline",
+  },
+];
+
+export const dummyTerms: TermDetail[] = [
+  { id: 1, name: "Term 1" },
+  { id: 2, name: "Term 2" },
+  { id: 3, name: "Term 3" },
+  { id: 4, name: "Term 4" },
+  { id: 5, name: "Term 5" },
+  { id: 6, name: "Term 6" },
+  { id: 7, name: "Term 7" },
+  { id: 8, name: "Term 8" },
+];
+
+export const dummyTimelines: TimelineDetail[] = [
+  { reportName: "Report 1", dueDate: new Date("2023-10-10") },
+  { reportName: "Report 2", dueDate: new Date("2024-01-10") },
+  { reportName: "Report 3", dueDate: new Date("2024-02-01") },
+  { reportName: "Report 4", dueDate: new Date("2024-02-10") },
+  { reportName: "Report 5", dueDate: new Date("2024-04-29") },
+  { reportName: "Report 6", dueDate: new Date("2024-05-10") },
+  { reportName: "Report 7", dueDate: new Date("2024-06-22") },
+];
+
+export const dummyOverviewProjects: ProjectDetail[] = [
+  { id: 1, name: "Project 1" },
+  { id: 2, name: "Project 2" },
+  { id: 3, name: "Project 3" },
+  { id: 4, name: "Project 4" },
+  { id: 5, name: "Project 5" },
+  { id: 6, name: "Project 6" },
+  { id: 7, name: "Project 7" },
+  { id: 8, name: "Project 8" },
+];
+
+export const dummyApplications: ApplicationCardProps[] = [
+  {
+    groupName: "Our Group#1",
+    groupMembers: ["Şura Nur Ertürkmen", "Mehmet Berat Ersarı"],
+    appliedProject: {
+      projectName: "Senior Project",
+      applicationStatus: ApplicationStatusType.Pending,
+    },
+  },
+  {
+    groupName: "Our Group#2",
+    groupMembers: ["Şura Nur Ertürkmen", "Mehmet Berat Ersarı"],
+    appliedProject: {
+      projectName: "Senior Project",
+      applicationStatus: ApplicationStatusType.Pending,
+    },
+  },
+  {
+    groupName: "Our Group#3",
+    groupMembers: ["Şura Nur Ertürkmen", "Mehmet Berat Ersarı"],
+    appliedProject: {
+      projectName: "Senior Project",
+      applicationStatus: ApplicationStatusType.Approved,
+    },
+  },
+];
+export const dummyGroups: GroupCardProps[] = [
+  {
+    groupName: "Our Group#1",
+    groupMembers: ["Şura Nur Ertürkmen", "Mehmet Berat Ersarı"],
+    appliedProjects: [
+      {
+        projectName: "Senior Project",
+        applicationStatus: ApplicationStatusType.Approved,
+      },
+      {
+        projectName: "xxxx Project",
+        applicationStatus: ApplicationStatusType.Pending,
+      },
+      {
+        projectName: "yyyyyy Project",
+        applicationStatus: ApplicationStatusType.Pending,
+      },
+      {
+        projectName: "yyyyyy Project",
+        applicationStatus: ApplicationStatusType.Pending,
+      },
+      {
+        projectName: "yyyyyy Project",
+        applicationStatus: ApplicationStatusType.Rejected,
+      },
+    ],
+  },
+  {
+    groupName: "Our Group#2",
+    groupMembers: ["Nur Şura  Ertürkmen", "Berat Mehmet  Ersarı"],
+    appliedProjects: [
+      {
+        projectName: "Senior Project",
+        applicationStatus: ApplicationStatusType.Approved,
+      },
+      {
+        projectName: "xxxx Project",
+        applicationStatus: ApplicationStatusType.Pending,
+      },
+      {
+        projectName: "yyyyyy Project",
+        applicationStatus: ApplicationStatusType.Pending,
+      },
+      {
+        projectName: "yyyyyy Project",
+        applicationStatus: ApplicationStatusType.Pending,
+      },
+      {
+        projectName: "yyyyyy Project",
+        applicationStatus: ApplicationStatusType.Rejected,
+      },
+    ],
+  },
+  {
+    groupName: "Our Group#3",
+    groupMembers: ["Şura Nur Ertürkmen", "Mehmet Berat Ersarı"],
+    appliedProjects: [
+      {
+        projectName: "Senior Project",
+        applicationStatus: ApplicationStatusType.Approved,
+      },
+      {
+        projectName: "xxxx Project",
+        applicationStatus: ApplicationStatusType.Pending,
+      },
+      {
+        projectName: "yyyyyy Project",
+        applicationStatus: ApplicationStatusType.Pending,
+      },
+      {
+        projectName: "yyyyyy Project",
+        applicationStatus: ApplicationStatusType.Pending,
+      },
+      {
+        projectName: "yyyyyy Project",
+        applicationStatus: ApplicationStatusType.Rejected,
+      },
+    ],
+  },
+];
 
 export const dummyImages: string[] = [
   "https://i.ibb.co/YtbXJLP/banner75.png",
@@ -59,6 +480,51 @@ export const dummyAnnouncements: AnnouncementProps[] = [
     title: "Announcement 10",
     date: "2021-10-10",
     content: "This is an announcement content",
+  },
+];
+export const dummyAllProjects: AllProjectsCardProps[] = [
+  {
+    name: "Project 1",
+    description: "This is a project description",
+    projectType: ProjectType.InApplicationProcess,
+    needNumberOfStudents: 2,
+    isApplied: true,
+  },
+  {
+    name: "Project 2",
+    description: "This is a project description",
+    projectType: ProjectType.InApplicationProcess,
+    needNumberOfStudents: 1,
+  },
+  {
+    name: "Project 3",
+    description: "This is a project description",
+    projectType: ProjectType.InApplicationProcess,
+    needNumberOfStudents: 3,
+  },
+  {
+    name: "Project 4",
+    students: ["Student 7", "Student 8"],
+    description: "This is a project description",
+    projectType: ProjectType.Working,
+  },
+  {
+    name: "Project 5",
+    description: "This is a project description",
+    projectType: ProjectType.InApplicationProcess,
+    needNumberOfStudents: 1,
+  },
+  {
+    name: "Project 6",
+    students: ["Student 11", "Student 12"],
+    description: "This is a project description",
+    projectType: ProjectType.Working,
+  },
+  {
+    name: "Project 7",
+    description: "This is a project description",
+    projectType: ProjectType.InApplicationProcess,
+    needNumberOfStudents: 3,
   },
 ];
 

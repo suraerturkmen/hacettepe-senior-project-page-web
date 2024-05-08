@@ -1,12 +1,5 @@
 import React, { useState, useEffect, useMemo, use } from "react";
-import { useDispatch } from "react-redux";
-import {
-  ProjectData,
-  getPagingData,
-} from "@/redux/features/PaginationDataSlice";
-import { RootState } from "@/redux/rootReducer";
-import { ThunkDispatch } from "@reduxjs/toolkit";
-import { AnyAction } from "redux";
+import { ProjectData } from "@/redux/features/PaginationDataSlice";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import ProjectListCards from "@/components/my-projects/project-list-cards/ProjectListCards";
 import { dummyProfessorProjects } from "@/dummyData/dummyData";
@@ -17,13 +10,8 @@ import {
   UserType,
 } from "@/components/my-projects/project-list-card/ProjectListCard";
 
-type PagingData = {
-  Projects: ProjectData[];
-  totalPages: number;
-};
-
 function ProfessorMyProjectsPage() {
-  const itemCountPerPage = 5;
+  const itemCountPerPage = 4;
   const [currentPageWorkingProject, setCurrentPageWorkingProject] = useState(1);
   const [currentPageArchivedProject, setCurrentPageArchivedProject] =
     useState(1);
@@ -100,95 +88,3 @@ export default ProfessorMyProjectsPage;
 ProfessorMyProjectsPage.getLayout = (page: JSX.Element) => (
   <DefaultLayout>{page}</DefaultLayout>
 );
-
-function usePaginationWorkingProject(
-  pageNumber: number,
-  pageSize: number
-): PagingData {
-  const dispatch: ThunkDispatch<RootState, undefined, AnyAction> =
-    useDispatch();
-  const [projects, setProjects] = useState<ProjectData[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [totalPages, setTotalPages] = useState<number>(0);
-
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      try {
-        const actionResult = await dispatch(
-          getPagingData({ pageNumber, pageSize })
-        );
-
-        if (getPagingData.fulfilled.match(actionResult)) {
-          const pagingData = actionResult.payload;
-          setTotalPages(pagingData.totalElements);
-          const data = pagingData.data;
-          data.reduce((acc: ProjectData[], project: ProjectData) => {
-            acc.push(project);
-            return acc;
-          }, []);
-          setProjects(data);
-        } else if (getPagingData.rejected.match(actionResult)) {
-          setError("An error occurred while fetching data.");
-        }
-      } catch (error) {
-        setError("An error occurred while fetching data.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, [dispatch, pageNumber, pageSize]);
-
-  return useMemo(
-    () => ({ Projects: projects, totalPages }),
-    [projects, totalPages]
-  );
-}
-
-function usePaginationArchivedProject(
-  pageNumber: number,
-  pageSize: number
-): PagingData {
-  const dispatch: ThunkDispatch<RootState, undefined, AnyAction> =
-    useDispatch();
-  const [projects, setProjects] = useState<ProjectData[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string | null>(null);
-  const [totalPages, setTotalPages] = useState<number>(0);
-
-  useEffect(() => {
-    async function fetchData() {
-      setLoading(true);
-      try {
-        const actionResult = await dispatch(
-          getPagingData({ pageNumber, pageSize })
-        );
-
-        if (getPagingData.fulfilled.match(actionResult)) {
-          const pagingData = actionResult.payload;
-          setTotalPages(pagingData.totalElements);
-          const data = pagingData.data;
-          data.reduce((acc: ProjectData[], project: ProjectData) => {
-            acc.push(project);
-            return acc;
-          }, []);
-          setProjects(data);
-        } else if (getPagingData.rejected.match(actionResult)) {
-          setError("An error occurred while fetching data.");
-        }
-      } catch (error) {
-        setError("An error occurred while fetching data.");
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, [dispatch, pageNumber, pageSize]);
-
-  return useMemo(
-    () => ({ Projects: projects, totalPages }),
-    [projects, totalPages]
-  );
-}

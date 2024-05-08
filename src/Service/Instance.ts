@@ -1,16 +1,20 @@
 import axios from "axios";
+import { getSession } from "next-auth/react";
 
 const instance = axios.create({
   baseURL: "http://localhost:8080/api/",
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
-instance.interceptors.request.use((config) => {
-  const username = process.env.NEXT_PUBLIC_USERNAME;
-  const password = process.env.NEXT_PUBLIC_PASSWORD;
-  const basicAuth = `Basic ${btoa(`${username}:${password}`)}`;
-
-  config.headers["Authorization"] = basicAuth;
-  return config;
-});
+// Function to set JWT token in axios headers
+export const setAuthToken = (token: string) => {
+  if (token) {
+    instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    delete instance.defaults.headers.common["Authorization"];
+  }
+};
 
 export default instance;

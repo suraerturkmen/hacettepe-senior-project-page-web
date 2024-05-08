@@ -44,7 +44,7 @@ export const getByTitle = createAsyncThunk(
   }
 );
 
-const dataSlice = createSlice({
+const searchDataSlice = createSlice({
   name: "data",
   initialState,
   reducers: {},
@@ -66,4 +66,4 @@ const dataSlice = createSlice({
   },
 });
 
-export default dataSlice.reducer;
+export default searchDataSlice.reducer;

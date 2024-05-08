@@ -9,18 +9,19 @@ export enum UserType {
 export enum ProjectType {
   Past = "Past",
   Working = "Working",
+  InApplicationProcess = "InApplicationProcess",
 }
 
 export interface CardProps {
   name: string;
-  students: string[];
+  students?: string[];
   description?: string;
-  projectType?: ProjectType;
+  projectType: ProjectType;
   userType?: UserType;
 }
 
 const ProjectListCard = (props: CardProps): JSX.Element => {
-  const { name, description, students, userType } = props;
+  const { name, description, students, userType, projectType } = props;
 
   return (
     <S.StyledCard>
@@ -41,14 +42,16 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
           </S.StyledDeleteAndEdit>
         )}
       </S.StyledFirstLine>
-      <S.StyledStudentsArea>
-        <Typography variant="bodyMedium" color="GrayText">
-          Students:
-        </Typography>
-        <Typography variant="captionBold" color="#344767">
-          {students.join(", ")}
-        </Typography>
-      </S.StyledStudentsArea>
+      {students && (
+        <S.StyledStudentsArea>
+          <Typography variant="bodyMedium" color="GrayText">
+            Students:
+          </Typography>
+          <Typography variant="captionBold" color="#344767">
+            {students.join(", ")}
+          </Typography>
+        </S.StyledStudentsArea>
+      )}
       <S.StyledDescriptionArea>
         <Typography variant="bodyMedium" color="GrayText">
           Project Description:

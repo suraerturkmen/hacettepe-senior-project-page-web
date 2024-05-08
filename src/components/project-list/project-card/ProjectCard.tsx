@@ -5,19 +5,19 @@ import { defaultImageUrl } from "@/dummyData/dummyData";
 export interface CardProps {
   authors?: string[];
   term: string;
-  name: string;
+  title: string;
   description?: string;
   relatedTopics?: string[];
   imageUrl?: string;
 }
 
 const ProjectCard = (props: CardProps): JSX.Element => {
-  const { authors, term, name, description, relatedTopics, imageUrl } = props;
+  const { authors, term, title, description, relatedTopics, imageUrl } = props;
 
   return (
     <S.StyledCard>
-      {imageUrl && <S.StyledImage src={imageUrl} alt={name} />}
-      {!imageUrl && <S.StyledImage src={defaultImageUrl} alt={name} />}
+      {imageUrl && <S.StyledImage src={imageUrl} alt={title} />}
+      {!imageUrl && <S.StyledImage src={defaultImageUrl} alt={title} />}
       <S.StyledContent>
         <S.StyledAuthorAndTerm>
           <S.StyledAuthor>
@@ -32,7 +32,7 @@ const ProjectCard = (props: CardProps): JSX.Element => {
             {term}
           </Typography>
         </S.StyledAuthorAndTerm>
-        <Typography variant="h7Bold">{name}</Typography>
+        <Typography variant="h7Bold">{title}</Typography>
         {description && <Typography variant="body1">{description}</Typography>}
         <S.StyledChipContainer>
           {relatedTopics && (

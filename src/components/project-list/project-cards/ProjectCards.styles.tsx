@@ -42,3 +42,9 @@ export const StyledSearchContainer = styled("div")(({ theme }) => ({
   gap: "200px",
   width: "100%",
 }));
+
+export const StyledSearchInputContainer = styled("div")(({ theme }) => ({
+  display: "flex",
+  gap: "16px",
+  alignItems: "center",
+}));
