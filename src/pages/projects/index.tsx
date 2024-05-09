@@ -110,7 +110,7 @@ function usePaginationProject(
           value: searchTerm,
         },
         sort: {
-          type: "title",
+          type: "",
           direction: "ASC",
         },
         pageNumber: pageNumber,
@@ -118,7 +118,6 @@ function usePaginationProject(
       };
       await store.dispatch(fetchProjects(searchRequest));
       const projectState = store.getState().projects;
-      console.log(projectState);
       setProjectStateData(projectState);
     }
     getData();

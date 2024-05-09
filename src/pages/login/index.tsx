@@ -1,17 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Typography } from "@mui/material";
 import { LoginLogo } from "@/dummyData/dummyData";
-import DefaultLayout from "@/layouts/DefaultLayouts";
+import DefaultLayout, { UserRole } from "@/layouts/DefaultLayouts";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { login } from "@/redux/features/AuthSlice";
 import * as S from "@/components/login/Login.styles";
 import { AppDispatch } from "@/redux/store";
 import router from "next/router";
+import { store } from "@/redux/store";
 
 export default function Login() {
-  const dispatch = useDispatch<AppDispatch>();
-
   const {
     register,
     handleSubmit,
@@ -20,13 +19,27 @@ export default function Login() {
 
   const onSubmit = async (data: { username: string; password: string }) => {
     try {
-      await dispatch(
+      await store.dispatch(
         login({ username: data.username, password: data.password })
       );
-      router.push("/projects");
+      store.getState().auth;
     } catch (error) {
       console.error("Authentication Error:", error);
-      // Handle authentication error
+    }
+    const roles =
+      typeof window !== "undefined" ? localStorage.getItem("roles") : null;
+
+    if (roles) {
+      const parsedRoles = JSON.parse(roles) as string[];
+      if (parsedRoles.includes(UserRole.ADMIN)) {
+        router.push("/admin-home");
+      } else if (parsedRoles.includes(UserRole.PROFESSOR)) {
+        router.push("/professor-home");
+      } else if (parsedRoles.includes(UserRole.STUDENT)) {
+        router.push("/student-home");
+      } else {
+        router.push("/");
+      }
     }
   };
 

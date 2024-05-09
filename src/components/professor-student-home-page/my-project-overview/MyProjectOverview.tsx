@@ -4,6 +4,7 @@ import { Typography } from "@mui/material";
 export type ProjectDetail = {
   id: number;
   name: string;
+  documents: string[];
 };
 
 export interface MyProjectOverviewProps {

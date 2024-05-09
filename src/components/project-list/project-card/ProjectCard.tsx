@@ -1,6 +1,8 @@
 import Typography from "@mui/material/Typography";
 import * as S from "@/components/project-list/project-card/ProjectCard.styles";
 import { defaultImageUrl } from "@/dummyData/dummyData";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export interface CardProps {
   authors?: string[];
@@ -14,8 +16,21 @@ export interface CardProps {
 const ProjectCard = (props: CardProps): JSX.Element => {
   const { authors, term, title, description, relatedTopics, imageUrl } = props;
 
+  const router = useRouter();
+  const handleClick = () => {
+    router.push({
+      pathname: "/project-detail/[title]",
+      query: {
+        term: term,
+        title: title,
+        description: description,
+        imageUrl: imageUrl,
+      },
+    });
+  };
+
   return (
-    <S.StyledCard>
+    <S.StyledCard onClick={handleClick}>
       {imageUrl && <S.StyledImage src={imageUrl} alt={title} />}
       {!imageUrl && <S.StyledImage src={defaultImageUrl} alt={title} />}
       <S.StyledContent>

@@ -2,38 +2,123 @@ import * as S from "@/components/header/Header.styles";
 import { Typography, Box } from "@mui/material";
 import { HacettepeLogo } from "@/dummyData/dummyData";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { UserRole } from "@/layouts/DefaultLayouts";
+import { useEffect } from "react";
 
-export default function Header(): JSX.Element {
+interface Props {
+  role: UserRole | null;
+}
+
+export default function Header(props: Props): JSX.Element {
+  const { role } = props;
+  const router = useRouter();
+
+  const handleClick = () => {
+    localStorage.clear();
+    localStorage.setItem("role", UserRole.USER);
+    router.push("/");
+    setTimeout(() => {
+      window.location.reload();
+    }, 1);
+  };
+
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
+
   return (
-    <>
-      <S.StyledAppBar
-        position="static"
-        color="default"
-        elevation={0}
-        className="no-print">
-        <S.StyledContentContainer>
-          <S.StyledImage src={HacettepeLogo} />
-          <S.StyledTypography variant="h6">
-            <Box fontWeight="bold" display="inline">
-              {"Hacettepe University"}
-            </Box>
-            {"Computer Engineering - Artificial Intelligence Engineering"}
-          </S.StyledTypography>
-          <S.StyledButtonContainer>
+    <S.StyledAppBar
+      position="static"
+      color="default"
+      elevation={0}
+      className="no-print">
+      <S.StyledContentContainer>
+        <S.StyledImage src={HacettepeLogo} />
+        <S.StyledTypography variant="h5TaglineBold">
+          <Box fontWeight="bold" display="inline">
+            Hacettepe University
+          </Box>{" "}
+          Computer Engineering - Artificial Intelligence Engineering
+        </S.StyledTypography>
+        <S.StyledButtonContainer>
+          {(role === UserRole.USER || role == null) && (
             <Link href="/">
-              <Typography variant="h5TaglineBold">{"Home"}</Typography>
+              <Typography variant="h5TaglineBold" component="span">
+                Home
+              </Typography>
             </Link>
-            <Typography variant="h5TaglineBold">{"Timelines"}</Typography>
-            <Link href="/projects">
-              <Typography variant="h5TaglineBold">{"Projects"}</Typography>
+          )}
+          {role === UserRole.STUDENT && (
+            <Link href="/student-home">
+              <Typography variant="h5TaglineBold" component="span">
+                Home
+              </Typography>
             </Link>
-            <Typography variant="h5TaglineBold">{"Visualizations"}</Typography>
+          )}
+          {role === UserRole.PROFESSOR && (
+            <Link href="/professor-home">
+              <Typography variant="h5TaglineBold" component="span">
+                Home
+              </Typography>
+            </Link>
+          )}
+          {role === UserRole.ADMIN && (
+            <Link href="/admin-home">
+              <Typography variant="h5TaglineBold" component="span">
+                Admin Home
+              </Typography>
+            </Link>
+          )}
+          {role === UserRole.STUDENT && (
+            <Link href="/student-projects">
+              <Typography variant="h5TaglineBold" component="span">
+                My Projects
+              </Typography>
+            </Link>
+          )}
+          {role === UserRole.PROFESSOR && (
+            <Link href="/professor-projects">
+              <Typography variant="h5TaglineBold" component="span">
+                My Projects
+              </Typography>
+            </Link>
+          )}
+          <Link href="/projects">
+            <Typography variant="h5TaglineBold" component="span">
+              Projects
+            </Typography>
+          </Link>
+          {role === UserRole.STUDENT && (
+            <Link href="/student-groups">
+              <Typography variant="h5TaglineBold" component="span">
+                My Groups
+              </Typography>
+            </Link>
+          )}
+          {role !== UserRole.USER && (
+            <Link href="/timeline">
+              <Typography variant="h5TaglineBold" component="span">
+                Timeline
+              </Typography>
+            </Link>
+          )}
+          {role !== UserRole.USER && role != null && (
+            <Link href="/" onClick={handleClick}>
+              <Typography variant="h5TaglineBold" component="span">
+                Logout
+              </Typography>
+            </Link>
+          )}
+          {(role === UserRole.USER || role == null) && (
             <Link href="/login">
-              <Typography variant="h5TaglineBold">{"Login"}</Typography>
+              <Typography variant="h5TaglineBold" component="span">
+                Login
+              </Typography>
             </Link>
-          </S.StyledButtonContainer>
-        </S.StyledContentContainer>
-      </S.StyledAppBar>
-    </>
+          )}
+        </S.StyledButtonContainer>
+      </S.StyledContentContainer>
+    </S.StyledAppBar>
   );
 }

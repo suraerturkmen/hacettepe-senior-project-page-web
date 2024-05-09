@@ -28,3 +28,7 @@ export const StyledImage = styled("img")({
   height: "51px",
   width: "40px",
 });
+
+export const StyledClicakbleTypography = styled(Typography)({
+  cursor: "pointer",
+});

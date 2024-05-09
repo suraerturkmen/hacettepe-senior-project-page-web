@@ -39,7 +39,7 @@ export const MainPage = () => {
       <Typography variant="h3TitleBold" color="#790606">
         Announcements
       </Typography>
-      <Accordions annoncements={pagingAnnouncementData} />
+      <Accordions announcements={pagingAnnouncementData} />
       <Pagination
         itemCountPerPage={itemCountPerPage}
         totalCount={announcements.length}

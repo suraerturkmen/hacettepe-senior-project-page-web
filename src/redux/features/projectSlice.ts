@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
-import { RootState } from "../rootReducer";
 
 export interface SearchRequest {
   search: {
@@ -15,6 +14,11 @@ export interface SearchRequest {
   pageSize: number;
 }
 
+export interface IdByProjectRequest {
+  sessionId: string;
+  roles: string[];
+}
+
 interface Project {
   applicationIds: number[];
   authorNames: string[];
@@ -27,6 +31,7 @@ interface Project {
   term: string;
   working: boolean;
   youtubeLink: string;
+  projectStatus: string;
 }
 
 interface ProjectData {
@@ -67,14 +72,29 @@ export const fetchProjects = createAsyncThunk(
   "projects/getProjects",
   async (searchRequest: SearchRequest, { rejectWithValue }) => {
     try {
+      const response = await axiosInstance.post<ProjectData>(
+        "projects/getProjects",
+        searchRequest
+      );
+
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
+  }
+);
+
+export const fetchProjectsById = createAsyncThunk(
+  "projects/getMyProjects",
+  async (idByProjectRequest: IdByProjectRequest, { rejectWithValue }) => {
+    try {
       const token = localStorage.getItem("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }
-
       const response = await axiosInstance.post<ProjectData>(
-        "projects/getProjects",
-        searchRequest,
+        "projects/getMyProjects",
+        idByProjectRequest,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -95,6 +115,9 @@ const projectSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchProjects.fulfilled, (state, action) => {
+      state.projectData = action.payload;
+    });
+    builder.addCase(fetchProjectsById.fulfilled, (state, action) => {
       state.projectData = action.payload;
     });
   },

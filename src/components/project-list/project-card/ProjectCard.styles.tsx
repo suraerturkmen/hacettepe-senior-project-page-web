@@ -9,6 +9,7 @@ export const StyledCard = styled("div")(({ theme }) => ({
   backgroundColor: "white",
   color: "black",
   width: "318px",
+  cursor: "pointer",
 }));
 
 export const StyledContent = styled("div")(({ theme }) => ({

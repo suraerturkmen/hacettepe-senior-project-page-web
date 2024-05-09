@@ -4,15 +4,15 @@ import Accordion, {
 } from "@/reusable-components/accordions/Accordion";
 
 interface Props {
-  annoncements: AnnouncementProps[];
+  announcements: AnnouncementProps[];
 }
 
 export const Accordions = (props: Props) => {
-  const { annoncements } = props;
+  const { announcements } = props;
 
   return (
     <S.StyledContainer>
-      {annoncements.map((announcement, index) => (
+      {announcements.map((announcement, index) => (
         <Accordion key={index} {...announcement} />
       ))}
     </S.StyledContainer>

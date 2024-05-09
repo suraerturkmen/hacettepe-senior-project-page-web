@@ -282,7 +282,7 @@ const Theme: Theme = createTheme({
         {
           props: { variant: "h5TaglineBold" },
           style: {
-            fontFamily: FONT_DAXPRO.style.fontFamily,
+            fontFamily: FONT_GILROY.style.fontFamily,
             fontSize: "24px",
             fontWeight: "bold",
             fontStretch: "normal",

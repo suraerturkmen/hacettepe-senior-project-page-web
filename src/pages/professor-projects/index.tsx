@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useMemo, use } from "react";
-import { ProjectData } from "@/redux/features/PaginationDataSlice";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import ProjectListCards from "@/components/my-projects/project-list-cards/ProjectListCards";
-import { dummyProfessorProjects } from "@/dummyData/dummyData";
 import * as S from "@/components/my-projects/project-list-cards/ProjectListCards.styles";
 import {
   CardProps,
   ProjectType,
   UserType,
 } from "@/components/my-projects/project-list-card/ProjectListCard";
+import { store } from "@/redux/store";
+import { ProjectState, fetchProjectsById } from "@/redux/features/projectSlice";
 
 function ProfessorMyProjectsPage() {
   const itemCountPerPage = 4;
@@ -26,17 +26,55 @@ function ProfessorMyProjectsPage() {
     setCurrentPageArchivedProject(page);
   };
 
-  useEffect(() => {
-    const workingProjectsData = dummyProfessorProjects.filter(
-      (project) => project.projectType === ProjectType.Working
-    );
-    const archivedProjectsData = dummyProfessorProjects.filter(
-      (project) => project.projectType === ProjectType.Past
-    );
+  const [sessionId, setSessionId] = useState<string>("");
+  const [userRoles, setUserRoles] = useState<string[]>([]);
 
-    setWorkingProjects(workingProjectsData);
-    setArchivedProjects(archivedProjectsData);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userIdFromLocalStorage = localStorage.getItem("userId") || "";
+      const rolesFromLocalStorage =
+        localStorage.getItem("roles") || JSON.stringify(["ROLE_USER"]);
+      const roles = JSON.parse(rolesFromLocalStorage);
+      setSessionId(userIdFromLocalStorage);
+      setUserRoles(roles);
+    }
   }, []);
+
+  const projectStateData = useFetchProfessorProjects(
+    sessionId,
+    userRoles
+  )?.projectData;
+
+  useEffect(() => {
+    if (projectStateData) {
+      const projectsData = projectStateData?.data;
+      const workingProjectsData =
+        projectsData?.filter(
+          (project) => project.projectStatus === ProjectType.Working
+        ) || [];
+      const archivedProjectsData =
+        projectsData?.filter(
+          (project) => project.projectStatus === ProjectType.Past
+        ) || [];
+
+      const workingProjects = workingProjectsData.map((project) => ({
+        name: project.title,
+        description: project.description,
+        students: project.authorNames,
+        projectType: ProjectType.Working,
+      }));
+
+      const archivedProjects = archivedProjectsData.map((project) => ({
+        name: project.title,
+        description: project.description,
+        students: project.authorNames,
+        projectType: ProjectType.Past,
+      }));
+
+      setWorkingProjects(workingProjects);
+      setArchivedProjects(archivedProjects);
+    }
+  }, [projectStateData]);
 
   const [pagingWorkingData, setPagingWorkingData] = useState<CardProps[]>([]);
   const [pagingArchivedData, setPagingArchivedData] = useState<CardProps[]>([]);
@@ -88,3 +126,25 @@ export default ProfessorMyProjectsPage;
 ProfessorMyProjectsPage.getLayout = (page: JSX.Element) => (
   <DefaultLayout>{page}</DefaultLayout>
 );
+
+function useFetchProfessorProjects(
+  sessionId: string,
+  roles: string[]
+): ProjectState | undefined {
+  const [projectStateData, setProjectStateData] = useState<ProjectState>();
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const idByProjectRequest = { sessionId, roles: roles };
+        await store.dispatch(fetchProjectsById(idByProjectRequest));
+        const projectState = store.getState().projects;
+        setProjectStateData(projectState);
+      } catch (error) {
+        console.error("Error fetching professor projects:", error);
+      }
+    }
+    fetchData();
+  }, [sessionId, roles]);
+
+  return projectStateData;
+}

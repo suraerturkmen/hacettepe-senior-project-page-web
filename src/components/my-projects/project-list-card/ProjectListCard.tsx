@@ -7,9 +7,9 @@ export enum UserType {
 }
 
 export enum ProjectType {
-  Past = "Past",
-  Working = "Working",
-  InApplicationProcess = "InApplicationProcess",
+  Past = "ARCHIVED",
+  Working = "WORKING",
+  InApplicationProcess = "OFFERED",
 }
 
 export interface CardProps {
