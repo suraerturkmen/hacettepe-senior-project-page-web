@@ -1,3 +1,4 @@
+import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const StyledProjectCardBoxes = styled("div")(({ theme }) => ({
@@ -29,4 +30,16 @@ export const StyledProjectCardListContainer = styled("div")(({ theme }) => ({
   flexDirection: "column",
   width: "100%",
   margin: "0 auto",
+}));
+
+export const StyledButton = styled(Button)(({ theme }) => ({
+  width: "100%",
+  maxWidth: "200px",
+  padding: "16px 24px",
+  backgroundColor: "#247690",
+  color: "#FFFFFF",
+  "&:hover": {
+    backgroundColor: "#4CAF50",
+  },
+  alignSelf: "center",
 }));

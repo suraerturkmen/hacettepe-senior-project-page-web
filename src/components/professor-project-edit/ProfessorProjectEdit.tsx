@@ -1,65 +1,145 @@
 import * as S from "@/components/professor-project-edit/ProfessorProjectEdit.styles";
-import {
-  Typography,
-  TextField,
-  FormControl,
-  Button,
-  Autocomplete,
-  Chip,
-} from "@mui/material";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import RemoveIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
+import { Typography, TextField, Chip, Autocomplete } from "@mui/material";
+import { set, useForm } from "react-hook-form";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { SetStateAction, use, useEffect, useState } from "react";
+import { ProfessorsProperties } from "@/redux/features/projectSlice";
+import { MuiChipsInput, MuiChipsInputChip } from "mui-chips-input";
+import { useRouter } from "next/router";
 
-export interface StudentProperties {
-  id: number;
-  name: string;
+export interface GroupProperties {
+  id?: number;
+  students?: string[];
 }
 
 interface ProfessorProjectEditProps {
+  id: string;
   defaultTitle: string;
   defaultDescription: string;
   defaultStudentNumber: number;
-  studentNames?: StudentProperties[];
-  defaultStudentNames: StudentProperties[];
+  defaultStudentGroup?: string;
+  defaultKeywords?: string[];
+  defaultProfessors: string;
+  currentProfessorUsername: string;
+  allProfessors: ProfessorsProperties[];
+  onSubmit: (data: any) => void;
 }
 
 const ProfessorProjectEdit = (
   props: ProfessorProjectEditProps
 ): JSX.Element => {
   const {
+    id,
     defaultTitle,
     defaultDescription,
     defaultStudentNumber,
-    studentNames,
-    defaultStudentNames,
+    defaultStudentGroup,
+    defaultKeywords,
+    defaultProfessors,
+    currentProfessorUsername,
+    allProfessors,
+    onSubmit,
   } = props || {};
+
+  const [parsedDefaultStudentGroup, setParsedDefaultStudentGroup] =
+    useState<GroupProperties | null>(null);
+  const [parsedDefaultKeywords, setParsedDefaultKeywords] = useState<
+    string[] | null
+  >(null);
+  const [parsedDefaultProfessors, setParsedDefaultProfessors] = useState<
+    ProfessorsProperties[] | null
+  >(null);
+
+  useEffect(() => {
+    if (defaultStudentGroup) {
+      setParsedDefaultStudentGroup(JSON.parse(defaultStudentGroup as any));
+    }
+    if (defaultKeywords) {
+      setParsedDefaultKeywords(defaultKeywords);
+    }
+    if (defaultProfessors) {
+      setParsedDefaultProfessors(JSON.parse(defaultProfessors as any));
+    }
+  }, [
+    defaultStudentGroup,
+    defaultKeywords,
+    currentProfessorUsername,
+    defaultProfessors,
+  ]);
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data: any) => {
+  const [sessionId, setSessionId] = useState<string>("");
+
+  useEffect(() => {
+    if (window !== undefined) {
+      const userId = localStorage.getItem("userId");
+      setSessionId(userId || "");
+    }
+  }, []);
+
+  const router = useRouter();
+
+  const beforeSubmit = async (data: any) => {
+    data.id = id;
+    data.sessionId = sessionId;
+    if (!keywordChips) data.keywords = [];
+    if (!val) data.professors = [];
+    if (!parsedDefaultStudentGroup) data.groupId = "";
+    else data.groupId = parsedDefaultStudentGroup?.id || "";
+    console.log(val);
+    console.log(keywordChips);
     console.log(data);
+    onSubmit(data);
+    router.push("/professor-projects");
   };
 
-  const [val, setVal] = useState<StudentProperties[]>(defaultStudentNames);
+  const [val, setVal] = useState<ProfessorsProperties[]>([]);
 
-  const valHtml = val.map((option: StudentProperties, index) => {
-    const label = option.name;
+  useEffect(() => {
+    if (parsedDefaultProfessors) {
+      setVal(parsedDefaultProfessors);
+    }
+  }, [parsedDefaultProfessors]);
+
+  const valHtml = val.map((option: ProfessorsProperties, index) => {
+    const label = option.username;
     return (
       <Chip
-        key={label}
+        key={option.id}
         label={label}
         deleteIcon={<RemoveIcon />}
         onDelete={() => {
-          setVal(val.filter((entry) => entry !== option));
+          setVal(val.filter((entry) => entry !== option) || []);
         }}
       />
     );
   });
+  const [keywordChips, setKeywordChips] = useState<MuiChipsInputChip[]>([]);
+
+  useEffect(() => {
+    if (parsedDefaultKeywords) {
+      setKeywordChips(parsedDefaultKeywords);
+    }
+  }, [parsedDefaultKeywords]);
+
+  useEffect(() => {
+    if (parsedDefaultProfessors) {
+      parsedDefaultProfessors.map((professor, index) => {
+        register(`professors[${index}]`, { value: professor });
+      });
+    }
+    if (parsedDefaultKeywords) {
+      parsedDefaultKeywords.map((keyword, index) => {
+        register(`keywords[${index}]`, { value: keyword });
+      });
+    }
+  }, [parsedDefaultProfessors, parsedDefaultKeywords, register]);
 
   return (
     <S.StyledProjectCardWrapper>
@@ -67,68 +147,101 @@ const ProfessorProjectEdit = (
         Update Project
       </Typography>
       <S.StyledInputFieldsWrapper>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(beforeSubmit)}>
           <TextField
             id="title"
-            name="title"
             label="Title"
             helperText="Enter title of the project"
             color="secondary"
+            {...register("title")}
             defaultValue={defaultTitle}
           />
           <TextField
             multiline
             rows={4}
             id="description"
-            name="description"
             label="Description"
             helperText="Enter description of the project"
             color="secondary"
+            {...register("description")}
             defaultValue={defaultDescription}
           />
-          {!studentNames && (
-            <TextField
-              id="number"
-              name="maxStudents"
-              label="Maximum student expected"
-              helperText="Enter maximum number of students expected"
-              color="secondary"
-              defaultValue={defaultStudentNumber}
-            />
-          )}
-          {studentNames && (
+          {allProfessors && (
             <Autocomplete
               multiple
-              id="tags-standard"
+              id="professors"
               freeSolo
               filterSelectedOptions
-              options={studentNames}
-              onChange={(e, newValue) =>
-                setVal(newValue as StudentProperties[])
-              }
-              getOptionLabel={(option: string | StudentProperties) => {
+              options={allProfessors}
+              onChange={(e, newValue) => {
+                setValue("professors", newValue);
+                setVal(newValue as ProfessorsProperties[]);
+              }}
+              getOptionLabel={(option: string | ProfessorsProperties) => {
                 if (typeof option === "string") {
                   return option;
                 } else {
-                  return option.name;
+                  return option.username;
                 }
               }}
-              value={val.filter((option) =>
-                defaultStudentNames.some(
-                  (defaultOption) => defaultOption.id === option.id
-                )
-              )}
+              value={val.filter((professor) => {
+                return professor.username !== currentProfessorUsername;
+              })}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   variant="standard"
                   margin="normal"
                   fullWidth
-                  label="Select students"
+                  label="Select professors"
                 />
               )}
             />
           )}
+          {!parsedDefaultStudentGroup?.id && (
+            <TextField
+              id="number"
+              type="number"
+              label="Maximum student expected"
+              helperText="Enter maximum number of students expected"
+              color="secondary"
+              {...register("studentLimit")}
+              defaultValue={defaultStudentNumber || 0}
+            />
+          )}
+          {parsedDefaultStudentGroup && !!parsedDefaultStudentGroup?.id && (
+            <S.StyledStudentList>
+              <S.StyledHeaderArea>
+                <Typography variant="h5TaglineBold" color={"#344767"}>
+                  Group
+                </Typography>
+                <S.StyledRemoveArea
+                  onClick={() => {
+                    setParsedDefaultStudentGroup(null);
+                  }}>
+                  <S.StyledDeleteIcon />
+                  <Typography variant="captionBold" color="#F44334">
+                    Delete
+                  </Typography>
+                </S.StyledRemoveArea>
+              </S.StyledHeaderArea>
+              {parsedDefaultStudentGroup.students?.map((studentName) => (
+                <Chip key={studentName} label={studentName} />
+              ))}
+            </S.StyledStudentList>
+          )}
+          <MuiChipsInput
+            id="keywords"
+            label="Keywords"
+            helperText="Enter keywords for the project"
+            value={keywordChips}
+            onChange={(newValue) => {
+              const uniqueKeywords = Array.from(new Set(newValue));
+              setKeywordChips(uniqueKeywords);
+              setValue("keywords", uniqueKeywords);
+            }}
+          />
+
           <S.StyledButton type="submit" variant="contained">
             Submit
           </S.StyledButton>

@@ -1,5 +1,5 @@
 import { Delete, Edit } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import { Button, Dialog, Drawer } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const StyledCard = styled("div")(({ theme }) => ({
@@ -11,6 +11,7 @@ export const StyledCard = styled("div")(({ theme }) => ({
   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
   backgroundColor: "#F8F9FA",
   padding: "32px",
+  cursor: "pointer",
 }));
 
 export const StyledFirstLine = styled("div")(({ theme }) => ({
@@ -67,5 +68,72 @@ export const StyledButton = styled(Button, {
   },
   ":disabled": {
     backgroundColor: $color,
+  },
+}));
+
+export const StyledDraweContainer = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  padding: "56px 164px",
+  gap: "56px",
+});
+
+export const StyledSection = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  gap: "4px",
+});
+
+export const StyledMemberList = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+});
+
+export const StyledGroupContainer = styled("div")({
+  display: "flex",
+  gap: "56px",
+  background: "#FFFFFFF",
+  padding: "32px",
+  boxShadow: "0px 2px 6px rgba(0, 0, 0, 0.25)",
+  borderRadius: "8px",
+});
+
+export const StyledApproveWithGroupButtonSection = styled("div")({
+  display: "flex",
+});
+
+export const StyledApproveWithGroupButton = styled(Button)({
+  padding: "0px 56px !important",
+  height: "60px",
+});
+
+export const StyledErrorContainer = styled("div")({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  padding: "60px",
+  gap: "8px",
+});
+
+export const SyledDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiDialog-container": {
+    "& .MuiPaper-root": {
+      width: "100%",
+      maxWidth: "800px",
+      borderRadius: "8px 8px 0 0",
+      [theme.breakpoints.down("desktop")]: {
+        maxWidth: "650px",
+      },
+      [theme.breakpoints.down("tablet")]: {
+        maxWidth: "none",
+        marginTop: "65px",
+        height: "calc(100% - 64px)",
+        borderRadius: "0",
+
+        "& .MuiBox-root": {
+          height: "100%",
+        },
+      },
+    },
   },
 }));

@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useMemo, use } from "react";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import ProjectListCards from "@/components/my-projects/project-list-cards/ProjectListCards";
-import { dummyProfessorProjects } from "@/dummyData/dummyData";
 import * as S from "@/components/my-projects/project-list-cards/ProjectListCards.styles";
 import {
   CardProps,
-  ProjectType,
+  ProjectStatus,
   UserType,
 } from "@/components/my-projects/project-list-card/ProjectListCard";
+import { ProjectState, fetchProjectsById } from "@/redux/features/projectSlice";
+import { store } from "@/redux/store";
 
 function StudentMyProjectPage() {
   const itemCountPerPage = 4;
@@ -25,17 +26,73 @@ function StudentMyProjectPage() {
     setCurrentPageArchivedProject(page);
   };
 
-  useEffect(() => {
-    const workingProjectsData = dummyProfessorProjects.filter(
-      (project) => project.projectType === ProjectType.Working
-    );
-    const archivedProjectsData = dummyProfessorProjects.filter(
-      (project) => project.projectType === ProjectType.Past
-    );
+  const [sessionId, setSessionId] = useState<string>("");
+  const [userRoles, setUserRoles] = useState<string[]>([]);
 
-    setWorkingProjects(workingProjectsData);
-    setArchivedProjects(archivedProjectsData);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const userIdFromLocalStorage = localStorage.getItem("userId") || "";
+      const rolesFromLocalStorage =
+        localStorage.getItem("roles") || JSON.stringify(["ROLE_USER"]);
+      const roles = JSON.parse(rolesFromLocalStorage);
+      setSessionId(userIdFromLocalStorage);
+      setUserRoles(roles);
+    }
   }, []);
+
+  const projectStateData = useFetchStudentProjects(
+    sessionId,
+    userRoles
+  )?.projectData;
+
+  useMemo(() => {
+    if (projectStateData) {
+      const workingProjectsData =
+        projectStateData.data?.filter(
+          (project) => project.projectStatus === ProjectStatus.Working
+        ) || [];
+      const archivedProjectsData =
+        projectStateData.data?.filter(
+          (project) => project.projectStatus === ProjectStatus.Past
+        ) || [];
+
+      setWorkingProjects(
+        workingProjectsData.map((project) => ({
+          id: project.id,
+          title: project.title,
+          description: project.description,
+          students: project.students,
+          projectStatus: ProjectStatus.Past,
+          userType: UserType.Student,
+          studentLimit: project.studentLimit,
+          imageUrl: project.imageUrl,
+          keywords: project.keywords,
+          groupId: project.groupId,
+          term: project.term,
+          projectTypeId: project.projectTypeId,
+          professors: project.professors,
+        }))
+      );
+
+      setArchivedProjects(
+        archivedProjectsData.map((project) => ({
+          id: project.id,
+          title: project.title,
+          description: project.description,
+          students: project.students,
+          projectStatus: ProjectStatus.Past,
+          userType: UserType.Student,
+          studentLimit: project.studentLimit,
+          imageUrl: project.imageUrl,
+          keywords: project.keywords,
+          groupId: project.groupId,
+          term: project.term,
+          projectTypeId: project.projectTypeId,
+          professors: project.professors,
+        }))
+      );
+    }
+  }, [projectStateData]);
 
   const [pagingWorkingData, setPagingWorkingData] = useState<CardProps[]>([]);
   const [pagingArchivedData, setPagingArchivedData] = useState<CardProps[]>([]);
@@ -87,3 +144,25 @@ export default StudentMyProjectPage;
 StudentMyProjectPage.getLayout = (page: JSX.Element) => (
   <DefaultLayout>{page}</DefaultLayout>
 );
+
+function useFetchStudentProjects(
+  sessionId: string,
+  roles: string[]
+): ProjectState | undefined {
+  const [projectStateData, setProjectStateData] = useState<ProjectState>();
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const idByProjectRequest = { sessionId, roles: roles };
+        await store.dispatch(fetchProjectsById(idByProjectRequest));
+        const projectState = store.getState().projects;
+        setProjectStateData(projectState);
+      } catch (error) {
+        console.error("Error fetching professor projects:", error);
+      }
+    }
+    fetchData();
+  }, [sessionId, roles]);
+
+  return projectStateData;
+}

@@ -1,6 +1,16 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
 
+export interface ProfessorsProperties {
+  id: string;
+  username: string;
+}
+export enum ProjectStatus {
+  Past = "ARCHIVED",
+  Working = "WORKING",
+  InApplicationProcess = "OFFERED",
+}
+
 export interface SearchRequest {
   search: {
     type: string;
@@ -19,19 +29,25 @@ export interface IdByProjectRequest {
   roles: string[];
 }
 
-interface Project {
+export interface Project {
   applicationIds: number[];
-  authorNames: string[];
+  students: string[];
+  professors: ProfessorsProperties[];
   description: string;
-  groupId: number;
-  id: number;
+  groupId: string;
+  id: string;
   title: string;
-  professorIds: number[];
   reportLink: string;
   term: string;
   working: boolean;
   youtubeLink: string;
-  projectStatus: string;
+  projectStatus: ProjectStatus;
+  keywords: string[];
+  studentLimit: number;
+  imageUrl: string;
+  projectTypeId: string;
+  myProject: boolean;
+  applied: boolean;
 }
 
 interface ProjectData {

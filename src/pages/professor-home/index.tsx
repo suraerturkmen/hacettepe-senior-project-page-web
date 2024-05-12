@@ -12,20 +12,17 @@ import { Typography } from "@mui/material";
 import { AnnouncementProps } from "@/reusable-components/accordions/Accordion";
 import Accordions from "@/reusable-components/accordions/Accordions";
 import Pagination from "@/reusable-components/pagination/Pagination";
-import {
-  Project,
-  ProjectState,
-  fetchMyProjects,
-} from "@/redux/features/MyProjectSlice";
+import { ProjectState, fetchMyProjects } from "@/redux/features/MyProjectSlice";
 import { store } from "@/redux/store";
 import {
   TimelineState,
   fetchTimelinesByProjectTypeId,
 } from "@/redux/features/TimelineSlice";
-import ActiveSeniorProjectTerm, {
+import {
   ActiveSeniorProjectTermState,
   fetchActiveSeniorProjectTerm,
 } from "@/redux/features/ActiveSeniorProjectTerm";
+import { Project } from "@/redux/features/projectSlice";
 
 function ProfessorHomePage() {
   const itemCountPerPage = 5;
@@ -38,6 +35,10 @@ function ProfessorHomePage() {
   const [roles, setRoles] = useState<string[]>([]);
   const [myProjects, setMyProjects] = useState<ProjectDetail[]>([]);
   const [timelines, setTimelines] = useState<TimelineDetail[]>([]);
+
+  const handlePageChangeAnnouncement = (page: number) => {
+    setCurrentAnnouncementPage(page);
+  };
 
   useEffect(() => {
     setAnnouncements(dummyAnnouncements);
@@ -79,15 +80,11 @@ function ProfessorHomePage() {
     const projects =
       projectStateData?.data.map((project: Project) => ({
         id: project.id,
-        name: project.title,
+        title: project.title,
         documents: [], // update after document API is implemented
       })) || [];
     setMyProjects(projects);
   }, [projectStateData]);
-
-  const handlePageChangeAnnouncement = (page: number) => {
-    setCurrentAnnouncementPage(page);
-  };
 
   return (
     <S.StyledWrapper>

@@ -1,5 +1,12 @@
 import Typography from "@mui/material/Typography";
 import * as S from "@/components/all-projects/project-list-card/ProjectListCard.styles";
+import { useRouter } from "next/router";
+import { Dialog, Drawer } from "@mui/material";
+import { useState } from "react";
+import { GroupResponse } from "@/redux/features/GroupList";
+import { useForm } from "react-hook-form";
+import { ProfessorsProperties } from "@/redux/features/projectSlice";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 export enum UserType {
   Student = "Student",
@@ -13,39 +20,160 @@ export enum ProjectType {
 }
 
 export interface AllProjectsCardProps {
-  name: string;
+  id: string;
+  title: string;
   students?: string[];
   description?: string;
   projectType: ProjectType;
   userType?: UserType;
-  needNumberOfStudents?: number;
+  studentLimit?: number;
   isApplied?: boolean;
-  handleButtonClick?: () => void; // Get students groups and give selection window
+  isMyProject?: boolean;
+  imageUrl?: string;
+  term?: string;
+  studentGroups?: GroupResponse[];
+  professors?: ProfessorsProperties[];
+  handleApply?: (groupId: string, projectId: string) => void;
 }
 
 const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
   const {
-    name,
+    id,
+    title,
     description,
     students,
     userType,
     projectType,
-    needNumberOfStudents,
+    studentLimit,
     isApplied = false,
-    handleButtonClick,
+    isMyProject = false,
+    imageUrl,
+    term,
+    studentGroups,
+    professors,
+    handleApply,
   } = props;
+
+  const [open, setOpen] = useState(false);
+  const [errorOpen, setErrorOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const router = useRouter();
+  const handleClick = () => {
+    router.push({
+      pathname: "/project-detail/[title]",
+      query: {
+        term: term,
+        title: title,
+        description: description,
+        imageUrl: imageUrl,
+      },
+    });
+  };
+
+  const handleAppliedButtonClick = () => {
+    if (!studentGroups) {
+      setErrorMessage("You need to create a group first");
+      setErrorOpen(true);
+    } else {
+      setOpen(true);
+    }
+  };
+
+  const handleSelectGroup = (groupId: string) => {
+    setOpen(false);
+    //window.location.reload;
+    if (groupId !== "") {
+      const selectedGroup = studentGroups?.find(
+        (group) => group.id === groupId
+      );
+      if (
+        selectedGroup &&
+        studentLimit &&
+        studentLimit >= selectedGroup.groupMembers.length
+      ) {
+        if (handleApply) {
+          handleApply(groupId, id);
+        }
+      } else {
+        setErrorMessage("Your group achieved the maximum number of students.");
+        setErrorOpen(true);
+      }
+    }
+  };
+
+  const groupDrawer = () => {
+    return (
+      <>
+        {studentGroups?.map((group, index) => (
+          <S.StyledGroupContainer key={index}>
+            <S.StyledApproveWithGroupButtonSection>
+              <S.StyledApproveWithGroupButton
+                variant="contained"
+                onClick={() => handleSelectGroup(group.id)}>
+                <Typography variant="formButtonLargeLabel">Select</Typography>
+              </S.StyledApproveWithGroupButton>
+            </S.StyledApproveWithGroupButtonSection>
+            <S.StyledSection>
+              <Typography variant="h5TaglineBold" style={{ color: "#344767" }}>
+                Group Name:
+              </Typography>
+              <Typography variant="body1" style={{ color: "GrayText" }}>
+                {group.groupName}
+              </Typography>
+            </S.StyledSection>
+            <S.StyledSection>
+              <Typography variant="h5TaglineBold" style={{ color: "#344767" }}>
+                {group.groupMembers.length > 1
+                  ? "Group Members:"
+                  : "Group Member:"}
+              </Typography>
+              {group.groupMembers.map((groupMember, memberIndex) => (
+                <div key={memberIndex}>
+                  <Typography variant="body1" style={{ color: "GrayText" }}>
+                    {groupMember.username}
+                  </Typography>
+                </div>
+              ))}
+            </S.StyledSection>
+          </S.StyledGroupContainer>
+        ))}
+      </>
+    );
+  };
 
   return (
     <S.StyledWrapper>
-      <S.StyledCard>
-        {(name || userType === UserType.Teacher) && (
+      <S.SyledDialog
+        open={errorOpen}
+        onClose={() => {
+          setErrorOpen(false);
+        }}>
+        <S.StyledErrorContainer>
+          <ErrorOutlineIcon style={{ color: "#F44334" }} />
+          <Typography variant="h5TaglineBold" style={{ color: "#F44334" }}>
+            {errorMessage}
+          </Typography>
+        </S.StyledErrorContainer>
+      </S.SyledDialog>
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={() => {
+          setOpen(false);
+        }}>
+        <S.StyledDraweContainer>{groupDrawer()}</S.StyledDraweContainer>
+      </Drawer>
+
+      <S.StyledCard onClick={handleClick}>
+        {(title || userType === UserType.Teacher) && (
           <S.StyledFirstLine>
-            {name && (
+            {title && (
               <Typography variant="h5TaglineBold" color="#344767">
-                {name}
+                {title}
               </Typography>
             )}
-            {userType === UserType.Teacher && (
+            {userType === UserType.Teacher && isMyProject && (
               <S.StyledDeleteAndEdit>
                 <S.StyledDeleteIcon />
                 <Typography variant="captionBold" color="#F44334">
@@ -60,9 +188,21 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
           </S.StyledFirstLine>
         )}
         <S.StyledDetails>
+          <S.StyledArea>
+            <Typography variant="bodyMedium" style={{ color: "#7B809A" }}>
+              {professors?.length ?? 0 > 1 ? "Professors:" : "Professor:"}
+            </Typography>
+            {professors?.map((professor, professorIndex) => (
+              <div key={professorIndex}>
+                <Typography variant="bodyMedium" style={{ color: "#344767" }}>
+                  {professor.username}
+                </Typography>
+              </div>
+            ))}
+          </S.StyledArea>
           {students && (
             <S.StyledArea>
-              <Typography variant="bodyMedium" color="GrayText">
+              <Typography variant="bodyMedium" color={"#7B809A"}>
                 Students:
               </Typography>
               <Typography variant="bodyMedium" color="#344767">
@@ -70,19 +210,19 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
               </Typography>
             </S.StyledArea>
           )}
-          {needNumberOfStudents && (
+          {studentLimit && (
             <S.StyledArea>
-              <Typography variant="bodyMedium" color="GrayText">
+              <Typography variant="bodyMedium" color="#7B809A">
                 Need Number Of Students:
               </Typography>
               <Typography variant="bodyMedium" color="#344767">
-                {needNumberOfStudents}
+                {studentLimit}
               </Typography>
             </S.StyledArea>
           )}
           {description && (
             <S.StyledArea>
-              <Typography variant="bodyMedium" color="GrayText">
+              <Typography variant="bodyMedium" color="#7B809A">
                 Project Description:
               </Typography>
               <Typography variant="bodyMedium" color="#344767">
@@ -97,7 +237,7 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
           variant="contained"
           $color={isApplied ? "#2E7D32" : "#247690"}
           disabled={isApplied}
-          onClick={handleButtonClick}>
+          onClick={handleAppliedButtonClick}>
           <Typography color="#FFFFFF">
             {isApplied ? "APPLIED" : "APPLY"}
           </Typography>

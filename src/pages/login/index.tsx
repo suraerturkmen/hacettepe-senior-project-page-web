@@ -31,6 +31,7 @@ export default function Login() {
 
     if (roles) {
       const parsedRoles = JSON.parse(roles) as string[];
+      console.log(parsedRoles);
       if (parsedRoles.includes(UserRole.ADMIN)) {
         router.push("/admin-home");
       } else if (parsedRoles.includes(UserRole.PROFESSOR)) {

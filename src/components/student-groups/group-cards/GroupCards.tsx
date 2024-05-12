@@ -1,11 +1,9 @@
 import * as S from "@/components/student-groups/group-cards/GroupCards.styles";
-import GroupCard, {
-  GroupCardProps,
-} from "@/components/student-groups/group-card/GroupCard";
-import { Typography } from "@mui/material";
+import GroupCard from "@/components/student-groups/group-card/GroupCard";
+import { GroupResponse } from "@/redux/features/GroupList";
 
 interface GroupCardsProps {
-  groups: GroupCardProps[];
+  groups: GroupResponse[];
 }
 
 const GroupCards = (props: GroupCardsProps): JSX.Element => {

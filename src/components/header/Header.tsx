@@ -11,7 +11,7 @@ interface Props {
 }
 
 export default function Header(props: Props): JSX.Element {
-  const { role } = props;
+  let { role } = props;
   const router = useRouter();
 
   const handleClick = () => {
@@ -20,12 +20,9 @@ export default function Header(props: Props): JSX.Element {
     router.push("/");
     setTimeout(() => {
       window.location.reload();
-    }, 1);
+    }, 500);
+    console.log("Logged out");
   };
-
-  useEffect(() => {
-    localStorage.clear();
-  }, []);
 
   return (
     <S.StyledAppBar
@@ -84,6 +81,28 @@ export default function Header(props: Props): JSX.Element {
               </Typography>
             </Link>
           )}
+          {role === UserRole.PROFESSOR && (
+            <Link href="/all-projects-professor">
+              <Typography variant="h5TaglineBold" component="span">
+                Opened Projects
+              </Typography>
+            </Link>
+          )}
+          {role === UserRole.PROFESSOR && (
+            <Link href="/professor-project-application">
+              <Typography variant="h5TaglineBold" component="span">
+                Project Applications
+              </Typography>
+            </Link>
+          )}
+          {role === UserRole.STUDENT && (
+            <Link href="/all-projects-student">
+              <Typography variant="h5TaglineBold" component="span">
+                Opened Projects
+              </Typography>
+            </Link>
+          )}
+
           <Link href="/projects">
             <Typography variant="h5TaglineBold" component="span">
               Projects

@@ -1,18 +1,19 @@
 import * as S from "@/components/professor-project-application/application-card/ApplicationCard.styles";
+import { fetchChangeApplicationStatus } from "@/redux/features/ChangeApplicationStatus";
+import { ApplicationStatusType } from "@/redux/features/CreateApplication";
+import { ProjectStatus } from "@/redux/features/projectSlice";
+import { store } from "@/redux/store";
 import { Typography } from "@mui/material";
 
-export enum ApplicationStatusType {
-  Approved = "Approved",
-  Rejected = "Rejected",
-  Pending = "Pending",
-}
-
 export interface AppliedProject {
+  projectId: string;
   projectName: string;
   applicationStatus: ApplicationStatusType;
+  projectStatus: ProjectStatus;
 }
 
 export interface ApplicationCardProps {
+  applicationId: string;
   groupName: string;
   groupMembers: string[];
   appliedProject: AppliedProject;
@@ -25,7 +26,27 @@ const ColorMap: { [key in ApplicationStatusType]: string } = {
 };
 
 const ApplicationCard = (props: ApplicationCardProps): JSX.Element => {
-  const { groupName, groupMembers, appliedProject } = props;
+  const { applicationId, groupName, groupMembers, appliedProject } = props;
+
+  const handleApprove = async () => {
+    await store.dispatch(
+      fetchChangeApplicationStatus({
+        id: applicationId,
+        status: ApplicationStatusType.Approved,
+      })
+    );
+    appliedProject.applicationStatus = ApplicationStatusType.Approved;
+  };
+
+  const handleReject = async () => {
+    await store.dispatch(
+      fetchChangeApplicationStatus({
+        id: applicationId,
+        status: ApplicationStatusType.Rejected,
+      })
+    );
+    appliedProject.applicationStatus = ApplicationStatusType.Rejected;
+  };
 
   return (
     <S.StyledCard>
@@ -34,15 +55,13 @@ const ApplicationCard = (props: ApplicationCardProps): JSX.Element => {
           <S.StyledButton
             variant="contained"
             $color={"#2E7D32"}
-            //onClick={handleButtonClick}
-          >
+            onClick={handleApprove}>
             <Typography color="#FFFFFF">APPROVE</Typography>
           </S.StyledButton>
           <S.StyledButton
             variant="contained"
             $color={"#D32F2F"}
-            //onClick={handleButtonClick}
-          >
+            onClick={handleReject}>
             <Typography color="#FFFFFF">REJECT</Typography>
           </S.StyledButton>
         </S.StyledButtonsContainer>

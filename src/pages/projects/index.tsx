@@ -34,7 +34,19 @@ function Page() {
     searchType,
     searchTerm
   )?.projectData;
-  const currentProjects = pagingData?.data;
+
+  const currentProjects = pagingData?.data.map((project) => ({
+    authors: [
+      ...project.students,
+      ...project.professors.map((professor) => professor.username),
+    ],
+    term: project.term,
+    title: project.title,
+    description: project.description,
+    relatedTopics: project.keywords,
+    imageUrl: project.youtubeLink,
+  }));
+
   const totalElements = pagingData?.totalElements;
 
   const handlePageChange = (newPage: number) => {

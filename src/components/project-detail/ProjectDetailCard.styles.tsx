@@ -4,6 +4,7 @@ export const StyledCard = styled("div")({
   display: "flex",
   borderRadius: "8px",
   maxWidth: "1260px",
+  width: "100%",
   gap: "32px",
   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
   backgroundColor: "#F8F9FA",

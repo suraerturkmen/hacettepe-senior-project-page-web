@@ -12,6 +12,7 @@ export interface ProjectDetailCardProps {
 const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
   const { title, term, description, imageUrl } = props;
 
+  console.log(title, term, description, imageUrl);
   return (
     <S.StyledCard>
       <S.StyledImageTitleContainer>
@@ -25,7 +26,7 @@ const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
         <Typography variant="h5TaglineBold" color="#344767">
           Project Term:
         </Typography>
-        <Typography variant="bodyBold" color="GrayText">
+        <Typography variant="bodyBold" color="#7B809A">
           {term}
         </Typography>
       </S.StyledSection>
@@ -33,7 +34,7 @@ const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
         <Typography variant="h5TaglineBold" color="#344767">
           Project Description:
         </Typography>
-        <Typography variant="bodyBold" color="GrayText">
+        <Typography variant="bodyBold" color="#7B809A">
           {description}
         </Typography>
       </S.StyledSection>

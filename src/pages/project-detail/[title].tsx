@@ -14,13 +14,14 @@ interface Props {
 
 function ProjectDetailPage(props: Props) {
   const { title, term, description, imageUrl } = props;
+  console.log(title, term, description, imageUrl);
   return (
     <S.StyledContainer>
       <Typography variant="h3TitleBold" color="#344767">
         Project Detail
       </Typography>
       <ProjectDetailCard
-        title={title} // Corrected from name={title}
+        title={title}
         term={term}
         description={description}
         imageUrl={imageUrl || ""}
@@ -38,7 +39,6 @@ ProjectDetailPage.getLayout = (page: JSX.Element) => (
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  console.log(context.query);
   const { title, term, description, imageUrl } = context.query;
   return {
     props: {

@@ -1,5 +1,7 @@
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import RemoveIcon from "@mui/icons-material/Remove";
+import { Delete } from "@mui/icons-material";
 
 export const StyledProjectCardWrapper = styled("div")(({ theme }) => ({
   display: "flex",
@@ -41,3 +43,28 @@ export const StyledButton = styled(Button)(({ theme }) => ({
     backgroundColor: "#E27676",
   },
 }));
+
+export const StyledStudentList = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  gap: "8px",
+});
+
+export const StyledHeaderArea = styled("div")({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  width: "100%",
+});
+
+export const StyledDeleteIcon = styled(Delete)({
+  cursor: "pointer",
+  color: "#D54949",
+});
+
+export const StyledRemoveArea = styled("div")({
+  display: "flex",
+  gap: "2px",
+  alignItems: "center",
+  cursor: "pointer",
+});

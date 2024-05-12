@@ -4,13 +4,31 @@ import authReducer from "./features/AuthSlice";
 import myProjectSliceReducer from "./features/MyProjectSlice";
 import timelineReducer from "./features/TimelineSlice";
 import ActiveSeniorProjectTerm from "./features/ActiveSeniorProjectTerm";
+import UpdateProject from "./features/UpdateProject";
+import ProfessorList from "./features/ProfessorList";
+import deleteReducer from "./features/DeleteProject";
+import activeSeniorProjects from "./features/AllProjectsInActiveTerm";
+import groupReducer from "./features/CreateGroup";
+import StudentListReducer from "./features/StudentList";
+import groupListReducer from "./features/GroupList";
+import CreateApplicationReducer from "./features/CreateApplication";
+import ApplicationListReducer from "./features/ProfessorProjectApplications";
 
 const rootReducer = combineReducers({
   projects: projectReducer,
-  auth: authReducer, // Include the authentication reducer under the key 'auth'
+  auth: authReducer,
   myProjects: myProjectSliceReducer,
   timelines: timelineReducer,
   activeSeniorProjectTerm: ActiveSeniorProjectTerm,
+  updateProject: UpdateProject,
+  professors: ProfessorList,
+  deleteProject: deleteReducer,
+  activeSeniorProjects: activeSeniorProjects,
+  group: groupReducer,
+  students: StudentListReducer,
+  groupList: groupListReducer,
+  createApplication: CreateApplicationReducer,
+  applicationList: ApplicationListReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

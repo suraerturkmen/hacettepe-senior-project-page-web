@@ -6,36 +6,50 @@ import {
   Autocomplete,
   Chip,
 } from "@mui/material";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { set, useForm } from "react-hook-form";
 import RemoveIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
-
-export interface StudentOptionsType {
-  studentName: string;
-  id: number;
-}
+import { StudentProperties } from "@/redux/features/CreateGroup";
+import { useRouter } from "next/router";
 
 interface CreateStudentGroupsProps {
-  students: StudentOptionsType[];
+  students: StudentProperties[];
+  currentStudentName: string;
+  onSubmit: (data: any) => void;
 }
 
 const CreateStudentGroups = (props: CreateStudentGroupsProps): JSX.Element => {
-  const { students } = props;
+  const { students, currentStudentName, onSubmit } = props;
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data: any) => {
-    console.log(data);
+  const [sessionId, setSessionId] = useState<string>("");
+
+  useEffect(() => {
+    if (window !== undefined) {
+      const userId = localStorage.getItem("userId");
+      setSessionId(userId || "");
+    }
+  }, []);
+
+  const router = useRouter();
+
+  const beforeSubmit = async (data: any) => {
+    data.sessionId = sessionId;
+    if (!val) data.students = [];
+    onSubmit(data);
+    setTimeout(() => {
+      router.push("/student-groups");
+    }, 50);
   };
+  const [val, setVal] = useState<StudentProperties[]>([]);
 
-  // Ensure val state is always of type StudentOptionsType[]
-  const [val, setVal] = useState<StudentOptionsType[]>([]);
-
-  const valHtml = val.map((option: StudentOptionsType, index) => {
-    const label = option.studentName;
+  const valHtml = val.map((option: StudentProperties, index) => {
+    const label = option.username;
     return (
       <Chip
         key={label}
@@ -54,22 +68,27 @@ const CreateStudentGroups = (props: CreateStudentGroupsProps): JSX.Element => {
         Create a new group
       </Typography>
       <S.StyledInputFieldsWrapper>
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(beforeSubmit)}>
           <Autocomplete
             multiple
             id="tags-standard"
             freeSolo
             filterSelectedOptions
             options={students}
-            onChange={(e, newValue) => setVal(newValue as StudentOptionsType[])}
-            getOptionLabel={(option: string | StudentOptionsType) => {
+            onChange={(e, newValue) => {
+              setVal(newValue as StudentProperties[]);
+              setValue("students", newValue);
+            }}
+            getOptionLabel={(option: string | StudentProperties) => {
               if (typeof option === "string") {
                 return option;
               } else {
-                return option.studentName;
+                return option.username;
               }
             }}
-            value={val}
+            value={val.filter(
+              (option) => option.username !== currentStudentName
+            )}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -82,10 +101,10 @@ const CreateStudentGroups = (props: CreateStudentGroupsProps): JSX.Element => {
           />
           <TextField
             id="groupName"
-            name="groupName"
             label="Group Name"
             helperText="Enter group name"
             color="secondary"
+            {...register("groupName", { required: true })}
           />
           <S.StyledButton type="submit" variant="contained">
             Submit

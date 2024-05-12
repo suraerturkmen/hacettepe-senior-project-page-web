@@ -4,7 +4,7 @@ import ProjectListCards from "@/components/my-projects/project-list-cards/Projec
 import * as S from "@/components/my-projects/project-list-cards/ProjectListCards.styles";
 import {
   CardProps,
-  ProjectType,
+  ProjectStatus,
   UserType,
 } from "@/components/my-projects/project-list-card/ProjectListCard";
 import { store } from "@/redux/store";
@@ -45,37 +45,54 @@ function ProfessorMyProjectsPage() {
     userRoles
   )?.projectData;
 
-  useEffect(() => {
+  useMemo(() => {
     if (projectStateData) {
-      const projectsData = projectStateData?.data;
       const workingProjectsData =
-        projectsData?.filter(
-          (project) => project.projectStatus === ProjectType.Working
+        projectStateData.data?.filter(
+          (project) => project.projectStatus === ProjectStatus.Working
         ) || [];
       const archivedProjectsData =
-        projectsData?.filter(
-          (project) => project.projectStatus === ProjectType.Past
+        projectStateData.data?.filter(
+          (project) => project.projectStatus === ProjectStatus.Past
         ) || [];
 
-      const workingProjects = workingProjectsData.map((project) => ({
-        name: project.title,
-        description: project.description,
-        students: project.authorNames,
-        projectType: ProjectType.Working,
-      }));
+      setWorkingProjects(
+        workingProjectsData.map((project) => ({
+          id: project.id,
+          title: project.title,
+          description: project.description,
+          students: project.students,
+          projectStatus: ProjectStatus.Past,
+          userType: UserType.Teacher,
+          studentLimit: project.studentLimit,
+          imageUrl: project.imageUrl,
+          keywords: project.keywords,
+          groupId: project.groupId,
+          term: project.term,
+          projectTypeId: project.projectTypeId,
+          professors: project.professors,
+        }))
+      );
 
-      const archivedProjects = archivedProjectsData.map((project) => ({
-        name: project.title,
-        description: project.description,
-        students: project.authorNames,
-        projectType: ProjectType.Past,
-      }));
-
-      setWorkingProjects(workingProjects);
-      setArchivedProjects(archivedProjects);
+      setArchivedProjects(
+        archivedProjectsData.map((project) => ({
+          id: project.id,
+          title: project.title,
+          description: project.description,
+          students: project.students,
+          projectStatus: ProjectStatus.Past,
+          userType: UserType.Teacher,
+          studentLimit: project.studentLimit,
+          imageUrl: project.imageUrl,
+          keywords: project.keywords,
+          groupId: project.groupId,
+          term: project.term,
+          projectTypeId: project.projectTypeId,
+          professors: project.professors,
+        }))
+      );
     }
   }, [projectStateData]);
-
   const [pagingWorkingData, setPagingWorkingData] = useState<CardProps[]>([]);
   const [pagingArchivedData, setPagingArchivedData] = useState<CardProps[]>([]);
 

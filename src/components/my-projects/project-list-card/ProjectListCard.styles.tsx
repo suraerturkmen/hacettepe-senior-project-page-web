@@ -46,3 +46,8 @@ export const StyledDescriptionArea = styled("div")(({ theme }) => ({
   alignItems: "center",
   gap: "10px",
 }));
+
+export const StyledClickable = styled("div")({
+  display: "flex",
+  cursor: "pointer",
+});

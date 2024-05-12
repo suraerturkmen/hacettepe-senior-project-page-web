@@ -1,21 +1,11 @@
 import * as S from "@/components/student-groups/group-card/GroupCard.styles";
+import { ApplicationStatusType } from "@/redux/features/CreateApplication";
+import { GroupResponse } from "@/redux/features/GroupList";
 import { Typography } from "@mui/material";
-
-export enum ApplicationStatusType {
-  Approved = "Approved",
-  Rejected = "Rejected",
-  Pending = "Pending",
-}
 
 export interface AppliedProject {
   projectName: string;
   applicationStatus: ApplicationStatusType;
-}
-
-export interface GroupCardProps {
-  groupName: string;
-  groupMembers: string[];
-  appliedProjects: AppliedProject[];
 }
 
 const ColorMap: { [key in ApplicationStatusType]: string } = {
@@ -24,8 +14,8 @@ const ColorMap: { [key in ApplicationStatusType]: string } = {
   [ApplicationStatusType.Rejected]: "#D32F2F",
 };
 
-const GroupCard = (props: GroupCardProps): JSX.Element => {
-  const { groupName, groupMembers, appliedProjects } = props;
+const GroupCard = (props: GroupResponse): JSX.Element => {
+  const { groupName, groupMembers, applications } = props;
 
   return (
     <S.StyledCard>
@@ -45,7 +35,7 @@ const GroupCard = (props: GroupCardProps): JSX.Element => {
           {groupMembers.map((groupMember, index) => (
             <S.StyledMemberList key={index}>
               <Typography variant="bodyMedium" color="GrayText">
-                {groupMember}
+                {groupMember.username}
               </Typography>
             </S.StyledMemberList>
           ))}
@@ -55,15 +45,15 @@ const GroupCard = (props: GroupCardProps): JSX.Element => {
         <Typography variant="h5TaglineBold" color="#344767">
           Applied Projects:
         </Typography>
-        {appliedProjects.map((appliedProject, index) => (
+        {applications.map((appliedProject, index) => (
           <S.StyledApplicationList key={index}>
             <Typography variant="bodyMedium" color="GrayText">
-              {appliedProject.projectName}
+              {appliedProject.projectTitle}
             </Typography>
             <Typography
               variant="bodyBold"
-              color={ColorMap[appliedProject.applicationStatus]}>
-              {appliedProject.applicationStatus}
+              color={ColorMap[appliedProject.status]}>
+              {appliedProject.status}
             </Typography>
           </S.StyledApplicationList>
         ))}

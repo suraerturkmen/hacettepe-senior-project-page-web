@@ -4,13 +4,18 @@ import { Project } from "./projectSlice";
 
 export interface MyProjectRequest {
   sessionId: string;
-  roles: string[];
+  pageNumber: number;
+  pageSize: number;
 }
 
 interface ProjectData {
   success: boolean;
   message: string;
   data: Project[];
+  number: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
 }
 
 export interface ProjectState {
@@ -18,6 +23,10 @@ export interface ProjectState {
     message: string;
     success: boolean;
     data: Project[];
+    number: number;
+    pageSize: number;
+    totalElements: number;
+    totalPages: number;
   };
 }
 
@@ -26,11 +35,15 @@ const initialState: ProjectState = {
     success: false,
     message: "",
     data: [],
+    number: 0,
+    pageSize: 0,
+    totalElements: 0,
+    totalPages: 0,
   },
 };
 
-export const fetchMyProjects = createAsyncThunk(
-  "projects/getMyProjects",
+export const fetchActiveSeniorProjects = createAsyncThunk(
+  "projects/getActiveSeniorProjects",
   async (request: MyProjectRequest, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("jwtToken");
@@ -38,7 +51,7 @@ export const fetchMyProjects = createAsyncThunk(
         throw new Error("JWT token not found");
       }
       const response = await axiosInstance.post<ProjectData>(
-        "projects/getMyProjects",
+        "projects/getActiveSeniorProjects",
         request,
         {
           headers: {
@@ -53,15 +66,15 @@ export const fetchMyProjects = createAsyncThunk(
   }
 );
 
-const myProjectSlice = createSlice({
-  name: "myProjects",
+const activeSeniorProjectsSlice = createSlice({
+  name: "activeSeniorProject",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchMyProjects.fulfilled, (state, action) => {
+    builder.addCase(fetchActiveSeniorProjects.fulfilled, (state, action) => {
       state.projectData = action.payload;
     });
   },
 });
 
-export default myProjectSlice.reducer;
+export default activeSeniorProjectsSlice.reducer;

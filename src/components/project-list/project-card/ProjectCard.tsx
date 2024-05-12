@@ -39,7 +39,7 @@ const ProjectCard = (props: CardProps): JSX.Element => {
             {authors &&
               authors.map((author, index) => (
                 <Typography key={index} variant="subtitle1" color="blue">
-                  {author}
+                  {author.split(" ").length > 1 ? author.split(" ")[0] : author}
                 </Typography>
               ))}
           </S.StyledAuthor>

@@ -2,8 +2,8 @@ import * as S from "@/components/professor-student-home-page/my-project-overview
 import { Typography } from "@mui/material";
 
 export type ProjectDetail = {
-  id: number;
-  name: string;
+  id: string;
+  title: string;
   documents: string[];
 };
 
@@ -21,9 +21,9 @@ const MyProjectOverview = (props: MyProjectOverviewProps): JSX.Element => {
       <S.StyledAllProjects>
         {projects.map((project, index) => (
           <S.StyledProjectContainer key={index}>
-            {project.name && (
+            {project.title && (
               <Typography variant="h5TaglineBold" color="#344767">
-                {project.name}
+                {project.title}
               </Typography>
             )}
             {/* Use RouterLink to navigate to the documents page */}

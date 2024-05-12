@@ -2,9 +2,15 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
 import { Project } from "./projectSlice";
 
-export interface MyProjectRequest {
+export interface StudentProperties {
+  id: string;
+  username: string;
+}
+
+export interface CreateGroupRequest {
   sessionId: string;
-  roles: string[];
+  groupName: string;
+  students: string[];
 }
 
 interface ProjectData {
@@ -13,7 +19,7 @@ interface ProjectData {
   data: Project[];
 }
 
-export interface ProjectState {
+export interface CreateProjectState {
   projectData: {
     message: string;
     success: boolean;
@@ -21,7 +27,7 @@ export interface ProjectState {
   };
 }
 
-const initialState: ProjectState = {
+const initialState: CreateProjectState = {
   projectData: {
     success: false,
     message: "",
@@ -29,39 +35,40 @@ const initialState: ProjectState = {
   },
 };
 
-export const fetchMyProjects = createAsyncThunk(
-  "projects/getMyProjects",
-  async (request: MyProjectRequest, { rejectWithValue }) => {
+export const fetchCreateGroup = createAsyncThunk(
+  "groups/createStudentGroup",
+  async (createRequest: CreateGroupRequest, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }
       const response = await axiosInstance.post<ProjectData>(
-        "projects/getMyProjects",
-        request,
+        "groups/createStudentGroup",
+        createRequest,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data);
     }
   }
 );
 
-const myProjectSlice = createSlice({
-  name: "myProjects",
+const createGroupSlice = createSlice({
+  name: "createGroup",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchMyProjects.fulfilled, (state, action) => {
+    builder.addCase(fetchCreateGroup.fulfilled, (state, action) => {
       state.projectData = action.payload;
     });
   },
 });
 
-export default myProjectSlice.reducer;
+export default createGroupSlice.reducer;

@@ -8,7 +8,6 @@ export const StyledCard = styled("div")(({ theme }) => ({
   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
   backgroundColor: "white",
   color: "black",
-  width: "318px",
   cursor: "pointer",
 }));
 
@@ -27,7 +26,8 @@ export const StyledAuthorAndTerm = styled("div")(({ theme }) => ({
 export const StyledAuthor = styled("div")(({ theme }) => ({
   display: "flex",
   gap: "4px",
-  flexDirection: "column",
+  textOverflow: "ellipsis",
+  overflow: "hidden",
 }));
 
 export const StyledChip = styled("div")(({ theme }) => ({

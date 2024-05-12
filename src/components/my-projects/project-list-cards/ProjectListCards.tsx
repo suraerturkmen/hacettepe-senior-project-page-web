@@ -27,24 +27,28 @@ const ProjectCards = (props: ProjectCardsProps): JSX.Element => {
     userType,
   } = props;
   return (
-    <S.StyledProjectCardWrapper>
-      {title && (
-        <Typography variant="h3TitleBold" color="#344767">
-          {title}
-        </Typography>
+    <>
+      {projects.length !== 0 && (
+        <S.StyledProjectCardWrapper>
+          {title && (
+            <Typography variant="h3TitleBold" color="#344767">
+              {title}
+            </Typography>
+          )}
+          <S.StyledProjectCardBoxes>
+            {projects.map((project, index) => (
+              <ProjectCard key={index} userType={userType} {...project} />
+            ))}
+          </S.StyledProjectCardBoxes>
+          <Pagination
+            itemCountPerPage={itemCountPerPage}
+            currentPage={currentPage}
+            totalCount={totalPages}
+            onChange={handlePageChange}
+          />
+        </S.StyledProjectCardWrapper>
       )}
-      <S.StyledProjectCardBoxes>
-        {projects.map((project, index) => (
-          <ProjectCard key={index} userType={userType} {...project} />
-        ))}
-      </S.StyledProjectCardBoxes>
-      <Pagination
-        itemCountPerPage={itemCountPerPage}
-        currentPage={currentPage}
-        totalCount={totalPages}
-        onChange={handlePageChange}
-      />
-    </S.StyledProjectCardWrapper>
+    </>
   );
 };
 
