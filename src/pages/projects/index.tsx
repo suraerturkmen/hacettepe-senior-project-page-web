@@ -19,7 +19,7 @@ interface SearchForm {
   search: string;
 }
 
-const itemCountPerPage = 9;
+const itemCountPerPage = 6;
 
 function Page() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,6 +35,7 @@ function Page() {
     searchTerm
   )?.projectData;
 
+  //const recommends = useRecommendedProjects();
   const currentProjects = pagingData?.data.map((project) => ({
     authors: [
       ...project.students,
@@ -45,6 +46,7 @@ function Page() {
     description: project.description,
     relatedTopics: project.keywords,
     imageUrl: project.youtubeLink,
+    //recommends: JSON.stringify(recommends),
   }));
 
   const totalElements = pagingData?.totalElements;
@@ -134,6 +136,22 @@ function usePaginationProject(
     }
     getData();
   }, [pageNumber, pageSize, searchType, searchTerm]);
+
+  return projectStateData;
+}
+
+function useRecommendedProjects(recommends: string): ProjectState | undefined {
+  const [projectStateData, setProjectStateData] = useState<ProjectState>();
+
+  useEffect(() => {
+    async function getData() {
+      const searchRequest = {};
+      //await store.dispatch();
+      const projectState = store.getState().projects;
+      setProjectStateData(projectState);
+    }
+    getData();
+  }, [recommends]);
 
   return projectStateData;
 }

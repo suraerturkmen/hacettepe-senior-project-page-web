@@ -49,6 +49,15 @@ const ProfessorProjectEdit = (
   const [parsedDefaultProfessors, setParsedDefaultProfessors] = useState<
     ProfessorsProperties[] | null
   >(null);
+  const [sessionId, setSessionId] = useState<string>("");
+  const [val, setVal] = useState<ProfessorsProperties[]>([]);
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm();
 
   useEffect(() => {
     if (defaultStudentGroup) {
@@ -67,15 +76,6 @@ const ProfessorProjectEdit = (
     defaultProfessors,
   ]);
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm();
-
-  const [sessionId, setSessionId] = useState<string>("");
-
   useEffect(() => {
     if (window !== undefined) {
       const userId = localStorage.getItem("userId");
@@ -83,7 +83,11 @@ const ProfessorProjectEdit = (
     }
   }, []);
 
-  const router = useRouter();
+  useEffect(() => {
+    if (parsedDefaultProfessors) {
+      setVal(parsedDefaultProfessors);
+    }
+  }, [parsedDefaultProfessors]);
 
   const beforeSubmit = async (data: any) => {
     data.id = id;
@@ -92,20 +96,11 @@ const ProfessorProjectEdit = (
     if (!val) data.professors = [];
     if (!parsedDefaultStudentGroup) data.groupId = "";
     else data.groupId = parsedDefaultStudentGroup?.id || "";
-    console.log(val);
-    console.log(keywordChips);
-    console.log(data);
     onSubmit(data);
-    router.push("/professor-projects");
+    setTimeout(() => {
+      router.push("/professor-projects");
+    }, 50);
   };
-
-  const [val, setVal] = useState<ProfessorsProperties[]>([]);
-
-  useEffect(() => {
-    if (parsedDefaultProfessors) {
-      setVal(parsedDefaultProfessors);
-    }
-  }, [parsedDefaultProfessors]);
 
   const valHtml = val.map((option: ProfessorsProperties, index) => {
     const label = option.username;

@@ -4,10 +4,13 @@ import ProjectListCards from "@/components/my-projects/project-list-cards/Projec
 import * as S from "@/components/my-projects/project-list-cards/ProjectListCards.styles";
 import {
   CardProps,
-  ProjectStatus,
   UserType,
 } from "@/components/my-projects/project-list-card/ProjectListCard";
-import { ProjectState, fetchProjectsById } from "@/redux/features/projectSlice";
+import {
+  ProjectState,
+  ProjectStatus,
+  fetchProjectsById,
+} from "@/redux/features/projectSlice";
 import { store } from "@/redux/store";
 
 function StudentMyProjectPage() {

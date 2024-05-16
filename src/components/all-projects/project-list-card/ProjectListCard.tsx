@@ -4,8 +4,10 @@ import { useRouter } from "next/router";
 import { Dialog, Drawer } from "@mui/material";
 import { useState } from "react";
 import { GroupResponse } from "@/redux/features/GroupList";
-import { useForm } from "react-hook-form";
-import { ProfessorsProperties } from "@/redux/features/projectSlice";
+import {
+  ProfessorsProperties,
+  ProjectStatus,
+} from "@/redux/features/projectSlice";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 export enum UserType {
@@ -13,18 +15,12 @@ export enum UserType {
   Teacher = "Teacher",
 }
 
-export enum ProjectType {
-  Past = "Past",
-  Working = "Working",
-  InApplicationProcess = "InApplicationProcess",
-}
-
 export interface AllProjectsCardProps {
   id: string;
   title: string;
   students?: string[];
   description?: string;
-  projectType: ProjectType;
+  projectType: ProjectStatus;
   userType?: UserType;
   studentLimit?: number;
   isApplied?: boolean;
@@ -144,7 +140,7 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
 
   return (
     <S.StyledWrapper>
-      <S.SyledDialog
+      <S.StyledDialog
         open={errorOpen}
         onClose={() => {
           setErrorOpen(false);
@@ -155,7 +151,7 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
             {errorMessage}
           </Typography>
         </S.StyledErrorContainer>
-      </S.SyledDialog>
+      </S.StyledDialog>
       <Drawer
         anchor="right"
         open={open}

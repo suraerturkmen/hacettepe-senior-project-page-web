@@ -30,7 +30,9 @@ export const StyledAllTerms = styled("div")({
 });
 
 export const StyledTimelineItem = styled(TimelineItem)({
-  width: "350px",
+  display: "flex",
+  flexDirection: "row-reverse",
+  width: "500px",
 });
 
 export const StyledTerms = styled("div")({

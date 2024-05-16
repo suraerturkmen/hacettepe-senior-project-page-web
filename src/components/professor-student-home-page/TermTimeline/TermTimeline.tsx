@@ -7,18 +7,14 @@ import {
   TimelineOppositeContent,
   TimelineSeparator,
 } from "@mui/lab";
-
-export type TimelineDetail = {
-  reportName: string;
-  dueDate: Date;
-};
+import { Timeline } from "@/redux/features/TimelineSlice";
 
 export interface TimelineProps {
-  timelines: TimelineDetail[];
+  timelines: Timeline[];
   termName: string;
 }
 
-const Timeline = (props: TimelineProps): JSX.Element => {
+const TermTimeline = (props: TimelineProps): JSX.Element => {
   const { timelines, termName } = props;
   const todayDate = new Date();
 
@@ -32,20 +28,22 @@ const Timeline = (props: TimelineProps): JSX.Element => {
           {timelines.map((timeline, index) => (
             <S.StyledTimelineItem key={index}>
               <TimelineContent color={""}>
-                {timeline.reportName}
+                {timeline.deliveryName}
               </TimelineContent>
               <TimelineSeparator>
                 <TimelineDot
                   variant={
-                    timeline.dueDate.getTime() < todayDate.getTime()
-                      ? "filled"
-                      : "outlined"
+                    timeline.deliveryDate < todayDate ? "filled" : "outlined"
                   }
                 />
                 {index !== timelines.length - 1 && <TimelineConnector />}
               </TimelineSeparator>
               <TimelineOppositeContent color="text.secondary">
-                {timeline.dueDate.toDateString()}
+                {new Date(timeline.deliveryDate)
+                  .toUTCString()
+                  .split(" ")
+                  .slice(0, 4)
+                  .join(" ")}
               </TimelineOppositeContent>
             </S.StyledTimelineItem>
           ))}
@@ -56,4 +54,4 @@ const Timeline = (props: TimelineProps): JSX.Element => {
   );
 };
 
-export default Timeline;
+export default TermTimeline;

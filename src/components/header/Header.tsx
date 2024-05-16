@@ -63,7 +63,7 @@ export default function Header(props: Props): JSX.Element {
           {role === UserRole.ADMIN && (
             <Link href="/admin-home">
               <Typography variant="h5TaglineBold" component="span">
-                Admin Home
+                Home
               </Typography>
             </Link>
           )}
@@ -116,9 +116,16 @@ export default function Header(props: Props): JSX.Element {
             </Link>
           )}
           {role !== UserRole.USER && (
-            <Link href="/timeline">
+            <Link href="/schedule">
               <Typography variant="h5TaglineBold" component="span">
                 Timeline
+              </Typography>
+            </Link>
+          )}
+          {role === UserRole.ADMIN && (
+            <Link href="/admin-project-types">
+              <Typography variant="h5TaglineBold" component="span">
+                Project Types
               </Typography>
             </Link>
           )}

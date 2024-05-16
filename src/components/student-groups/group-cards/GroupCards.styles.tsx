@@ -13,6 +13,7 @@ export const StyledContainer = styled("div")({
   flexDirection: "column",
   margin: "56px auto",
   alignItems: "center",
+  justifyContent: "center",
   gap: "56px",
 });
 
@@ -33,5 +34,7 @@ export const StyledHeaderContainer = styled("div")({
   display: "flex",
   justifyContent: "center",
   flexDirection: "column",
+  alignContent: "center",
+  alignItems: "center",
   gap: "32px",
 });

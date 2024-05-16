@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const StyledCard = styled("div")(({ theme }) => ({
@@ -14,20 +15,8 @@ export const StyledCard = styled("div")(({ theme }) => ({
 export const StyledContent = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  gap: "4px",
+  gap: "16px",
   padding: "16px",
-}));
-
-export const StyledAuthorAndTerm = styled("div")(({ theme }) => ({
-  display: "flex",
-  justifyContent: "space-between",
-}));
-
-export const StyledAuthor = styled("div")(({ theme }) => ({
-  display: "flex",
-  gap: "4px",
-  textOverflow: "ellipsis",
-  overflow: "hidden",
 }));
 
 export const StyledChip = styled("div")(({ theme }) => ({
@@ -51,3 +40,31 @@ export const StyledImage = styled("img")({
   objectPosition: "center",
   height: "200px",
 });
+
+export const StyledAuthorAndTerm = styled("div")(({ theme }) => ({
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+  width: "100%",
+  gap: "80px",
+}));
+
+export const StyledAuthor = styled("div")(({ theme }) => ({
+  display: "flex",
+  overflow: "hidden",
+  width: "200px",
+  textOverflow: "ellipsis",
+  gap: "4px",
+}));
+
+export const StyledTerm = styled("div")(({ theme }) => ({
+  width: "10ch",
+}));
+
+export const StyledDescription = styled(Typography)(({ theme }) => ({
+  display: "-webkit-box",
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: "vertical",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+}));

@@ -1,6 +1,4 @@
-import ProfessorProjectEdit, {
-  GroupProperties,
-} from "@/components/professor-project-edit/ProfessorProjectEdit";
+import ProfessorProjectEdit from "@/components/professor-project-edit/ProfessorProjectEdit";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import {
   ProfessorState,
@@ -8,14 +6,11 @@ import {
 } from "@/redux/features/ProfessorList";
 import {
   UpdateProjectRequest,
-  UpdateProjectState,
   fetchUpdateProject,
 } from "@/redux/features/UpdateProject";
-import { ProfessorsProperties } from "@/redux/features/projectSlice";
 import { store } from "@/redux/store";
-import axios from "axios";
 import { GetServerSideProps } from "next";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   id: string;
@@ -38,14 +33,10 @@ function ProfessorProjectEditPage(props: Props) {
     professors,
   } = props;
   const newStudentLimit = parseInt(studentLimit);
-  const [projectStateData, setProjectStateData] =
-    useState<UpdateProjectState>();
 
   const onSubmit = async (data: UpdateProjectRequest) => {
     console.log(data);
     await store.dispatch(fetchUpdateProject(data));
-    const projectState = store.getState().projects;
-    setProjectStateData(projectState);
   };
 
   const professorsResponse = useGetProfessors()?.professorData.data;

@@ -13,6 +13,11 @@ import StudentListReducer from "./features/StudentList";
 import groupListReducer from "./features/GroupList";
 import CreateApplicationReducer from "./features/CreateApplication";
 import ApplicationListReducer from "./features/ProfessorProjectApplications";
+import deleteGroupReducer from "./features/DeleteGroupById";
+import projectTypesReducer from "./features/GetProjectTypes";
+import CreateSeniorProjectType from "./features/CreateSeniorProjectType";
+import ActivateSeniorProjectTerm from "./features/ActivateSeniorProjectTerm";
+import EditSeniorProjectType from "./features/EditSeniorProjectType";
 
 const rootReducer = combineReducers({
   projects: projectReducer,
@@ -29,6 +34,11 @@ const rootReducer = combineReducers({
   groupList: groupListReducer,
   createApplication: CreateApplicationReducer,
   applicationList: ApplicationListReducer,
+  deleteGroup: deleteGroupReducer,
+  projectTypes: projectTypesReducer,
+  createSeniorProjectType: CreateSeniorProjectType,
+  activateSeniorProjectTerm: ActivateSeniorProjectTerm,
+  editSeniorProjectType: EditSeniorProjectType,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

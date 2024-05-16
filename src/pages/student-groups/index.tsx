@@ -15,6 +15,7 @@ function StudentGroupsPage() {
   const handleCreateGroup = () => {
     router.push("/student-create-new-group");
   };
+
   return (
     <S.StyledContainer>
       <S.StyledHeaderContainer>

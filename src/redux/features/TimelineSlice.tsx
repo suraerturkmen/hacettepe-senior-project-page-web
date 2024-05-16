@@ -7,9 +7,8 @@ export interface TimelineRequest {
 
 export interface Timeline {
   id: string;
-  deliveryDate: string;
+  deliveryDate: Date;
   deliveryName: string;
-  projectTypeId: string;
 }
 
 interface TimelineData {

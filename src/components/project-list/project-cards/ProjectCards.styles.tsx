@@ -1,7 +1,7 @@
 import { styled } from "@mui/material/styles";
 
 export const StyledProjectCardBoxes = styled("div")(({ theme }) => ({
-  maxWidth: "860px",
+  maxWidth: "1290px",
   width: "100%",
   display: "grid",
   gridTemplateColumns: "repeat(2, 1fr)",
@@ -14,7 +14,7 @@ export const StyledWrapper = styled("div")(({ theme }) => ({
   flexGrow: 0,
   justifyContent: "center",
   margin: "auto",
-  width: "1015px",
+  width: "1290px",
 
   [theme.breakpoints.between("tablet", "desktop")]: {
     width: "calc(100vw - 64px)",

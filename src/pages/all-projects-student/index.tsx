@@ -2,10 +2,7 @@ import React, { useState, useEffect } from "react";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import ProjectListCards from "@/components/all-projects/project-list-cards/ProjectListCards";
 import * as S from "@/components/all-projects/project-list-cards/ProjectListCards.styles";
-import {
-  ProjectType,
-  UserType,
-} from "@/components/all-projects/project-list-card/ProjectListCard";
+import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 import {
   ProjectState,
   fetchActiveSeniorProjects,
@@ -45,7 +42,7 @@ function ProfessorAllProjectsPage() {
     title: project.title,
     description: project.description,
     students: project.students,
-    projectType: project.projectStatus as ProjectType,
+    projectType: project.projectStatus,
     userType: UserType.Student,
     studentLimit: project.studentLimit,
     isMyProject: project.myProject,

@@ -4,11 +4,14 @@ import ProjectListCards from "@/components/my-projects/project-list-cards/Projec
 import * as S from "@/components/my-projects/project-list-cards/ProjectListCards.styles";
 import {
   CardProps,
-  ProjectStatus,
   UserType,
 } from "@/components/my-projects/project-list-card/ProjectListCard";
 import { store } from "@/redux/store";
-import { ProjectState, fetchProjectsById } from "@/redux/features/projectSlice";
+import {
+  ProjectState,
+  ProjectStatus,
+  fetchProjectsById,
+} from "@/redux/features/projectSlice";
 
 function ProfessorMyProjectsPage() {
   const itemCountPerPage = 4;

@@ -115,7 +115,7 @@ export const StyledErrorContainer = styled("div")({
   gap: "8px",
 });
 
-export const SyledDialog = styled(Dialog)(({ theme }) => ({
+export const StyledDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiDialog-container": {
     "& .MuiPaper-root": {
       width: "100%",

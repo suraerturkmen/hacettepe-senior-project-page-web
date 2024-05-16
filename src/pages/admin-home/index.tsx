@@ -35,6 +35,11 @@ function StudentHomePage() {
 
   return (
     <S.StyledWrapper>
+      <S.StyledCreateAnnoncementButton>
+        <Typography variant="h5TaglineBold" color="#FFFFFF">
+          Create Announcement
+        </Typography>
+      </S.StyledCreateAnnoncementButton>
       <ProjectTerms terms={dummyTerms} />
       <S.StyledAnnouncementSection>
         <Typography variant="h3TitleBold" color="#790606">

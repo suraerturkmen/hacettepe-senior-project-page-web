@@ -8,16 +8,43 @@ import {
   fetchGetApplications,
 } from "@/redux/features/ProfessorProjectApplications";
 import { store } from "@/redux/store";
+import ErrorDrawer from "@/components/drawers/error-drawer/ErrorDrawer";
+import { useRouter } from "next/router";
 
 function ProfessorProjectApplicationPage() {
-  const applications = useFetchProfessorApplications()?.applicationData.data;
+  const applicationResponse = useFetchProfessorApplications()?.applicationData;
+  const applications = applicationResponse?.data;
+  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const router = useRouter();
+
+  const handleErrorMessageClose = () => {
+    setIsError(false);
+    router.push("/professor-home");
+  };
+
+  useEffect(() => {
+    if (applicationResponse?.success === false) {
+      setIsError(true);
+      setErrorMessage(applicationResponse.message);
+    }
+  }, [applicationResponse]);
 
   return (
     <S.StyledContainer>
-      <Typography variant="h3TitleBold" color="#344767">
-        Project Applications
-      </Typography>
-      <ApplicationCards applications={applications || []} />
+      <ErrorDrawer
+        isError={isError}
+        errorMessage={errorMessage}
+        handleErrorMessageClose={handleErrorMessageClose}
+      />
+      {!isError && (
+        <>
+          <Typography variant="h3TitleBold" color="#344767">
+            Project Applications
+          </Typography>
+          <ApplicationCards applications={applications || []} />
+        </>
+      )}
     </S.StyledContainer>
   );
 }

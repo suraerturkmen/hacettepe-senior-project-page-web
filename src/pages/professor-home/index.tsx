@@ -4,9 +4,7 @@ import { dummyAnnouncements } from "@/dummyData/dummyData";
 import MyProjectOverview, {
   ProjectDetail,
 } from "@/components/professor-student-home-page/my-project-overview/MyProjectOverview";
-import TermTimeline, {
-  TimelineDetail,
-} from "@/components/professor-student-home-page/TermTimeline/TermTimeline";
+import TermTimeline from "@/components/professor-student-home-page/TermTimeline/TermTimeline";
 import * as S from "@/components/professor-student-home-page/ProfessorStudentHomePage.styles";
 import { Typography } from "@mui/material";
 import { AnnouncementProps } from "@/reusable-components/accordions/Accordion";
@@ -15,6 +13,7 @@ import Pagination from "@/reusable-components/pagination/Pagination";
 import { ProjectState, fetchMyProjects } from "@/redux/features/MyProjectSlice";
 import { store } from "@/redux/store";
 import {
+  Timeline,
   TimelineState,
   fetchTimelinesByProjectTypeId,
 } from "@/redux/features/TimelineSlice";
@@ -34,7 +33,6 @@ function ProfessorHomePage() {
   const [userId, setUserId] = useState<string>("");
   const [roles, setRoles] = useState<string[]>([]);
   const [myProjects, setMyProjects] = useState<ProjectDetail[]>([]);
-  const [timelines, setTimelines] = useState<TimelineDetail[]>([]);
 
   const handlePageChangeAnnouncement = (page: number) => {
     setCurrentAnnouncementPage(page);
@@ -53,15 +51,15 @@ function ProfessorHomePage() {
 
   const timelineData = useTimeline()?.timelineData;
 
-  useEffect(() => {
-    if (!timelineData) return;
-    const timelines =
-      timelineData?.data.map((timeline) => ({
-        reportName: timeline.deliveryName,
-        dueDate: new Date(timeline.deliveryDate),
-      })) || [];
-    setTimelines(timelines);
-  }, [timelineData]);
+  // useEffect(() => {
+  //   if (!timelineData) return;
+  //   const timelines =
+  //     timelineData?.data.map((timeline) => ({
+  //       reportName: timeline.deliveryName,
+  //       dueDate: new Date(timeline.deliveryDate),
+  //     })) || [];
+  //   setTimelines(timelines);
+  // }, [timelineData]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -75,6 +73,7 @@ function ProfessorHomePage() {
   }, []);
 
   const projectStateData = useMyProject(userId, roles)?.projectData;
+
   useEffect(() => {
     if (!projectStateData?.data) return;
     const projects =
@@ -86,14 +85,22 @@ function ProfessorHomePage() {
     setMyProjects(projects);
   }, [projectStateData]);
 
+  if (projectStateData?.success === false) {
+    return (
+      <Typography variant="h3TitleBold">{projectStateData.message}</Typography>
+    );
+  }
+
   return (
     <S.StyledWrapper>
       <S.StyledFirstSection>
         <MyProjectOverview projects={myProjects} />
-        <TermTimeline
-          timelines={timelines}
-          termName="Senior Project 2023-2024"
-        />
+        {timelineData && timelineData.data.length > 0 && (
+          <TermTimeline
+            timelines={timelineData?.data || []}
+            termName="Senior Project 2023-2024"
+          />
+        )}
       </S.StyledFirstSection>
       <S.StyledAnnouncementSection>
         <Typography variant="h3TitleBold" color="#790606">
@@ -147,10 +154,12 @@ function useTimeline(): TimelineState | undefined {
   const [timelineStateData, setTimelineStateData] = useState<TimelineState>();
 
   const projectTypeId =
-    useActiveSeniorProjectTerm()?.activeSeniorProjectTermData.data.id || "";
+    useActiveSeniorProjectTerm()?.activeSeniorProjectTermData?.data?.id || "";
+
   useEffect(() => {
     async function getData() {
       try {
+        if (!projectTypeId) return;
         const timelineRequest = {
           projectTypeId: projectTypeId,
         };
@@ -182,7 +191,6 @@ function useActiveSeniorProjectTerm():
           store.getState().activeSeniorProjectTerm;
         setActiveSeniorProjectTermData(activeSeniorProjectTermState);
       } catch (error) {
-        // Handle error
         console.error("Error fetching active senior project term:", error);
       }
     }

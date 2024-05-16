@@ -1,3 +1,4 @@
+import { Button } from "@mui/base";
 import { styled } from "@mui/material/styles";
 
 export const StyledWrapper = styled("div")({
@@ -23,4 +24,15 @@ export const StyledAnnouncementSection = styled("div")({
   alignItems: "center",
   gap: "32px",
   width: "100%",
+});
+
+export const StyledCreateAnnoncementButton = styled(Button)({
+  backgroundColor: "#790606",
+  padding: "16px 32px",
+  border: "none",
+  borderRadius: "4px",
+  cursor: "pointer",
+  "&:hover": {
+    backgroundColor: "#E27676",
+  },
 });

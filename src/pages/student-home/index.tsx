@@ -4,9 +4,7 @@ import { dummyAnnouncements, dummyTimelines } from "@/dummyData/dummyData";
 import MyProjectOverview, {
   ProjectDetail,
 } from "@/components/professor-student-home-page/my-project-overview/MyProjectOverview";
-import TermTimeline, {
-  TimelineDetail,
-} from "@/components/professor-student-home-page/TermTimeline/TermTimeline";
+import TermTimeline from "@/components/professor-student-home-page/TermTimeline/TermTimeline";
 import * as S from "@/components/professor-student-home-page/ProfessorStudentHomePage.styles";
 import { Typography } from "@mui/material";
 import { AnnouncementProps } from "@/reusable-components/accordions/Accordion";
@@ -16,6 +14,7 @@ import { Project } from "@/redux/features/projectSlice";
 import { ProjectState, fetchMyProjects } from "@/redux/features/MyProjectSlice";
 import { store } from "@/redux/store";
 import {
+  Timeline,
   TimelineState,
   fetchTimelinesByProjectTypeId,
 } from "@/redux/features/TimelineSlice";
@@ -34,7 +33,6 @@ function StudentHomePage() {
   const [userId, setUserId] = useState<string>("");
   const [roles, setRoles] = useState<string[]>([]);
   const [myProjects, setMyProjects] = useState<ProjectDetail[]>([]);
-  const [timelines, setTimelines] = useState<TimelineDetail[]>([]);
 
   const handlePageChangeAnnouncement = (page: number) => {
     setCurrentAnnouncementPage(page);
@@ -55,15 +53,15 @@ function StudentHomePage() {
 
   const timelineData = useTimeline()?.timelineData;
 
-  useEffect(() => {
-    if (!timelineData) return;
-    const timelines =
-      timelineData?.data.map((timeline) => ({
-        reportName: timeline.deliveryName,
-        dueDate: new Date(timeline.deliveryDate),
-      })) || [];
-    setTimelines(timelines);
-  }, [timelineData]);
+  // useEffect(() => {
+  //   if (!timelineData) return;
+  //   const timelines =
+  //     timelineData?.data.map((timeline) => ({
+  //       reportName: timeline.deliveryName,
+  //       dueDate: new Date(timeline.deliveryDate),
+  //     })) || [];
+  //   setTimelines(timelines);
+  // }, [timelineData]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -93,7 +91,7 @@ function StudentHomePage() {
       <S.StyledFirstSection>
         <MyProjectOverview projects={myProjects} />
         <TermTimeline
-          timelines={timelines}
+          timelines={timelineData?.data || []}
           termName="Senior Project 2023-2024"
         />
       </S.StyledFirstSection>
