@@ -1,30 +1,53 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import * as S from "@/components/project-detail/ProjectDetailCard.styles";
 import { Typography } from "@mui/material";
 import ProjectDetailCard from "@/components/project-detail/ProjectDetailCard";
 import { GetServerSideProps } from "next";
-import { Project } from "@/redux/features/projectSlice";
+import { Project, ProjectState } from "@/redux/features/projectSlice";
 import ProjectCard from "@/components/project-list/project-card/ProjectCard";
-import Slider from "react-slick";
+import { GetRecommendState, fetchGetSimilars } from "@/redux/features/RecommendedProjects";
+import { store } from "@/redux/store";
+import { fetchProjectIdsProjectList } from "@/redux/features/GetProjectsWithIdList";
+
+import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
+import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
+import Slider, { Settings } from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 interface Props {
+  id: string;
   title: string;
   term: string;
   description: string;
   imageUrl?: string;
-  recommends?: string;
 }
 
+const SETTINGS: Settings = {
+  slidesToScroll: 3,
+  slidesToShow: 3,
+  variableWidth: true,
+  centerMode: true,
+  dots: true,
+  nextArrow: <ChevronRightIcon />,
+  prevArrow: <ChevronLeftIcon />,
+  autoplay: true,
+};
+
+
 function ProjectDetailPage(props: Props) {
-  const { title, term, description, imageUrl, recommends } = props;
-  console.log(title, term, description, imageUrl, recommends);
+  const { id, title, term, description, imageUrl } = props;
+  const [recommends, setRecommends] = useState<Project[]>();
+  const ids = useRecommendedIds(id);
 
-  let parsedRecommends;
+  const recommendProjects = useRecommendedProjects(ids?.projectData.similar_ids ?? [[]]);
 
-  if (recommends) {
-    parsedRecommends = JSON.parse(recommends);
-  }
+  useEffect(() => {
+    setRecommends(recommendProjects?.projectData.data);
+  }, [recommendProjects]);
+
+  console.log(recommends)
 
   return (
     <S.StyledContainer>
@@ -35,22 +58,30 @@ function ProjectDetailPage(props: Props) {
         title={title}
         term={term}
         description={description}
-        imageUrl={imageUrl || ""}
+        imageUrl={imageUrl ?? ""}
       />
-      {parsedRecommends &&
-        parsedRecommends.map((project: Project) => (
-          <ProjectCard
-            key={project.title}
-            title={project.title}
-            term={project.term}
-            description={project.description}
-            imageUrl={project.imageUrl}
-            authors={[
-              ...project.students,
-              ...project.professors.map((professor) => professor.username),
-            ]}
-          />
-        ))}
+      <S.StyledProjectCardContainer>
+        <Slider  {...SETTINGS}>
+          {recommends &&
+            recommends.map((project) => (
+              <ProjectCard
+                width="400px"
+                id={project.id}
+                key={project.title}
+                title={project.title}
+                term={project.term}
+                description={project.description}
+                imageUrl={project.imageUrl}
+                authors={[
+                  ...project.students,
+                  ...project.professors.map((professor) => professor.username),
+                ]}
+              />
+            ))}
+        </Slider>
+      </S.StyledProjectCardContainer>
+
+
     </S.StyledContainer>
   );
 }
@@ -64,9 +95,10 @@ ProjectDetailPage.getLayout = (page: JSX.Element) => (
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { title, term, description, imageUrl } = context.query;
+  const { id, title, term, description, imageUrl } = context.query;
   return {
     props: {
+      id: id as string,
       title: title as string,
       term: term as string,
       description: description as string,
@@ -74,3 +106,42 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     },
   };
 };
+
+function useRecommendedIds(id: string): GetRecommendState | undefined {
+  const [recommendStateData, setRecommendStateData] = useState<GetRecommendState>();
+
+  useEffect(() => {
+    async function getData() {
+      await store.dispatch(fetchGetSimilars({ id }));
+      const recommendState = store.getState().getSimilars;
+      setRecommendStateData(recommendState);
+    }
+    getData();
+  }, [id]);
+
+  return recommendStateData;
+}
+
+function useRecommendedProjects(ids: string[][]): ProjectState | undefined {
+  const [recommendProjects, setRecommendProjects] = useState<ProjectState | undefined>(undefined);
+  const [request, setRequest] = useState<string[]>([]);
+
+  useEffect(() => {
+    const newRequest = ids.map((id) => id[1]);
+    setRequest(newRequest);
+  }, [ids]);
+
+  useEffect(() => {
+    async function getData() {
+      await store.dispatch(fetchProjectIdsProjectList({ projectIds: request ?? [] }));
+      const recommendProjectsState = store.getState().recommendedProjects;
+      setRecommendProjects(recommendProjectsState);
+    }
+
+    getData();
+  }, [request]);
+
+
+
+  return recommendProjects;
+}

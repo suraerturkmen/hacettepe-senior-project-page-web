@@ -39,3 +39,31 @@ export const StyledContainer = styled("div")({
   alignItems: "center",
   gap: "56px",
 });
+
+export const StyledProjectCardContainer = styled("div")({
+  display: "flex",
+  maxWidth: "1260px",
+
+  ".slick-slide": {
+    display: "block",
+    height: "auto !important",
+    padding: "0 4px"
+  },
+
+  ".slick-track": {
+    display: "flex",
+    ".slick-slide > div": {
+      display: "flex",
+      height: "100%"
+    },
+
+  },
+
+  ".slick-arrow.slick-next": {
+    right: "-35px"
+  }
+  ,
+  ".slick-slider": {
+    width: "100%"
+  },
+});

@@ -19,8 +19,6 @@ function ProfessorCreateNewProjectPage() {
   const onSubmit = async (data: CreateProjectRequest) => {
     console.log(data);
     await store.dispatch(fetchCreateProject(data));
-    //const projectState = store.getState().projects;
-    //setProjectStateData(projectState);
   };
 
   const professorsResponse = useGetProfessors()?.professorData.data;

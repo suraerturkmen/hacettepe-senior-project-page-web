@@ -8,6 +8,8 @@ const instance = axios.create({
   },
 });
 
+
+
 // Function to set JWT token in axios headers
 export const setAuthToken = (token: string) => {
   if (token) {

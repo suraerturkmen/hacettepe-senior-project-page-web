@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
 
 export interface ProjectData {
-  id: number;
+  id: string;
   name: string;
   term: string;
   youtubeLink: string;
@@ -12,6 +12,8 @@ export interface ProjectData {
   group: number;
   applications: number[];
   working: boolean;
+  keywords: string[];
+  embedding: string;
 }
 
 interface DataState {

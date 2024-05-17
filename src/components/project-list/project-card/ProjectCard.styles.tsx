@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-export const StyledCard = styled("div")(({ theme }) => ({
+export const StyledCard = styled("div", { shouldForwardProp: (prop) => prop !== "$width", })<{ $width?: string }>(({ theme, $width }) => ({
   display: "flex",
   flexDirection: "column",
   gap: "4px",
@@ -10,6 +10,7 @@ export const StyledCard = styled("div")(({ theme }) => ({
   backgroundColor: "white",
   color: "black",
   cursor: "pointer",
+  width: $width ? $width : "100%"
 }));
 
 export const StyledContent = styled("div")(({ theme }) => ({
@@ -31,8 +32,6 @@ export const StyledChip = styled("div")(({ theme }) => ({
 export const StyledChipContainer = styled("div")(({ theme }) => ({
   display: "flex",
   gap: "4px",
-  flexDirection: "column",
-  background: "lightgray",
 }));
 
 export const StyledImage = styled("img")({

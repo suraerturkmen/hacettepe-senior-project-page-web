@@ -48,6 +48,7 @@ export interface Project {
   projectTypeId: string;
   myProject: boolean;
   applied: boolean;
+  embedding: string;
 }
 
 interface ProjectData {

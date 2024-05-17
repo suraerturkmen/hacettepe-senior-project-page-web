@@ -1,27 +1,37 @@
 import Typography from "@mui/material/Typography";
 import * as S from "@/components/project-list/project-card/ProjectCard.styles";
 import { defaultImageUrl } from "@/dummyData/dummyData";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { Tooltip } from "@mui/material";
+import { GetRecommendState, fetchGetSimilars } from "@/redux/features/RecommendedProjects";
+import { useEffect, useState } from "react";
+import { store } from "@/redux/store";
+import { Project, ProjectState } from "@/redux/features/projectSlice";
+import { fetchProjectIdsProjectList } from "@/redux/features/GetProjectsWithIdList";
 
 export interface CardProps {
+  id: string;
   authors?: string[];
   term: string;
   title: string;
   description?: string;
   relatedTopics?: string[];
   imageUrl?: string;
+  width: string;
 }
 
 const ProjectCard = (props: CardProps): JSX.Element => {
-  const { authors, term, title, description, relatedTopics, imageUrl } = props;
+  const { id, authors, term, title, description, relatedTopics, imageUrl, width } = props;
+
+
+
 
   const router = useRouter();
   const handleClick = () => {
     router.push({
       pathname: "/project-detail/[title]",
       query: {
+        id: id,
         term: term,
         title: title,
         description: description,
@@ -30,12 +40,10 @@ const ProjectCard = (props: CardProps): JSX.Element => {
     });
   };
 
-  {
-    !imageUrl && <S.StyledImage src={imageUrl} alt={title} />;
-  }
+
 
   return (
-    <S.StyledCard onClick={handleClick}>
+    <S.StyledCard onClick={handleClick} $width={width}>
       {<S.StyledImage src={defaultImageUrl} alt={title} />}
       <S.StyledContent>
         <S.StyledAuthorAndTerm>
@@ -75,20 +83,23 @@ const ProjectCard = (props: CardProps): JSX.Element => {
             </S.StyledDescription>
           </Tooltip>
         )}
-        <S.StyledChipContainer>
-          {relatedTopics && (
-            <>
-              {relatedTopics.map((topic, index) => (
-                <S.StyledChip key={index}>
-                  <Typography variant="body2">{topic}</Typography>
-                </S.StyledChip>
-              ))}
-            </>
-          )}
-        </S.StyledChipContainer>
+
+        {relatedTopics && (
+          <S.StyledChipContainer>
+            {relatedTopics.map((topic, index) => (
+              <S.StyledChip key={index}>
+                <Typography variant="body2">{topic}</Typography>
+              </S.StyledChip>
+            ))}
+          </S.StyledChipContainer>
+
+        )}
       </S.StyledContent>
     </S.StyledCard>
   );
 };
 
 export default ProjectCard;
+
+
+

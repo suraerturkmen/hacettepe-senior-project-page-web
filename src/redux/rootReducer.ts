@@ -18,6 +18,10 @@ import projectTypesReducer from "./features/GetProjectTypes";
 import CreateSeniorProjectType from "./features/CreateSeniorProjectType";
 import ActivateSeniorProjectTerm from "./features/ActivateSeniorProjectTerm";
 import EditSeniorProjectType from "./features/EditSeniorProjectType";
+import GetEmbeddings from "./features/AddNewProjectToAI";
+import AddEmbeddingToProject from "./features/AddEmbeddingToProject";
+import GetSimilars from "./features/RecommendedProjects";
+import RecommendedProjects from "./features/GetProjectsWithIdList";
 
 const rootReducer = combineReducers({
   projects: projectReducer,
@@ -39,6 +43,10 @@ const rootReducer = combineReducers({
   createSeniorProjectType: CreateSeniorProjectType,
   activateSeniorProjectTerm: ActivateSeniorProjectTerm,
   editSeniorProjectType: EditSeniorProjectType,
+  getEmbeddings: GetEmbeddings,
+  addEmbeddings: AddEmbeddingToProject,
+  getSimilars: GetSimilars,
+  recommendedProjects: RecommendedProjects
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
