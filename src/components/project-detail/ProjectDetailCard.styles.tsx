@@ -1,4 +1,6 @@
+import { Button } from "@mui/material";
 import { styled } from "@mui/material/styles";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export const StyledCard = styled("div")({
   display: "flex",
@@ -47,23 +49,37 @@ export const StyledProjectCardContainer = styled("div")({
   ".slick-slide": {
     display: "block",
     height: "auto !important",
-    padding: "0 4px"
+    padding: "0 4px",
   },
 
   ".slick-track": {
     display: "flex",
     ".slick-slide > div": {
       display: "flex",
-      height: "100%"
+      height: "100%",
     },
-
   },
 
   ".slick-arrow.slick-next": {
-    right: "-35px"
-  }
-  ,
-  ".slick-slider": {
-    width: "100%"
+    right: "-35px",
   },
+  ".slick-slider": {
+    width: "100%",
+  },
+});
+
+export const StyledUploadDocumentButton = styled(Button)({
+  display: "flex",
+  justifyContent: "flex-end",
+  gap: "16px",
+  width: "fit-content",
+  alignSelf: "flex-end",
+  ":hover": {
+    backgroundColor: "transparent",
+    color: "#D54949",
+  },
+});
+
+export const StyledArrowForwardIcon = styled(ArrowForwardIcon)({
+  color: "#D54949",
 });

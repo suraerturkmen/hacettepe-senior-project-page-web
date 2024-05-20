@@ -72,7 +72,7 @@ export default function Login() {
           </S.StyledTextFieldContainer>
           <S.StyledSignInButton type="submit">Sign In</S.StyledSignInButton>
         </form>
-        <S.StyledOrArea>
+        {/* <S.StyledOrArea>
           <S.StyledHorizontalLine />
           <S.StyledOrText>or</S.StyledOrText>
           <S.StyledHorizontalLine />
@@ -80,7 +80,7 @@ export default function Login() {
 
         <Typography variant="captionMedium" color="#514347" align="center">
           Forgot Password
-        </Typography>
+        </Typography> */}
       </S.StyledInputAreasContainer>
     </S.StyledContainer>
   );

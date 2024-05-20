@@ -37,18 +37,9 @@ export const fetchTimelinesByProjectTypeId = createAsyncThunk(
   "timeline/getTimelinesByProjectTypeId",
   async (request: TimelineRequest, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("jwtToken");
-      if (!token) {
-        throw new Error("JWT token not found");
-      }
       const response = await axiosInstance.post<TimelineData>(
         "timeline/getTimelinesByProjectTypeId",
-        request,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        request
       );
       return response.data;
     } catch (error: any) {

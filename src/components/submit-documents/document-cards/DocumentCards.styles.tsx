@@ -19,6 +19,7 @@ export const StyledWrapper = styled("div")({
   flexDirection: "column",
   gap: "56px",
   margin: "56px auto",
+  alignItems: "center",
 });
 
 export const StyledDivider = styled(Divider)({

@@ -3,20 +3,21 @@ import TermSchedule, {
   TermScheduleProps,
 } from "@/components/schedule/term-schedule/TermSchedule";
 
-interface TermSchedulesProps {
-  termSchedules: TermScheduleProps[];
+export interface TermSchedulesProps {
+  termSchedules?: TermScheduleProps[];
 }
 
 const TermSchedules = (props: TermSchedulesProps): JSX.Element => {
   const { termSchedules } = props;
   return (
     <S.StyledTermSchedulesContainer>
-      {termSchedules.map((termSchedule, index) => (
-        <>
-          <TermSchedule key={index} {...termSchedule} />
-          {index !== termSchedules.length - 1 && <S.StyledHorizontalLine />}
-        </>
-      ))}
+      {termSchedules &&
+        termSchedules.map((termSchedule, index) => (
+          <>
+            <TermSchedule key={index} {...termSchedule} />
+            {index !== termSchedules.length - 1 && <S.StyledHorizontalLine />}
+          </>
+        ))}
     </S.StyledTermSchedulesContainer>
   );
 };

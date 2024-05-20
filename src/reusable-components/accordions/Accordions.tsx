@@ -1,10 +1,9 @@
 import * as S from "@/reusable-components/accordions/Accordions.styles";
-import Accordion, {
-  AnnouncementProps,
-} from "@/reusable-components/accordions/Accordion";
+import Accordion from "@/reusable-components/accordions/Accordion";
+import { Announcement } from "@/redux/features/CreateAnnouncement";
 
 interface Props {
-  announcements: AnnouncementProps[];
+  announcements: Announcement[];
 }
 
 export const Accordions = (props: Props) => {

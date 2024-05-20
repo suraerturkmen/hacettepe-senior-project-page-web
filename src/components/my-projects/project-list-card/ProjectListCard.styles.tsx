@@ -1,4 +1,6 @@
-import { Delete, Edit } from "@mui/icons-material";
+import { Delete, Edit, ArrowForward } from "@mui/icons-material";
+import { Button } from "@mui/material";
+
 import { styled } from "@mui/material/styles";
 
 export const StyledCard = styled("div")(({ theme }) => ({
@@ -50,4 +52,20 @@ export const StyledDescriptionArea = styled("div")(({ theme }) => ({
 export const StyledClickable = styled("div")({
   display: "flex",
   cursor: "pointer",
+});
+
+export const StyledUploadDocumentButton = styled(Button)({
+  display: "flex",
+  justifyContent: "flex-end",
+  gap: "16px",
+  width: "fit-content",
+  alignSelf: "center",
+  ":hover": {
+    backgroundColor: "transparent",
+    color: "#D54949",
+  },
+});
+
+export const StyledArrowForwardIcon = styled(ArrowForward)({
+  color: "#D54949",
 });

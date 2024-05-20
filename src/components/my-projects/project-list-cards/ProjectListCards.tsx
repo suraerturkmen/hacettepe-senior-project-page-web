@@ -14,6 +14,7 @@ interface ProjectCardsProps {
   totalPages: number;
   handlePageChange: (page: number) => void;
   userType?: UserType;
+  isArrowVisible?: boolean;
 }
 
 const ProjectCards = (props: ProjectCardsProps): JSX.Element => {
@@ -25,6 +26,7 @@ const ProjectCards = (props: ProjectCardsProps): JSX.Element => {
     totalPages,
     handlePageChange,
     userType,
+    isArrowVisible,
   } = props;
   return (
     <>
@@ -37,7 +39,12 @@ const ProjectCards = (props: ProjectCardsProps): JSX.Element => {
           )}
           <S.StyledProjectCardBoxes>
             {projects.map((project, index) => (
-              <ProjectCard key={index} userType={userType} {...project} />
+              <ProjectCard
+                key={index}
+                userType={userType}
+                isArrowVisible={isArrowVisible}
+                {...project}
+              />
             ))}
           </S.StyledProjectCardBoxes>
           <Pagination

@@ -33,7 +33,9 @@ const TermTimeline = (props: TimelineProps): JSX.Element => {
               <TimelineSeparator>
                 <TimelineDot
                   variant={
-                    timeline.deliveryDate < todayDate ? "filled" : "outlined"
+                    new Date(timeline.deliveryDate) < todayDate
+                      ? "filled"
+                      : "outlined"
                   }
                 />
                 {index !== timelines.length - 1 && <TimelineConnector />}

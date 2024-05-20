@@ -1,20 +1,17 @@
-import React, { useState, useEffect, useMemo, use } from "react";
+import React, { useState, useEffect } from "react";
 import DefaultLayout from "@/layouts/DefaultLayouts";
-import { dummyAnnouncements, dummyTimelines } from "@/dummyData/dummyData";
 import MyProjectOverview, {
   ProjectDetail,
 } from "@/components/professor-student-home-page/my-project-overview/MyProjectOverview";
 import TermTimeline from "@/components/professor-student-home-page/TermTimeline/TermTimeline";
 import * as S from "@/components/professor-student-home-page/ProfessorStudentHomePage.styles";
 import { Typography } from "@mui/material";
-import { AnnouncementProps } from "@/reusable-components/accordions/Accordion";
 import Accordions from "@/reusable-components/accordions/Accordions";
 import Pagination from "@/reusable-components/pagination/Pagination";
 import { Project } from "@/redux/features/projectSlice";
 import { ProjectState, fetchMyProjects } from "@/redux/features/MyProjectSlice";
 import { store } from "@/redux/store";
 import {
-  Timeline,
   TimelineState,
   fetchTimelinesByProjectTypeId,
 } from "@/redux/features/TimelineSlice";
@@ -22,13 +19,18 @@ import {
   ActiveSeniorProjectTermState,
   fetchActiveSeniorProjectTerm,
 } from "@/redux/features/ActiveSeniorProjectTerm";
+import { Announcement } from "@/redux/features/CreateAnnouncement";
+import {
+  AnnouncementState,
+  fetchGetAnnouncement,
+} from "@/redux/features/GetAnnouncement";
 
 function StudentHomePage() {
   const itemCountPerPage = 5;
   const [currentAnnouncementPage, setCurrentAnnouncementPage] = useState(1);
-  const [announcements, setAnnouncements] = useState<AnnouncementProps[]>([]);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [pagingAnnouncementData, setPagingAnnouncementData] = useState<
-    AnnouncementProps[]
+    Announcement[]
   >([]);
   const [userId, setUserId] = useState<string>("");
   const [roles, setRoles] = useState<string[]>([]);
@@ -38,9 +40,10 @@ function StudentHomePage() {
     setCurrentAnnouncementPage(page);
   };
 
+  const allAnnouncements = useFetchAnnouncements();
   useEffect(() => {
-    setAnnouncements(dummyAnnouncements);
-  }, []);
+    setAnnouncements(allAnnouncements?.announcementData.data || []);
+  }, [allAnnouncements]);
 
   useEffect(() => {
     const startIndex = (currentAnnouncementPage - 1) * itemCountPerPage;
@@ -190,4 +193,21 @@ function useActiveSeniorProjectTerm():
   }, []);
 
   return activeSeniorProjectTermData;
+}
+
+function useFetchAnnouncements() {
+  const [announcements, setAnnouncements] = useState<AnnouncementState>();
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        await store.dispatch(fetchGetAnnouncement());
+        const data = store.getState().announcement;
+        setAnnouncements(data);
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+      }
+    }
+    fetchData();
+  }, []);
+  return announcements;
 }

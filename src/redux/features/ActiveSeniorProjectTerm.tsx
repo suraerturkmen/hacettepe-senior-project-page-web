@@ -33,18 +33,9 @@ export const fetchActiveSeniorProjectTerm = createAsyncThunk(
   "projectTypes/getActiveSeniorProjectTerm",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("jwtToken");
-      if (!token) {
-        throw new Error("JWT token not found");
-      }
       const response = await axiosInstance.post<ActiveSeniorProjectTermData>(
         "projectTypes/getActiveSeniorProjectTerm",
-        _,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        _
       );
       return response.data;
     } catch (error: any) {

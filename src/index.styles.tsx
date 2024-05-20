@@ -5,7 +5,7 @@ export const StyledContainer = styled("div")(({ theme }) => ({
   flexDirection: "column",
   alignItems: "center",
   gap: "32px",
-  margin: "auto",
+  margin: "56px auto",
   maxWidth: "1254px",
   width: "100%",
 

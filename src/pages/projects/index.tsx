@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Project, ProjectState, fetchProjects } from "@/redux/features/projectSlice";
+import {
+  Project,
+  ProjectState,
+  fetchProjects,
+} from "@/redux/features/projectSlice";
 import ProjectCards from "@/components/project-list/project-cards/ProjectCards";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import Pagination from "@/reusable-components/pagination/Pagination";
@@ -14,7 +18,10 @@ import {
   Button,
 } from "@mui/material";
 import { store } from "@/redux/store";
-import { GetEmbeddigProjectState, fetchGetEmbeddings } from "@/redux/features/AddNewProjectToAI";
+import {
+  GetEmbeddigProjectState,
+  fetchGetEmbeddings,
+} from "@/redux/features/AddNewProjectToAI";
 import { fetchAddEmbedding } from "@/redux/features/AddEmbeddingToProject";
 
 interface SearchForm {
@@ -24,7 +31,12 @@ interface SearchForm {
 const itemCountPerPage = 6;
 
 async function usefetchAndAddEmbedding(project: Project) {
-  await store.dispatch(fetchGetEmbeddings({ abstract: project.description, keywords: project.keywords }));
+  await store.dispatch(
+    fetchGetEmbeddings({
+      abstract: project.description,
+      keywords: project.keywords,
+    })
+  );
   const embeddingState = store.getState().getEmbeddings;
   const embedding = embeddingState?.projectData?.embeddings;
 
@@ -38,10 +50,8 @@ async function usefetchAndAddEmbedding(project: Project) {
   }
   fetchData();
 
-
   return embedding;
 }
-
 
 function Page() {
   const [currentPage, setCurrentPage] = useState(1);
@@ -49,8 +59,6 @@ function Page() {
   const { register, handleSubmit } = useForm<SearchForm>();
 
   const [searchTerm, setSearchTerm] = useState("");
-
-
 
   const pagingData = usePaginationProject(
     currentPage,
@@ -61,10 +69,9 @@ function Page() {
 
   pagingData?.data.forEach((project) => {
     if (!project.embedding) {
-      usefetchAndAddEmbedding(project)
+      usefetchAndAddEmbedding(project);
     }
   });
-
 
   const currentProjects = pagingData?.data.map((project) => ({
     id: project.id,
@@ -169,4 +176,3 @@ function usePaginationProject(
 
   return projectStateData;
 }
-

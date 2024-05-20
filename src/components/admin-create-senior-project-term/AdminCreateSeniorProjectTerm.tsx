@@ -1,4 +1,3 @@
-import DefaultLayout from "@/layouts/DefaultLayouts";
 import * as S from "./AdminCreateSeniorProjectTerm.styles";
 import { Divider, TextField, Typography } from "@mui/material";
 import { useState } from "react";

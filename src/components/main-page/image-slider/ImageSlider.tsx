@@ -8,9 +8,11 @@ import Slider, { Settings } from "react-slick";
 import * as S from "@/components/main-page/image-slider/ImageSlider.styles";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { UrlAndImage } from "@/redux/features/GetUrlAndImages";
+import Link from "next/link";
 
-interface ImageSliderProps {
-  images: string[];
+export interface ImageSliderProps {
+  urlAndImages: UrlAndImage[];
 }
 
 const SETTINGS: Settings = {
@@ -20,15 +22,18 @@ const SETTINGS: Settings = {
   dots: true,
   nextArrow: <ChevronRightIcon />,
   prevArrow: <ChevronLeftIcon />,
-  autoplay: true,
 };
 
-export const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
+export const ImageSlider: React.FC<ImageSliderProps> = ({ urlAndImages }) => {
   return (
     <S.ImageSliderContainer>
       <Slider {...SETTINGS}>
-        {images.map((imageUrl) => (
-          <S.StyledImage key={imageUrl} src={imageUrl} />
+        {urlAndImages?.map((urlAndImage) => (
+          <Link key={urlAndImage.url} href={urlAndImage.url} passHref>
+            <S.StyledImage
+              src={`data:image/jpeg;base64,${urlAndImage.image}`}
+            />
+          </Link>
         ))}
       </Slider>
     </S.ImageSliderContainer>

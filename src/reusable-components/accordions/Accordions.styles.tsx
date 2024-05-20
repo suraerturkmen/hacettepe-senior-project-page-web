@@ -5,7 +5,9 @@ import {
   AccordionDetails,
   Typography,
   Box,
+  Button,
 } from "@mui/material";
+import { Delete, Edit } from "@mui/icons-material";
 
 export const StyledAccordion = styled(Accordion)({
   width: "100%",
@@ -23,12 +25,15 @@ export const StyledAccordionSummary = styled(AccordionSummary)({
   "& .MuiAccordionSummary-content": {
     display: "flex",
     gap: "50px",
+    justifyContent: "space-between",
   },
 
   "& .MuiAccordionSummary-content.Mui-expanded": {
+    display: "flex",
     padding: "0 0 12px 0",
     borderBottom: "1px solid rgba(0, 0, 0, .125)",
     minHeight: "48px",
+    alignItems: "center",
   },
 });
 
@@ -73,3 +78,42 @@ export const StyledTitleArea = styled("div")({
   justifyContent: "space-between",
   alignItems: "center",
 });
+
+export const StyledEditIcon = styled(Edit)(({ theme }) => ({
+  width: "24px",
+  height: "24px",
+  color: "#344767",
+  borderRadius: "50%",
+}));
+
+export const StyledDeleteIcon = styled(Delete)(({ theme }) => ({
+  width: "24px",
+  height: "24px",
+  color: "#F44334",
+  borderRadius: "50%",
+}));
+
+export const StyledEditSection = styled("div")(({ theme }) => ({
+  display: "flex",
+  gap: "8px",
+  alignSelf: "flex-end",
+  cursor: "pointer",
+}));
+
+export const StyledDeleteSection = styled("div")(({ theme }) => ({
+  display: "flex",
+  gap: "8px",
+  alignSelf: "flex-end",
+  cursor: "pointer",
+}));
+
+export const StyledEditAndDeleteSection = styled("div")(({ theme }) => ({
+  display: "flex",
+  gap: "16px",
+  marginRight: "32px",
+}));
+
+export const StyledContentSection = styled("div")(({ theme }) => ({
+  display: "flex",
+  gap: "32px",
+}));

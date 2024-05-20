@@ -26,7 +26,7 @@ export const StyledButtonContainer = styled("div")({
 
 export const StyledImage = styled("img")({
   height: "51px",
-  width: "40px",
+  width: "60px",
 });
 
 export const StyledClicakbleTypography = styled(Typography)({

@@ -22,6 +22,11 @@ import GetEmbeddings from "./features/AddNewProjectToAI";
 import AddEmbeddingToProject from "./features/AddEmbeddingToProject";
 import GetSimilars from "./features/RecommendedProjects";
 import RecommendedProjects from "./features/GetProjectsWithIdList";
+import CreateAnnouncement from "./features/CreateAnnouncement";
+import GetAnnouncement from "./features/GetAnnouncement";
+import UpdateAnnouncement from "./features/UpdateAnnouncement";
+import DownloadDocument from "./features/DownloadDocument";
+import GetUrlAndImages from "./features/GetUrlAndImages";
 
 const rootReducer = combineReducers({
   projects: projectReducer,
@@ -46,7 +51,12 @@ const rootReducer = combineReducers({
   getEmbeddings: GetEmbeddings,
   addEmbeddings: AddEmbeddingToProject,
   getSimilars: GetSimilars,
-  recommendedProjects: RecommendedProjects
+  recommendedProjects: RecommendedProjects,
+  createAnnouncement: CreateAnnouncement,
+  announcement: GetAnnouncement,
+  updateAnnouncement: UpdateAnnouncement,
+  downloadDocument: DownloadDocument,
+  urlAndImages: GetUrlAndImages,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

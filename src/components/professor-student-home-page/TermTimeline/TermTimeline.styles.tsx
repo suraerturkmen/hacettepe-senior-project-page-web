@@ -17,6 +17,7 @@ export const StyledContainer = styled("div")({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
+  textAlign: "center",
   maxWidth: "600px",
   width: "100%",
   gap: "32px",

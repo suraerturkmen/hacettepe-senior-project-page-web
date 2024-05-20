@@ -128,6 +128,7 @@ function StudentMyProjectPage() {
         totalPages={workingProjects.length}
         handlePageChange={handlePageChangeWorkingProject}
         userType={UserType.Student}
+        isArrowVisible={true}
       />
       <ProjectListCards
         projects={pagingArchivedData}

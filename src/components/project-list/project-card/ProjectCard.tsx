@@ -3,7 +3,10 @@ import * as S from "@/components/project-list/project-card/ProjectCard.styles";
 import { defaultImageUrl } from "@/dummyData/dummyData";
 import { useRouter } from "next/router";
 import { Tooltip } from "@mui/material";
-import { GetRecommendState, fetchGetSimilars } from "@/redux/features/RecommendedProjects";
+import {
+  GetRecommendState,
+  fetchGetSimilars,
+} from "@/redux/features/RecommendedProjects";
 import { useEffect, useState } from "react";
 import { store } from "@/redux/store";
 import { Project, ProjectState } from "@/redux/features/projectSlice";
@@ -17,14 +20,20 @@ export interface CardProps {
   description?: string;
   relatedTopics?: string[];
   imageUrl?: string;
-  width: string;
+  width?: string;
 }
 
 const ProjectCard = (props: CardProps): JSX.Element => {
-  const { id, authors, term, title, description, relatedTopics, imageUrl, width } = props;
-
-
-
+  const {
+    id,
+    authors,
+    term,
+    title,
+    description,
+    relatedTopics,
+    imageUrl,
+    width,
+  } = props;
 
   const router = useRouter();
   const handleClick = () => {
@@ -39,8 +48,6 @@ const ProjectCard = (props: CardProps): JSX.Element => {
       },
     });
   };
-
-
 
   return (
     <S.StyledCard onClick={handleClick} $width={width}>
@@ -88,11 +95,12 @@ const ProjectCard = (props: CardProps): JSX.Element => {
           <S.StyledChipContainer>
             {relatedTopics.map((topic, index) => (
               <S.StyledChip key={index}>
-                <Typography variant="body2">{topic}</Typography>
+                <Typography variant="body2" color="#FFFFFF">
+                  {topic}
+                </Typography>
               </S.StyledChip>
             ))}
           </S.StyledChipContainer>
-
         )}
       </S.StyledContent>
     </S.StyledCard>
@@ -100,6 +108,3 @@ const ProjectCard = (props: CardProps): JSX.Element => {
 };
 
 export default ProjectCard;
-
-
-

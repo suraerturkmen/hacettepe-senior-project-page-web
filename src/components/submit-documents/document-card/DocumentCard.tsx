@@ -1,5 +1,15 @@
 import * as S from "@/components/submit-documents/document-card/DocumentCard.styles";
 import { Button, Typography } from "@mui/material";
+import { useState } from "react";
+import axiosInstance from "@/Service/Instance";
+import {
+  UploadDocumentRequest,
+  fetchUploadDocument,
+} from "@/redux/features/UploadDocument";
+import { fetchDownloadDocument } from "@/redux/features/DownloadDocument";
+import { store } from "@/redux/store";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/rootReducer";
 
 export enum DocumentTypes {
   current = "current",
@@ -9,20 +19,161 @@ export enum DocumentTypes {
 
 export interface DocumentCardProps {
   documentName: string;
-  dueDate: string;
+  dueDate: Date;
   projectName: string;
+  projectId: string;
+  timelineId: string;
   type: DocumentTypes;
 }
 
 const DocumentCard = (props: DocumentCardProps): JSX.Element => {
-  const { type, documentName, dueDate, projectName } = props;
+  const { type, documentName, dueDate, projectName, projectId, timelineId } =
+    props;
+  const [uploadStatus, setUploadStatus] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const documentData = useSelector(
+    (state: RootState) => state.downloadDocument.documentData
+  );
+  const [downloadResponse, setDownloadResponse] = useState<Document | null>(
+    null
+  );
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
+      console.log(event.target.files[0]);
+    }
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      setUploadStatus("No file selected");
+      return;
+    }
+
+    const uploadRequest: UploadDocumentRequest = {
+      projectId,
+      timelineId,
+      file,
+    };
+
+    try {
+      await store.dispatch(fetchUploadDocument(uploadRequest));
+      setUploadStatus("Upload successful");
+      if (typeof window !== "undefined") {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setUploadStatus("Error uploading file");
+    }
+  };
+
+  const handleDownload = async () => {
+    try {
+      const request = {
+        documentName: `${projectId}_${timelineId}`,
+      };
+      await store.dispatch(fetchDownloadDocument(request));
+      const response = documentData;
+
+      if (!response.success) {
+        alert(response.message);
+        return;
+      }
+
+      if (!response.data || !response.data.file) {
+        alert("File data not found in response");
+        return;
+      }
+
+      const binaryData = atob(response.data.file);
+      console.log(binaryData);
+      const arrayBuffer = new ArrayBuffer(binaryData.length);
+      const uint8Array = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < binaryData.length; i++) {
+        uint8Array[i] = binaryData.charCodeAt(i);
+      }
+
+      const pdfBlob = new Blob([arrayBuffer], {
+        type: "application/pdf",
+      });
+
+      const url = window.URL.createObjectURL(pdfBlob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${response.data.deliveryName}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      alert("Error downloading file");
+    }
+  };
+
+  const renderActionButton = () => {
+    switch (type) {
+      case DocumentTypes.current:
+        return (
+          <>
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+              id="contained-button-file"
+            />
+            <label htmlFor="contained-button-file">
+              <Button
+                variant="contained"
+                component="span"
+                style={{ margin: "10px 0" }}>
+                Select Document
+              </Button>
+            </label>
+            <S.StyledButtonContainer>
+              <S.StyledDownloadButton
+                variant="contained"
+                onClick={handleDownload}>
+                Download Document
+              </S.StyledDownloadButton>
+              <S.StyledUploadButtonArea>
+                <S.StyledUploadButton
+                  variant="contained"
+                  onClick={handleUpload}>
+                  Upload Document
+                </S.StyledUploadButton>
+                <Typography variant="footnoteSmall">Max Size: 512MB</Typography>
+              </S.StyledUploadButtonArea>
+            </S.StyledButtonContainer>
+            {uploadStatus && (
+              <Typography color="error">{uploadStatus}</Typography>
+            )}
+          </>
+        );
+      case DocumentTypes.passed:
+        return (
+          <S.StyledDownloadButton variant="contained" onClick={handleDownload}>
+            Download Past Document
+          </S.StyledDownloadButton>
+        );
+      case DocumentTypes.next:
+        return (
+          <S.StyledDeliveryButton variant="contained" disabled>
+            Delivery Has Not Opened Yet
+          </S.StyledDeliveryButton>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <S.StyledDocumentCard>
-      <S.StyledDocumentCardHeader>
-        <Typography variant="h6BodyTitleBold" color="#344767">
-          {projectName}
-        </Typography>
-      </S.StyledDocumentCardHeader>
+      <S.StyledDocumentCardHeader></S.StyledDocumentCardHeader>
       <S.StyledDocumentCardBody>
         <S.StyledDocumentCardHeader>
           <Typography variant="h6BodyTitleBold" color="#344767">
@@ -37,25 +188,11 @@ const DocumentCard = (props: DocumentCardProps): JSX.Element => {
             Due Date:
           </Typography>
           <Typography variant="bodySemiboldUnderline" color="#7B809A">
-            {dueDate}
+            {new Date(dueDate).toISOString().split("T")[0]}
           </Typography>
         </S.StyledDocumentCardHeader>
       </S.StyledDocumentCardBody>
-      {type === DocumentTypes.current && (
-        <S.StyledUploadButton variant="contained">
-          Upload Document
-        </S.StyledUploadButton>
-      )}
-      {type === DocumentTypes.passed && (
-        <S.StyledDownloadButton variant="contained">
-          Download PasT doCUMENT
-        </S.StyledDownloadButton>
-      )}
-      {type === DocumentTypes.next && (
-        <S.StyledDeliveryButton variant="contained">
-          DELIVERY HAS NOT OPENED YET
-        </S.StyledDeliveryButton>
-      )}
+      {renderActionButton()}
     </S.StyledDocumentCard>
   );
 };

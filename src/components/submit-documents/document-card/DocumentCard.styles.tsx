@@ -41,6 +41,7 @@ export const StyledUploadButton = styled(Button)(({ theme }) => ({
 }));
 
 export const StyledDownloadButton = styled(Button)(({ theme }) => ({
+  height: "fit-content",
   backgroundColor: "#7E74F9",
   color: "#FFFFFF",
   padding: "16px",
@@ -64,4 +65,21 @@ export const StyledDeliveryButton = styled(Button)(({ theme }) => ({
   ":hover": {
     backgroundColor: "#E0E0E0",
   },
+  ":disabled": {
+    backgroundColor: "#E0E0E0",
+    cursor: "not-allowed",
+  },
 }));
+
+export const StyledButtonContainer = styled("div")({
+  display: "flex",
+  height: "fit-content",
+  gap: "16px",
+});
+
+export const StyledUploadButtonArea = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "8px",
+});

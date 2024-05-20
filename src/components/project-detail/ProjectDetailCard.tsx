@@ -1,20 +1,29 @@
 import * as S from "@/components/project-detail/ProjectDetailCard.styles";
 import { defaultImageUrl } from "@/dummyData/dummyData";
 import { Typography } from "@mui/material";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export interface ProjectDetailCardProps {
   title: string;
   term: string;
   description: string;
   imageUrl: string;
+  isArrowVisible?: boolean;
 }
 
 const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
-  const { title, term, description, imageUrl } = props;
+  const { title, term, description, imageUrl, isArrowVisible } = props;
 
-  console.log(title, term, description, imageUrl);
   return (
     <S.StyledCard>
+      {isArrowVisible && (
+        <S.StyledUploadDocumentButton>
+          <Typography variant="h5TaglineBold" color="#D54949">
+            Go to Upload Document
+          </Typography>
+          <S.StyledArrowForwardIcon />
+        </S.StyledUploadDocumentButton>
+      )}
       <S.StyledImageTitleContainer>
         <Typography variant="h5TaglineBold" color="#344767">
           {title}

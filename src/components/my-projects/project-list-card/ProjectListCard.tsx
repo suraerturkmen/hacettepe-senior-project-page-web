@@ -10,6 +10,7 @@ import {
 import { useEffect } from "react";
 import { fetchDeleteProject } from "@/redux/features/DeleteProject";
 import { store } from "@/redux/store";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 
 export enum UserType {
   Student = "Student",
@@ -30,6 +31,7 @@ export interface CardProps {
   term?: string;
   projectTypeId: string;
   professors: ProfessorsProperties[];
+  isArrowVisible?: boolean;
 }
 
 const ProjectListCard = (props: CardProps): JSX.Element => {
@@ -45,6 +47,8 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
     keywords,
     groupId,
     professors,
+    term,
+    isArrowVisible,
   } = props;
 
   const router = useRouter();
@@ -77,8 +81,40 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
     });
   };
 
+  const handleView = () => {
+    router.push({
+      pathname: "/student-project-detail/[id]",
+      query: {
+        id: id,
+        term: term,
+        title: title,
+        description: description,
+        imageUrl: imageUrl,
+      },
+    });
+  };
+
+  const handleSubmitDocument = () => {
+    router.push({
+      pathname: "/submit-documents/[id]",
+      query: {
+        id: id,
+        projectId: id,
+        projectName: title,
+      },
+    });
+  };
+
   return (
     <S.StyledCard>
+      {userType === UserType.Student && isArrowVisible && (
+        <S.StyledUploadDocumentButton onClick={handleSubmitDocument}>
+          <Typography variant="h5TaglineBold" color="#D54949">
+            Go to Upload Document
+          </Typography>
+          <S.StyledArrowForwardIcon />
+        </S.StyledUploadDocumentButton>
+      )}
       <S.StyledFirstLine>
         <Typography variant="h6BodyTitleBold" color="#344767">
           {title}
@@ -98,6 +134,14 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
               </Typography>
             </S.StyledClickable>
           </S.StyledDeleteAndEdit>
+        )}
+        {userType === UserType.Student && (
+          <S.StyledClickable onClick={handleView}>
+            <VisibilityIcon />
+            <Typography variant="captionBold" color="#344767">
+              View
+            </Typography>
+          </S.StyledClickable>
         )}
       </S.StyledFirstLine>
       {students && (

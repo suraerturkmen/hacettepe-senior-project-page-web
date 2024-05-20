@@ -1,7 +1,9 @@
 import { Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
-export const StyledCard = styled("div", { shouldForwardProp: (prop) => prop !== "$width", })<{ $width?: string }>(({ theme, $width }) => ({
+export const StyledCard = styled("div", {
+  shouldForwardProp: (prop) => prop !== "$width",
+})<{ $width?: string }>(({ theme, $width }) => ({
   display: "flex",
   flexDirection: "column",
   gap: "4px",
@@ -10,7 +12,7 @@ export const StyledCard = styled("div", { shouldForwardProp: (prop) => prop !== 
   backgroundColor: "white",
   color: "black",
   cursor: "pointer",
-  width: $width ? $width : "100%"
+  width: $width ? $width : "100%",
 }));
 
 export const StyledContent = styled("div")(({ theme }) => ({
@@ -22,16 +24,19 @@ export const StyledContent = styled("div")(({ theme }) => ({
 
 export const StyledChip = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
-  padding: "4px",
+  padding: "8px",
   borderRadius: "12px",
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  width: "fit-content",
 }));
 
 export const StyledChipContainer = styled("div")(({ theme }) => ({
   display: "flex",
   gap: "4px",
+  flex: 1,
+  flexWrap: "wrap",
 }));
 
 export const StyledImage = styled("img")({
