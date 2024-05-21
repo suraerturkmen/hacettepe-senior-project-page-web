@@ -47,7 +47,7 @@ function ProfessorAllProjectsPage() {
     studentLimit: project.studentLimit,
     isMyProject: project.myProject,
     isApplied: project.applied,
-    imageUrl: project.youtubeLink,
+    poster: project.poster,
     term: project.term,
     professors: project.professors,
   }));

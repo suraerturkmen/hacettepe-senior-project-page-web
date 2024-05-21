@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import * as S from "@/components/project-detail/ProjectDetailCard.styles";
 import { Typography } from "@mui/material";
@@ -10,11 +10,11 @@ interface Props {
   title: string;
   term: string;
   description: string;
-  imageUrl?: string;
+  poster?: string;
 }
 
 function StudentProjectDetailPage(props: Props) {
-  const { id, title, term, description, imageUrl } = props;
+  const { id, title, term, description, poster } = props;
 
   return (
     <S.StyledContainer>
@@ -25,7 +25,7 @@ function StudentProjectDetailPage(props: Props) {
         title={title}
         term={term}
         description={description}
-        imageUrl={imageUrl ?? ""}
+        poster={poster ?? ""}
         isArrowVisible={true}
       />
     </S.StyledContainer>
@@ -41,14 +41,14 @@ StudentProjectDetailPage.getLayout = (page: JSX.Element) => (
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { id, title, term, description, imageUrl } = context.query;
+  const { id, title, term, description, poster } = context.query;
   return {
     props: {
       id: id as string,
       title: title as string,
       term: term as string,
       description: description as string,
-      imageUrl: (imageUrl as string) || "",
+      poster: (poster as string) || "",
     },
   };
 };

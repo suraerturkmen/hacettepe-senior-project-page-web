@@ -83,7 +83,7 @@ function Page() {
     title: project.title,
     description: project.description,
     relatedTopics: project.keywords,
-    imageUrl: project.youtubeLink,
+    poster: project.poster,
   }));
 
   const totalElements = pagingData?.totalElements;

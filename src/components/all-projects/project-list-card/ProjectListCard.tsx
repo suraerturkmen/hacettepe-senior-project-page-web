@@ -25,7 +25,7 @@ export interface AllProjectsCardProps {
   studentLimit?: number;
   isApplied?: boolean;
   isMyProject?: boolean;
-  imageUrl?: string;
+  poster?: string;
   term?: string;
   studentGroups?: GroupResponse[];
   professors?: ProfessorsProperties[];
@@ -43,7 +43,7 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
     studentLimit,
     isApplied = false,
     isMyProject = false,
-    imageUrl,
+    poster,
     term,
     studentGroups,
     professors,
@@ -59,10 +59,11 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
     router.push({
       pathname: "/project-detail/[title]",
       query: {
+        id: id,
         term: term,
         title: title,
         description: description,
-        imageUrl: imageUrl,
+        poster: poster,
       },
     });
   };
@@ -188,13 +189,18 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
             <Typography variant="bodyMedium" style={{ color: "#7B809A" }}>
               {professors?.length ?? 0 > 1 ? "Professors:" : "Professor:"}
             </Typography>
-            {professors?.map((professor, professorIndex) => (
-              <div key={professorIndex}>
-                <Typography variant="bodyMedium" style={{ color: "#344767" }}>
-                  {professor.username}
+            <S.StyledProfessors>
+              {professors?.map((professor, professorIndex) => (
+                <Typography
+                  key={professorIndex}
+                  variant="bodyMedium"
+                  style={{ color: "#344767" }}>
+                  {professorIndex === professors?.length - 1
+                    ? `${professor.username}`
+                    : `${professor.username} ,`}
                 </Typography>
-              </div>
-            ))}
+              ))}
+            </S.StyledProfessors>
           </S.StyledArea>
           {students && (
             <S.StyledArea>

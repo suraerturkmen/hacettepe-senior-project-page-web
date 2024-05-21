@@ -36,6 +36,7 @@ const ApplicationCard = (props: ApplicationCardProps): JSX.Element => {
       })
     );
     appliedProject.applicationStatus = ApplicationStatusType.Approved;
+    window.location.reload();
   };
 
   const handleReject = async () => {
@@ -45,6 +46,7 @@ const ApplicationCard = (props: ApplicationCardProps): JSX.Element => {
         status: ApplicationStatusType.Rejected,
       })
     );
+    window.location.reload();
     appliedProject.applicationStatus = ApplicationStatusType.Rejected;
   };
 

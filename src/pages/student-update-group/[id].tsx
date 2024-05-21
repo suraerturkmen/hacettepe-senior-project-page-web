@@ -22,6 +22,7 @@ function UpdateStudentGroupPage(props: UpdateStudentGroupProps) {
 
   const onSubmit = async (data: UpdateGroupRequest) => {
     data.groupId = id;
+    console.log(data);
     await store.dispatch(fetchUpdateGroup(data));
   };
 

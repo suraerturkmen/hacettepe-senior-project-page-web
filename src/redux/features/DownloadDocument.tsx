@@ -13,10 +13,10 @@ export interface Document {
   file: string;
 }
 
-interface FileData {
+export interface FileData {
   success: boolean;
   message: string;
-  data: Document;
+  data?: Document;
 }
 
 interface FileDataState {

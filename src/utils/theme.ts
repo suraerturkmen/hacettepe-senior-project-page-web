@@ -334,7 +334,7 @@ const Theme: Theme = createTheme({
         {
           props: { variant: "h7Bold" },
           style: {
-            fontFamily: FONT_DAXPRO.style.fontFamily,
+            fontFamily: FONT_GILROY.style.fontFamily,
             fontSize: "20px",
             fontWeight: "bold",
             fontStretch: "normal",

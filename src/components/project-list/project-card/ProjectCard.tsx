@@ -3,14 +3,6 @@ import * as S from "@/components/project-list/project-card/ProjectCard.styles";
 import { defaultImageUrl } from "@/dummyData/dummyData";
 import { useRouter } from "next/router";
 import { Tooltip } from "@mui/material";
-import {
-  GetRecommendState,
-  fetchGetSimilars,
-} from "@/redux/features/RecommendedProjects";
-import { useEffect, useState } from "react";
-import { store } from "@/redux/store";
-import { Project, ProjectState } from "@/redux/features/projectSlice";
-import { fetchProjectIdsProjectList } from "@/redux/features/GetProjectsWithIdList";
 
 export interface CardProps {
   id: string;
@@ -19,7 +11,7 @@ export interface CardProps {
   title: string;
   description?: string;
   relatedTopics?: string[];
-  imageUrl?: string;
+  poster?: string;
   width?: string;
 }
 
@@ -31,22 +23,25 @@ const ProjectCard = (props: CardProps): JSX.Element => {
     title,
     description,
     relatedTopics,
-    imageUrl,
+    poster,
     width,
   } = props;
 
   const router = useRouter();
   const handleClick = () => {
-    router.push({
-      pathname: "/project-detail/[title]",
-      query: {
-        id: id,
-        term: term,
-        title: title,
-        description: description,
-        imageUrl: imageUrl,
-      },
-    });
+    if (!id) return;
+    const query = {
+      id: id,
+      term: term ? term : "",
+      title: title ? title : "",
+      description: description ? description : "",
+      poster: poster ? poster : "",
+    };
+
+    const queryString = new URLSearchParams(query).toString();
+    const path = `/project-detail/${encodeURIComponent(title)}?${queryString}`;
+
+    window.open(path, "_blank");
   };
 
   return (

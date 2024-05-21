@@ -2,16 +2,14 @@ import React, { useState, useEffect, useMemo, use } from "react";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import ProjectListCards from "@/components/my-projects/project-list-cards/ProjectListCards";
 import * as S from "@/components/my-projects/project-list-cards/ProjectListCards.styles";
-import {
-  CardProps,
-  UserType,
-} from "@/components/my-projects/project-list-card/ProjectListCard";
+import { CardProps } from "@/components/my-projects/project-list-card/ProjectListCard";
 import { store } from "@/redux/store";
 import {
   ProjectState,
   ProjectStatus,
   fetchProjectsById,
 } from "@/redux/features/projectSlice";
+import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 
 function ProfessorMyProjectsPage() {
   const itemCountPerPage = 4;
@@ -68,7 +66,7 @@ function ProfessorMyProjectsPage() {
           projectStatus: ProjectStatus.Past,
           userType: UserType.Teacher,
           studentLimit: project.studentLimit,
-          imageUrl: project.imageUrl,
+          poster: project.poster,
           keywords: project.keywords,
           groupId: project.groupId,
           term: project.term,
@@ -86,7 +84,7 @@ function ProfessorMyProjectsPage() {
           projectStatus: ProjectStatus.Past,
           userType: UserType.Teacher,
           studentLimit: project.studentLimit,
-          imageUrl: project.imageUrl,
+          poster: project.poster,
           keywords: project.keywords,
           groupId: project.groupId,
           term: project.term,

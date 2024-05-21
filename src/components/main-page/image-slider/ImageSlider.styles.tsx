@@ -53,7 +53,7 @@ export const StyledImage = styled("img", {
 })({
   display: "flex",
   alignSelf: "center",
-  width: "1000px",
+  width: "1000px !important",
   bottom: "30px",
   height: "330px",
   backgroundSize: "cover",

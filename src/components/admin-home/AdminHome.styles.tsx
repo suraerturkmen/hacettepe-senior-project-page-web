@@ -3,6 +3,7 @@ import { styled } from "@mui/material/styles";
 
 export const StyledWrapper = styled("div")({
   display: "flex",
+  width: "1290px",
   alignItems: "center",
   justifyContent: "center",
   flexDirection: "column",

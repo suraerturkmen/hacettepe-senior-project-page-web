@@ -1,3 +1,4 @@
+import { Button, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const StyledProjectContainer = styled("div")({
@@ -10,6 +11,7 @@ export const StyledProjectContainer = styled("div")({
   padding: "24px",
   borderRadius: "8px",
   alignItems: "center",
+  gap: "32px",
 });
 
 export const StyledContainer = styled("div")({
@@ -38,4 +40,23 @@ export const StyledAllProjects = styled("div")({
   "::-webkit-scrollbar-thumb": {
     background: "#BDBDBD",
   },
+});
+
+export const StyledButton = styled(Button)({
+  display: "inline-flex",
+  justifyContent: "flex-end",
+  padding: "16px",
+  color: "#344767",
+  width: "auto",
+  backgroundColor: "#3D7EAA",
+  "&:hover": {
+    backgroundColor: "#344767",
+  },
+});
+
+export const StyledTypography = styled(Typography)({
+  display: "flex",
+  justifyContent: "flex-start",
+  width: "260px",
+  gap: "8px",
 });

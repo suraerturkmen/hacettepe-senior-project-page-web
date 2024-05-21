@@ -1,21 +1,15 @@
 import Typography from "@mui/material/Typography";
 import * as S from "@/components/my-projects/project-list-card/ProjectListCard.styles";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { GroupProperties } from "@/components/professor-project-edit/ProfessorProjectEdit";
 import {
   ProfessorsProperties,
   ProjectStatus,
 } from "@/redux/features/projectSlice";
-import { useEffect } from "react";
 import { fetchDeleteProject } from "@/redux/features/DeleteProject";
 import { store } from "@/redux/store";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-
-export enum UserType {
-  Student = "Student",
-  Teacher = "Teacher",
-}
+import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 
 export interface CardProps {
   id: string;
@@ -25,7 +19,7 @@ export interface CardProps {
   projectStatus: ProjectStatus;
   userType?: UserType;
   studentLimit: number;
-  imageUrl: string;
+  poster: string;
   keywords: string[];
   groupId?: string;
   term?: string;
@@ -43,7 +37,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
     userType,
     projectStatus,
     studentLimit,
-    imageUrl,
+    poster,
     keywords,
     groupId,
     professors,
@@ -70,7 +64,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
         title: title,
         studentLimit: studentLimit,
         description: description,
-        imageUrl: imageUrl,
+        poster: poster,
         keywords: keywords,
         defaultStudentGroup: JSON.stringify({
           id: groupId,
@@ -89,7 +83,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
         term: term,
         title: title,
         description: description,
-        imageUrl: imageUrl,
+        poster: poster,
       },
     });
   };
@@ -101,6 +95,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
         id: id,
         projectId: id,
         projectName: title,
+        userType: userType,
       },
     });
   };

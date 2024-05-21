@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import * as S from "@/components/admin-home/AdminHome.styles";
-import { dummySchedules } from "@/dummyData/dummyData";
 import TermSchedules from "@/components/schedule/term-schedules/TermSchedules";
 import {
   TimelineState,
@@ -12,7 +11,6 @@ import {
   ActiveSeniorProjectTermState,
   fetchActiveSeniorProjectTerm,
 } from "@/redux/features/ActiveSeniorProjectTerm";
-import { TermSchedulesProps } from "@/components/schedule/term-schedules/TermSchedules";
 import {
   ScheduleDetail,
   TermScheduleProps,

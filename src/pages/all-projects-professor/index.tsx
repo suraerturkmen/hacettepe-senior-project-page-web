@@ -58,7 +58,7 @@ function ProfessorAllProjectsPage() {
       userType: UserType.Teacher,
       studentLimit: project.studentLimit,
       isMyProject: project.myProject,
-      imageUrl: project.youtubeLink,
+      poster: project.poster,
       term: project.term,
       professors: project.professors,
     })

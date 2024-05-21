@@ -49,8 +49,6 @@ const UpdateStudentGroup = (props: UpdateStudentGroupProps): JSX.Element => {
   const [parsedDefaultStudents, setParsedDefaultStudents] = useState<
     StudentProperties[]
   >([]);
-  const [parsedDefaultGroupName, setParsedDefaultGroupName] =
-    useState<string>("");
   const [sessionId, setSessionId] = useState<string>("");
   const [val, setVal] = useState<StudentProperties[]>([]);
 
@@ -59,10 +57,7 @@ const UpdateStudentGroup = (props: UpdateStudentGroupProps): JSX.Element => {
       const parsedStudents = JSON.parse(defaultStudents as any);
       setParsedDefaultStudents(parsedStudents);
     }
-    if (defaultGroupName) {
-      setParsedDefaultGroupName(defaultGroupName);
-    }
-  }, [defaultGroupName, defaultStudents]);
+  }, [defaultStudents]);
 
   useEffect(() => {
     if (window !== undefined) {
@@ -77,10 +72,13 @@ const UpdateStudentGroup = (props: UpdateStudentGroupProps): JSX.Element => {
     }
   }, [parsedDefaultStudents]);
 
-  console.log(val);
-  console.log(typeof val);
-  console.log(parsedDefaultStudents);
-  console.log(typeof parsedDefaultStudents);
+  useEffect(() => {
+    if (parsedDefaultStudents) {
+      parsedDefaultStudents.map((student, index) => {
+        register(`groupMembers[${index}]`, { value: student });
+      });
+    }
+  }, [parsedDefaultStudents, register]);
 
   const valHtml = val.map((option: StudentProperties, index) => {
     const label = option.username;
@@ -138,7 +136,7 @@ const UpdateStudentGroup = (props: UpdateStudentGroupProps): JSX.Element => {
             label="Group Name"
             helperText="Enter group name"
             color="secondary"
-            defaultValue={parsedDefaultGroupName}
+            defaultValue={defaultGroupName}
             {...register("groupName", { required: true })}
           />
           <S.StyledButton type="submit" variant="contained">

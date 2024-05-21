@@ -24,6 +24,7 @@ import {
   AnnouncementState,
   fetchGetAnnouncement,
 } from "@/redux/features/GetAnnouncement";
+import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 
 function StudentHomePage() {
   const itemCountPerPage = 5;
@@ -92,7 +93,7 @@ function StudentHomePage() {
   return (
     <S.StyledWrapper>
       <S.StyledFirstSection>
-        <MyProjectOverview projects={myProjects} />
+        <MyProjectOverview projects={myProjects} userType={UserType.Student} />
         <TermTimeline
           timelines={timelineData?.data || []}
           termName="Senior Project 2023-2024"

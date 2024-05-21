@@ -16,10 +16,12 @@ import {
   fetchTimelinesByProjectTypeId,
 } from "@/redux/features/TimelineSlice";
 import { GetServerSideProps } from "next";
+import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 
 interface Props {
   projectId: string;
   projectName: string;
+  userType: UserType;
 }
 
 function setDocumentType(deliveryDate: Date): DocumentTypes {
@@ -38,7 +40,7 @@ function setDocumentType(deliveryDate: Date): DocumentTypes {
 }
 
 function SubmitDocumentPage(props: Props) {
-  const { projectId, projectName } = props;
+  const { projectId, projectName, userType } = props;
   const [documentCards, setDocumentCards] = useState<DocumentCardProps[]>([]);
   const timelines = useTimeline();
 
@@ -51,9 +53,10 @@ function SubmitDocumentPage(props: Props) {
       dueDate: timeline.deliveryDate,
       projectName: projectName,
       projectId: projectId,
+      userType: userType,
     }));
     setDocumentCards(tempDocumentCards);
-  }, [projectId, projectName, timelines]);
+  }, [projectId, projectName, timelines, userType]);
 
   const currentDocumentCards = useMemo(() => {
     return documentCards.filter((card) => card.type === "current");
@@ -87,6 +90,7 @@ function SubmitDocumentPage(props: Props) {
             projectName={card.projectName}
             projectId={card.projectId}
             timelineId={card.timelineId}
+            userType={userType}
           />
         ))}
       </S.StyledDocumentCards>
@@ -106,6 +110,7 @@ function SubmitDocumentPage(props: Props) {
             projectName={card.projectName}
             projectId={card.projectId}
             timelineId={card.timelineId}
+            userType={userType}
           />
         ))}
       </S.StyledDocumentCards>
@@ -125,6 +130,7 @@ function SubmitDocumentPage(props: Props) {
             projectName={card.projectName}
             projectId={card.projectId}
             timelineId={card.timelineId}
+            userType={userType}
           />
         ))}
       </S.StyledDocumentCards>
@@ -141,12 +147,13 @@ SubmitDocumentPage.getLayout = (page: JSX.Element) => (
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { projectId, projectName } = context.query;
+  const { projectId, projectName, userType } = context.query;
 
   return {
     props: {
       projectId: projectId as string,
       projectName: projectName as string,
+      userType: userType as UserType,
     },
   };
 };

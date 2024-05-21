@@ -1,15 +1,19 @@
 import * as S from "@/components/submit-documents/document-card/DocumentCard.styles";
 import { Button, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axiosInstance from "@/Service/Instance";
 import {
   UploadDocumentRequest,
   fetchUploadDocument,
 } from "@/redux/features/UploadDocument";
-import { fetchDownloadDocument } from "@/redux/features/DownloadDocument";
+import {
+  FileData,
+  fetchDownloadDocument,
+} from "@/redux/features/DownloadDocument";
 import { store } from "@/redux/store";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/rootReducer";
+import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 
 export enum DocumentTypes {
   current = "current",
@@ -24,24 +28,44 @@ export interface DocumentCardProps {
   projectId: string;
   timelineId: string;
   type: DocumentTypes;
+  userType: UserType;
 }
 
 const DocumentCard = (props: DocumentCardProps): JSX.Element => {
-  const { type, documentName, dueDate, projectName, projectId, timelineId } =
-    props;
+  const {
+    type,
+    documentName,
+    dueDate,
+    projectName,
+    projectId,
+    timelineId,
+    userType,
+  } = props;
+
   const [uploadStatus, setUploadStatus] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const documentData = useSelector(
     (state: RootState) => state.downloadDocument.documentData
   );
-  const [downloadResponse, setDownloadResponse] = useState<Document | null>(
+  const [downloadResponse, setDownloadResponse] = useState<FileData | null>(
     null
   );
+
+  useEffect(() => {
+    const fetchDocument = async () => {
+      const request = {
+        documentName: `${projectId}_${timelineId}`,
+      };
+      const response = await store.dispatch(fetchDownloadDocument(request));
+      setDownloadResponse(response.payload as FileData);
+    };
+
+    fetchDocument();
+  }, [projectId, timelineId]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       setFile(event.target.files[0]);
-      console.log(event.target.files[0]);
     }
   };
 
@@ -71,42 +95,28 @@ const DocumentCard = (props: DocumentCardProps): JSX.Element => {
 
   const handleDownload = async () => {
     try {
-      const request = {
-        documentName: `${projectId}_${timelineId}`,
-      };
-      await store.dispatch(fetchDownloadDocument(request));
-      const response = documentData;
-
-      if (!response.success) {
-        alert(response.message);
+      if (!downloadResponse || !downloadResponse.data) {
+        alert("No file to download");
         return;
       }
 
-      if (!response.data || !response.data.file) {
-        alert("File data not found in response");
-        return;
-      }
-
-      const binaryData = atob(response.data.file);
-      console.log(binaryData);
+      const binaryData = atob(downloadResponse.data.file);
       const arrayBuffer = new ArrayBuffer(binaryData.length);
       const uint8Array = new Uint8Array(arrayBuffer);
       for (let i = 0; i < binaryData.length; i++) {
         uint8Array[i] = binaryData.charCodeAt(i);
       }
 
-      const pdfBlob = new Blob([arrayBuffer], {
-        type: "application/pdf",
-      });
-
+      const pdfBlob = new Blob([arrayBuffer], { type: "application/pdf" });
       const url = window.URL.createObjectURL(pdfBlob);
-
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `${response.data.deliveryName}.pdf`);
+      link.setAttribute(
+        "download",
+        `${downloadResponse.data.deliveryName}.pdf`
+      );
       document.body.appendChild(link);
       link.click();
-
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error downloading file:", error);
@@ -126,31 +136,37 @@ const DocumentCard = (props: DocumentCardProps): JSX.Element => {
               style={{ display: "none" }}
               id="contained-button-file"
             />
-            <label htmlFor="contained-button-file">
-              <Button
-                variant="contained"
-                component="span"
-                style={{ margin: "10px 0" }}>
-                Select Document
-              </Button>
-            </label>
-            <S.StyledButtonContainer>
-              <S.StyledDownloadButton
-                variant="contained"
-                onClick={handleDownload}>
-                Download Document
-              </S.StyledDownloadButton>
-              <S.StyledUploadButtonArea>
-                <S.StyledUploadButton
-                  variant="contained"
-                  onClick={handleUpload}>
-                  Upload Document
-                </S.StyledUploadButton>
-                <Typography variant="footnoteSmall">Max Size: 512MB</Typography>
-              </S.StyledUploadButtonArea>
-            </S.StyledButtonContainer>
-            {uploadStatus && (
-              <Typography color="error">{uploadStatus}</Typography>
+            {userType === UserType.Student && (
+              <>
+                <label htmlFor="contained-button-file">
+                  <Button
+                    variant="contained"
+                    component="span"
+                    style={{ margin: "10px 0" }}>
+                    Select Document
+                  </Button>
+                </label>
+                <S.StyledButtonContainer>
+                  <S.StyledDownloadButton
+                    variant="contained"
+                    onClick={handleDownload}>
+                    Download Document
+                  </S.StyledDownloadButton>
+                  <S.StyledUploadButtonArea>
+                    <S.StyledUploadButton
+                      variant="contained"
+                      onClick={handleUpload}>
+                      Upload Document
+                    </S.StyledUploadButton>
+                    <Typography variant="footnoteSmall">
+                      Max Size: 512MB
+                    </Typography>
+                  </S.StyledUploadButtonArea>
+                </S.StyledButtonContainer>
+                {uploadStatus && (
+                  <Typography color="error">{uploadStatus}</Typography>
+                )}
+              </>
             )}
           </>
         );

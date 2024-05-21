@@ -15,7 +15,7 @@ const ApplicationCards = (props: ApplicationCardsProps): JSX.Element => {
       {applications.map((application, index) => (
         <ApplicationCard
           key={index}
-          groupName={application.groupId}
+          groupName={application.groupName}
           groupMembers={application.groupMembers.map(
             (member) => member?.username
           )}

@@ -75,7 +75,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     title,
     studentLimit,
     description,
-    imageUrl,
+    poster,
     keywords,
     defaultStudentGroup,
     professors,

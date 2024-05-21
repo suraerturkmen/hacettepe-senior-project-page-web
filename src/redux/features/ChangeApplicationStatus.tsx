@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
-import { Project, ProjectStatus } from "./projectSlice";
+import { ProjectStatus } from "./projectSlice";
 import {
   ApplicationProperties,
   ApplicationStatusType,
@@ -51,10 +51,11 @@ const initialState: ChangeApplicationState = {
         youtubeLink: "",
         keywords: [],
         studentLimit: 0,
-        imageUrl: "",
+        poster: "",
         projectTypeId: "",
         myProject: false,
         applied: false,
+        embedding: "",
       },
     },
   },

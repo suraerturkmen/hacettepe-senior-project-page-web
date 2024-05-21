@@ -13,6 +13,11 @@ import {
   AnnouncementState,
   fetchGetAnnouncement,
 } from "@/redux/features/GetAnnouncement";
+import { ImageSlider } from "@/components/main-page/image-slider/ImageSlider";
+import {
+  UrlAndImage,
+  fetchUrlAndImages,
+} from "@/redux/features/GetUrlAndImages";
 
 function StudentHomePage() {
   const itemCountPerPage = 5;
@@ -21,7 +26,21 @@ function StudentHomePage() {
   const [pagingAnnouncementData, setPagingAnnouncementData] = useState<
     Announcement[]
   >([]);
+  const [urlAndImages, setUrlAndImages] = useState<UrlAndImage[]>([]);
   const router = useRouter();
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        await store.dispatch(fetchUrlAndImages());
+        const data = store.getState().urlAndImages;
+        setUrlAndImages(data.urlAndImageData.data);
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+      }
+    }
+    fetchData();
+  }, []);
 
   const handlePageChangeAnnouncement = (page: number) => {
     setCurrentAnnouncementPage(page);
@@ -45,14 +64,16 @@ function StudentHomePage() {
     setPagingAnnouncementData(tempAnnouncements);
   }, [currentAnnouncementPage, announcements]);
 
+  // <ProjectTerms terms={dummyTerms} />;
+
   return (
     <S.StyledWrapper>
+      <ImageSlider urlAndImages={urlAndImages} />
       <S.StyledCreateAnnoncementButton onClick={handleAnnouncement}>
         <Typography variant="h5TaglineBold" color="#FFFFFF">
           Create Announcement
         </Typography>
       </S.StyledCreateAnnoncementButton>
-      <ProjectTerms terms={dummyTerms} />
       <S.StyledAnnouncementSection>
         <Typography variant="h3TitleBold" color="#790606">
           Announcements

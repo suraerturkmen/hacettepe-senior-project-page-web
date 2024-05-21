@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import MyProjectOverview, {
   ProjectDetail,
@@ -24,6 +24,7 @@ import {
   AnnouncementState,
   fetchGetAnnouncement,
 } from "@/redux/features/GetAnnouncement";
+import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 
 function ProfessorHomePage() {
   const itemCountPerPage = 5;
@@ -54,16 +55,6 @@ function ProfessorHomePage() {
 
   const timelineData = useTimeline()?.timelineData;
 
-  // useEffect(() => {
-  //   if (!timelineData) return;
-  //   const timelines =
-  //     timelineData?.data.map((timeline) => ({
-  //       reportName: timeline.deliveryName,
-  //       dueDate: new Date(timeline.deliveryDate),
-  //     })) || [];
-  //   setTimelines(timelines);
-  // }, [timelineData]);
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const userIdFromLocalStorage = localStorage.getItem("userId") || "";
@@ -83,7 +74,7 @@ function ProfessorHomePage() {
       projectStateData?.data.map((project: Project) => ({
         id: project.id,
         title: project.title,
-        documents: [], // update after document API is implemented
+        documents: [],
       })) || [];
     setMyProjects(projects);
   }, [projectStateData]);
@@ -97,7 +88,7 @@ function ProfessorHomePage() {
   return (
     <S.StyledWrapper>
       <S.StyledFirstSection>
-        <MyProjectOverview projects={myProjects} />
+        <MyProjectOverview projects={myProjects} userType={UserType.Teacher} />
         {timelineData && timelineData.data.length > 0 && (
           <TermTimeline
             timelines={timelineData?.data || []}

@@ -44,7 +44,7 @@ export interface Project {
   projectStatus: ProjectStatus;
   keywords: string[];
   studentLimit: number;
-  imageUrl: string;
+  poster: string;
   projectTypeId: string;
   myProject: boolean;
   applied: boolean;

@@ -1,18 +1,17 @@
 import * as S from "@/components/project-detail/ProjectDetailCard.styles";
 import { defaultImageUrl } from "@/dummyData/dummyData";
 import { Typography } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
 export interface ProjectDetailCardProps {
   title: string;
   term: string;
   description: string;
-  imageUrl: string;
+  poster: string;
   isArrowVisible?: boolean;
 }
 
 const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
-  const { title, term, description, imageUrl, isArrowVisible } = props;
+  const { title, term, description, poster, isArrowVisible } = props;
 
   return (
     <S.StyledCard>
@@ -28,8 +27,7 @@ const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
         <Typography variant="h5TaglineBold" color="#344767">
           {title}
         </Typography>
-        {imageUrl && <S.StyledImage src={imageUrl} alt={title} />}
-        {!imageUrl && <S.StyledImage src={defaultImageUrl} alt={title} />}
+        {poster && <S.StyledImage src={poster} alt={title} />}
       </S.StyledImageTitleContainer>
       <S.StyledSection>
         <Typography variant="h5TaglineBold" color="#344767">

@@ -40,14 +40,16 @@ export const StyledEditIcon = styled(Edit)(({ theme }) => ({
 
 export const StyledArea = styled("div")(({ theme }) => ({
   display: "flex",
-  alignItems: "center",
-  gap: "10px",
+  alignItems: "flex-start",
+  flexDirection: "column",
+  flex: 1,
 }));
 
 export const StyledDetails = styled("div")({
   display: "flex",
-  gap: "4px",
   flexDirection: "column",
+  gap: "16px",
+  flex: 1,
 });
 
 export const StyledWrapper = styled("div")({
@@ -137,3 +139,8 @@ export const StyledDialog = styled(Dialog)(({ theme }) => ({
     },
   },
 }));
+
+export const StyledProfessors = styled("div")({
+  display: "flex",
+  gap: "8px",
+});

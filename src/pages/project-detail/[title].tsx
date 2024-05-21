@@ -6,7 +6,10 @@ import ProjectDetailCard from "@/components/project-detail/ProjectDetailCard";
 import { GetServerSideProps } from "next";
 import { Project, ProjectState } from "@/redux/features/projectSlice";
 import ProjectCard from "@/components/project-list/project-card/ProjectCard";
-import { GetRecommendState, fetchGetSimilars } from "@/redux/features/RecommendedProjects";
+import {
+  GetRecommendState,
+  fetchGetSimilars,
+} from "@/redux/features/RecommendedProjects";
 import { store } from "@/redux/store";
 import { fetchProjectIdsProjectList } from "@/redux/features/GetProjectsWithIdList";
 
@@ -21,7 +24,7 @@ interface Props {
   title: string;
   term: string;
   description: string;
-  imageUrl?: string;
+  poster?: string;
 }
 
 const SETTINGS: Settings = {
@@ -35,20 +38,20 @@ const SETTINGS: Settings = {
   autoplay: true,
 };
 
-
 function ProjectDetailPage(props: Props) {
-  const { id, title, term, description, imageUrl } = props;
+  const { id, title, term, description, poster } = props;
   const [recommends, setRecommends] = useState<Project[]>();
   const ids = useRecommendedIds(id);
 
-  const recommendProjects = useRecommendedProjects(ids?.projectData.similar_ids ?? [[]]);
+  const recommendProjects = useRecommendedProjects(
+    ids?.projectData.similar_ids ?? [[]]
+  );
 
   useEffect(() => {
     setRecommends(recommendProjects?.projectData.data);
   }, [recommendProjects]);
 
-  console.log(recommends)
-
+  console.log(recommends);
   return (
     <S.StyledContainer>
       <Typography variant="h3TitleBold" color="#344767">
@@ -58,30 +61,29 @@ function ProjectDetailPage(props: Props) {
         title={title}
         term={term}
         description={description}
-        imageUrl={imageUrl ?? ""}
+        poster={poster ?? ""}
       />
       <S.StyledProjectCardContainer>
-        <Slider  {...SETTINGS}>
-          {recommends &&
-            recommends.map((project) => (
+        {recommends?.length ? (
+          <Slider {...SETTINGS}>
+            {recommends.map((project) => (
               <ProjectCard
+                key={project.id}
                 width="400px"
                 id={project.id}
-                key={project.title}
                 title={project.title}
                 term={project.term}
                 description={project.description}
-                imageUrl={project.imageUrl}
+                poster={project.poster}
                 authors={[
                   ...project.students,
                   ...project.professors.map((professor) => professor.username),
                 ]}
               />
             ))}
-        </Slider>
+          </Slider>
+        ) : null}
       </S.StyledProjectCardContainer>
-
-
     </S.StyledContainer>
   );
 }
@@ -95,20 +97,21 @@ ProjectDetailPage.getLayout = (page: JSX.Element) => (
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { id, title, term, description, imageUrl } = context.query;
+  const { id, title, term, description, poster } = context.query;
   return {
     props: {
       id: id as string,
       title: title as string,
       term: term as string,
       description: description as string,
-      imageUrl: (imageUrl as string) || "",
+      poster: (poster as string) || "",
     },
   };
 };
 
 function useRecommendedIds(id: string): GetRecommendState | undefined {
-  const [recommendStateData, setRecommendStateData] = useState<GetRecommendState>();
+  const [recommendStateData, setRecommendStateData] =
+    useState<GetRecommendState>();
 
   useEffect(() => {
     async function getData() {
@@ -123,7 +126,9 @@ function useRecommendedIds(id: string): GetRecommendState | undefined {
 }
 
 function useRecommendedProjects(ids: string[][]): ProjectState | undefined {
-  const [recommendProjects, setRecommendProjects] = useState<ProjectState | undefined>(undefined);
+  const [recommendProjects, setRecommendProjects] = useState<
+    ProjectState | undefined
+  >(undefined);
   const [request, setRequest] = useState<string[]>([]);
 
   useEffect(() => {
@@ -133,15 +138,15 @@ function useRecommendedProjects(ids: string[][]): ProjectState | undefined {
 
   useEffect(() => {
     async function getData() {
-      await store.dispatch(fetchProjectIdsProjectList({ projectIds: request ?? [] }));
+      await store.dispatch(
+        fetchProjectIdsProjectList({ projectIds: request ?? [] })
+      );
       const recommendProjectsState = store.getState().recommendedProjects;
       setRecommendProjects(recommendProjectsState);
     }
 
     getData();
   }, [request]);
-
-
 
   return recommendProjects;
 }

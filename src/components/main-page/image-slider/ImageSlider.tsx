@@ -24,16 +24,21 @@ const SETTINGS: Settings = {
   prevArrow: <ChevronLeftIcon />,
 };
 
+const onImageClick = (url: string) => {
+  if (!url) {
+    return;
+  }
+  window.open(url, "_blank");
+};
 export const ImageSlider: React.FC<ImageSliderProps> = ({ urlAndImages }) => {
   return (
     <S.ImageSliderContainer>
       <Slider {...SETTINGS}>
         {urlAndImages?.map((urlAndImage) => (
-          <Link key={urlAndImage.url} href={urlAndImage.url} passHref>
-            <S.StyledImage
-              src={`data:image/jpeg;base64,${urlAndImage.image}`}
-            />
-          </Link>
+          <S.StyledImage
+            src={`data:image/jpeg;base64,${urlAndImage.image}`}
+            onClick={() => onImageClick(urlAndImage.url)}
+          />
         ))}
       </Slider>
     </S.ImageSliderContainer>
