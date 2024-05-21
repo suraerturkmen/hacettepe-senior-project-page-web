@@ -1,9 +1,8 @@
-import { dummyImages } from "@/dummyData/dummyData";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import Accordions from "@/reusable-components/accordions/Accordions";
 import { Typography } from "@mui/material";
 import * as S from "@/index.styles";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Pagination from "@/reusable-components/pagination/Pagination";
 import { ImageSlider } from "@/components/main-page/image-slider/ImageSlider";
 import { Announcement } from "@/redux/features/CreateAnnouncement";

@@ -1,8 +1,11 @@
 import * as S from "@/components/project-detail/ProjectDetailCard.styles";
-import { defaultImageUrl } from "@/dummyData/dummyData";
 import { Typography } from "@mui/material";
+import { useRouter } from "next/router";
+import { ProjectDetail } from "../professor-student-home-page/my-project-overview/MyProjectOverview";
+import { UserType } from "../all-projects/project-list-card/ProjectListCard";
 
 export interface ProjectDetailCardProps {
+  id?: string;
   title: string;
   term: string;
   description: string;
@@ -11,12 +14,27 @@ export interface ProjectDetailCardProps {
 }
 
 const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
-  const { title, term, description, poster, isArrowVisible } = props;
+  const { id, title, term, description, poster, isArrowVisible } = props;
+
+  const router = useRouter();
+
+  const userType = isArrowVisible ? UserType.Student : UserType.Teacher;
+  const onDocumentClick = () => {
+    router.push({
+      pathname: "/submit-documents/[id]",
+      query: {
+        id: id,
+        projectId: id,
+        projectName: title,
+        userType: userType as UserType,
+      },
+    });
+  };
 
   return (
     <S.StyledCard>
       {isArrowVisible && (
-        <S.StyledUploadDocumentButton>
+        <S.StyledUploadDocumentButton onClick={onDocumentClick}>
           <Typography variant="h5TaglineBold" color="#D54949">
             Go to Upload Document
           </Typography>

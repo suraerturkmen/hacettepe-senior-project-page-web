@@ -77,7 +77,7 @@ const CreateStudentGroups = (props: CreateStudentGroupsProps): JSX.Element => {
             options={students}
             onChange={(e, newValue) => {
               setVal(newValue as StudentProperties[]);
-              setValue("students", newValue);
+              setValue("groupMembers", newValue);
             }}
             getOptionLabel={(option: string | StudentProperties) => {
               if (typeof option === "string") {

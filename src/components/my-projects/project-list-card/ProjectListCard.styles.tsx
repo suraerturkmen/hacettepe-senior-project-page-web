@@ -6,7 +6,7 @@ import { styled } from "@mui/material/styles";
 export const StyledCard = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
-  gap: "10px",
+  gap: "32px",
   borderRadius: "8px",
   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
   backgroundColor: "#F8F9FA",
@@ -39,14 +39,14 @@ export const StyledEditIcon = styled(Edit)(({ theme }) => ({
 
 export const StyledStudentsArea = styled("div")(({ theme }) => ({
   display: "flex",
-  alignItems: "center",
-  gap: "10px",
+  flexDirection: "column",
+  justifyContent: "center",
 }));
 
 export const StyledDescriptionArea = styled("div")(({ theme }) => ({
   display: "flex",
-  alignItems: "center",
-  gap: "10px",
+  flexDirection: "column",
+  justifyContent: "center",
 }));
 
 export const StyledClickable = styled("div")({

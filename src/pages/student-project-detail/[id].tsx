@@ -22,6 +22,7 @@ function StudentProjectDetailPage(props: Props) {
         Project Detail
       </Typography>
       <ProjectDetailCard
+        id={id}
         title={title}
         term={term}
         description={description}

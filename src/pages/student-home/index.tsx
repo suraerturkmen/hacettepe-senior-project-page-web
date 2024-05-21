@@ -57,16 +57,6 @@ function StudentHomePage() {
 
   const timelineData = useTimeline()?.timelineData;
 
-  // useEffect(() => {
-  //   if (!timelineData) return;
-  //   const timelines =
-  //     timelineData?.data.map((timeline) => ({
-  //       reportName: timeline.deliveryName,
-  //       dueDate: new Date(timeline.deliveryDate),
-  //     })) || [];
-  //   setTimelines(timelines);
-  // }, [timelineData]);
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       const userIdFromLocalStorage = localStorage.getItem("userId") || "";
@@ -85,7 +75,7 @@ function StudentHomePage() {
       projectStateData?.data.map((project: Project) => ({
         id: project.id,
         title: project.title,
-        documents: [], // update after document API is implemented
+        documents: [],
       })) || [];
     setMyProjects(projects);
   }, [projectStateData]);

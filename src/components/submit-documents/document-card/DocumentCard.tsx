@@ -11,8 +11,6 @@ import {
   fetchDownloadDocument,
 } from "@/redux/features/DownloadDocument";
 import { store } from "@/redux/store";
-import { useSelector } from "react-redux";
-import { RootState } from "@/redux/rootReducer";
 import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 
 export enum DocumentTypes {
@@ -44,9 +42,6 @@ const DocumentCard = (props: DocumentCardProps): JSX.Element => {
 
   const [uploadStatus, setUploadStatus] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const documentData = useSelector(
-    (state: RootState) => state.downloadDocument.documentData
-  );
   const [downloadResponse, setDownloadResponse] = useState<FileData | null>(
     null
   );
@@ -61,7 +56,7 @@ const DocumentCard = (props: DocumentCardProps): JSX.Element => {
     };
 
     fetchDocument();
-  }, [projectId, timelineId]);
+  }, [projectId, timelineId, uploadStatus]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -85,7 +80,7 @@ const DocumentCard = (props: DocumentCardProps): JSX.Element => {
       await store.dispatch(fetchUploadDocument(uploadRequest));
       setUploadStatus("Upload successful");
       if (typeof window !== "undefined") {
-        window.location.reload();
+        // window.location.reload();
       }
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -159,7 +154,7 @@ const DocumentCard = (props: DocumentCardProps): JSX.Element => {
                       Upload Document
                     </S.StyledUploadButton>
                     <Typography variant="footnoteSmall">
-                      Max Size: 512MB
+                      Max Size: 25MB
                     </Typography>
                   </S.StyledUploadButtonArea>
                 </S.StyledButtonContainer>
