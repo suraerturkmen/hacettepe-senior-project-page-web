@@ -4,22 +4,19 @@ import * as S from "@/reusable-components/accordions/Accordions.styles";
 import ExpandMoreIcon from "@/components/icons/ExpandMoreIcon";
 import { Announcement } from "@/redux/features/CreateAnnouncement";
 import { store } from "@/redux/store";
-import {
-  DeleteAnnouncementRequest,
-  fetchDeleteAnnouncement,
-} from "@/redux/features/DeleteAnnouncement";
+import { fetchDeleteAnnouncement } from "@/redux/features/DeleteAnnouncement";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 export const Accordion = (props: Announcement) => {
   const { id, createdDate, title, content } = props;
 
   const router = useRouter();
+
   let isAdmin = false;
 
   if (typeof window !== "undefined") {
-    isAdmin = localStorage.getItem("roles")?.includes("ROLE_ADMIN")
-      ? true
-      : false;
+    isAdmin = Cookies.get("roles")?.includes("ROLE_ADMIN") ? true : false;
   }
 
   const handleDelete = async () => {

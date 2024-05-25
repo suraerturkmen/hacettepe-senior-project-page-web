@@ -25,6 +25,7 @@ import {
   fetchGetAnnouncement,
 } from "@/redux/features/GetAnnouncement";
 import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
+import Cookies from "js-cookie";
 
 function ProfessorHomePage() {
   const itemCountPerPage = 5;
@@ -57,11 +58,11 @@ function ProfessorHomePage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const userIdFromLocalStorage = localStorage.getItem("userId") || "";
-      const rolesFromLocalStorage =
-        localStorage.getItem("roles") || JSON.stringify(["ROLE_USER"]);
-      const roles = JSON.parse(rolesFromLocalStorage);
-      setUserId(userIdFromLocalStorage);
+      const userIdFromCookies = Cookies.get("userId") || "";
+      const rolesFromCookies =
+        Cookies.get("roles") || JSON.stringify(["ROLE_USER"]);
+      const roles = JSON.parse(rolesFromCookies);
+      setUserId(userIdFromCookies);
       setRoles(roles);
     }
   }, []);
@@ -75,6 +76,7 @@ function ProfessorHomePage() {
         id: project.id,
         title: project.title,
         documents: [],
+        projectTypeId: project.projectTypeId,
       })) || [];
     setMyProjects(projects);
   }, [projectStateData]);

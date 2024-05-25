@@ -4,6 +4,7 @@ export const StyledApplicationCards = styled("div")(({ theme }) => ({
   display: "flex",
   gap: "32px",
   margin: "0 auto",
+  width: "1290px",
   flexDirection: "column",
 }));
 

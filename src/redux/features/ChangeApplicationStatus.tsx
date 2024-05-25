@@ -5,6 +5,7 @@ import {
   ApplicationProperties,
   ApplicationStatusType,
 } from "./CreateApplication";
+import Cookies from "js-cookie";
 
 export interface ChangeApplicationStatusRequest {
   id: string;
@@ -68,7 +69,7 @@ export const fetchChangeApplicationStatus = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = Cookies.get("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }

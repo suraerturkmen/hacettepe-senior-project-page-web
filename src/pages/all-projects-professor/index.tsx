@@ -9,28 +9,31 @@ import {
   fetchActiveSeniorProjects,
 } from "@/redux/features/AllProjectsInActiveTerm";
 import { store } from "@/redux/store";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import { Typography } from "@mui/material";
 import ErrorDrawer from "@/components/drawers/error-drawer/ErrorDrawer";
+import Cookies from "js-cookie";
 
 function ProfessorAllProjectsPage() {
   const itemCountPerPage = 6;
   const [currentPageProject, setCurrentPageProject] = useState(1);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isError, setIsError] = useState(false);
+  const [term, setTerm] = useState("");
 
   const handlePageChangeProject = (page: number) => {
     setCurrentPageProject(page);
   };
 
   const handleErrorMessageClose = () => {
+    setIsError(false);
     router.push("/professor-home");
   };
+
   const router = useRouter();
 
   let sessionId = "";
 
   if (typeof window !== "undefined") {
-    sessionId = localStorage.getItem("userId") || "";
+    sessionId = Cookies.get("userId") || "";
   }
 
   const currentProjects = useFetchActiveSeniorProjects(
@@ -39,12 +42,18 @@ function ProfessorAllProjectsPage() {
     itemCountPerPage
   );
 
-  const isError = currentProjects?.projectData.success === false;
   useEffect(() => {
-    if (isError) {
+    if (currentProjects?.projectData.success === false) {
+      setIsError(true);
       setErrorMessage(currentProjects?.projectData.message || "");
+    } else {
+      setTerm(currentProjects?.projectData?.message || "");
+      if (currentProjects?.projectData.data.length === 0) {
+        setErrorMessage("No projects found");
+        setIsError(true);
+      }
     }
-  }, [isError, currentProjects]);
+  }, [currentProjects, router]);
 
   const totalPages = currentProjects?.projectData.totalElements;
 
@@ -82,7 +91,7 @@ function ProfessorAllProjectsPage() {
           </S.StyledButton>
           <ProjectListCards
             projects={modifiedProjects || []}
-            title="2023-2024 Term Projects"
+            title={`${term} Term Projects`}
             itemCountPerPage={itemCountPerPage}
             currentPage={currentPageProject}
             totalPages={totalPages || 0}
@@ -114,7 +123,6 @@ function useFetchActiveSeniorProjects(
         await store.dispatch(fetchActiveSeniorProjects(myProjectRequest));
         const projectState = store.getState().activeSeniorProjects;
         setProjectStateData(projectState);
-        console.log("projectState", projectState);
       } catch (error) {
         console.error("Error fetching professor projects:", error);
       }

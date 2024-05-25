@@ -1,4 +1,5 @@
 import { Button } from "@mui/base";
+import { CircularProgress } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const StyledWrapper = styled("div")({
@@ -36,4 +37,13 @@ export const StyledCreateAnnoncementButton = styled(Button)({
   "&:hover": {
     backgroundColor: "#E27676",
   },
+});
+
+export const StyledLoading = styled(CircularProgress)({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  height: "100px",
+  fontSize: "24px",
+  color: "#790606",
 });

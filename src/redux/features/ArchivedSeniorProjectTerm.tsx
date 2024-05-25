@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
 import { ActiveSeniorProjectTerm } from "./ActiveSeniorProjectTerm";
+import Cookies from "js-cookie";
 
 export interface ArchivedSeniorProjectTerm {
   id: string;
@@ -13,7 +14,7 @@ interface ArchivedSeniorProjectTermData {
 }
 
 export interface ActiveSeniorProjectTermState {
-  activeSeniorProjectTermData: {
+  archiveSeniorProjectTermData: {
     message: string;
     success: boolean;
     data: ActiveSeniorProjectTerm;
@@ -21,7 +22,7 @@ export interface ActiveSeniorProjectTermState {
 }
 
 const initialState: ActiveSeniorProjectTermState = {
-  activeSeniorProjectTermData: {
+  archiveSeniorProjectTermData: {
     success: false,
     message: "",
     data: { id: "", term: "", name: "" },
@@ -35,7 +36,7 @@ export const fetchArchivedSeniorProjectTerm = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = Cookies.get("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }
@@ -63,7 +64,7 @@ const ArchivedSeniorProjectTermSlice = createSlice({
     builder.addCase(
       fetchArchivedSeniorProjectTerm.fulfilled,
       (state, action) => {
-        state.activeSeniorProjectTermData = action.payload;
+        state.archiveSeniorProjectTermData = action.payload;
       }
     );
   },

@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 export type ProjectDetail = {
   id: string;
   title: string;
-  documents: string[];
+  projectTypeId: string;
 };
 
 export interface MyProjectOverviewProps {
@@ -25,6 +25,7 @@ const MyProjectOverview = (props: MyProjectOverviewProps): JSX.Element => {
         projectId: project.id,
         projectName: project.title,
         userType: userType as UserType,
+        projectTypeId: project.projectTypeId,
       },
     });
   };

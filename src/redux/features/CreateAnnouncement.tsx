@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
+import Cookies from "js-cookie";
 
 export interface CreateAnnouncementRequest {
   content: string;
@@ -39,7 +40,7 @@ export const fetchCreateAnnouncement = createAsyncThunk(
   "announcements/createAnnouncement",
   async (createRequest: CreateAnnouncementRequest, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = Cookies.get("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }

@@ -17,6 +17,8 @@ interface ProjectCardsProps {
   userType?: UserType;
   studentGroups?: GroupResponse[];
   handleApply?: (groupId: string, projectId: string) => void;
+  handleUnApply?: (studentId: string, projectId: string) => void;
+  appliedGroupId?: string;
 }
 
 const ProjectCards = (props: ProjectCardsProps): JSX.Element => {
@@ -30,6 +32,7 @@ const ProjectCards = (props: ProjectCardsProps): JSX.Element => {
     userType,
     studentGroups,
     handleApply,
+    handleUnApply,
   } = props;
   return (
     <S.StyledProjectCardWrapper>
@@ -46,6 +49,7 @@ const ProjectCards = (props: ProjectCardsProps): JSX.Element => {
               userType={userType}
               studentGroups={studentGroups}
               handleApply={handleApply}
+              handleUnApply={handleUnApply}
               {...project}
             />
           </>

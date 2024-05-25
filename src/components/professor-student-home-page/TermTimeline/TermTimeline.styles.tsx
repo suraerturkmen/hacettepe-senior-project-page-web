@@ -3,7 +3,6 @@ import { styled } from "@mui/material/styles";
 
 export const StyledTermContainer = styled("div")({
   display: "flex",
-  justifyContent: "space-between",
   width: "100%",
   flexDirection: "column",
   maxWidth: "550px",

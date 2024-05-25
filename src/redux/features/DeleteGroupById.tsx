@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
+import Cookies from "js-cookie";
 
 export interface DeleteGroupRequest {
   groupId: string;
@@ -28,7 +29,7 @@ export const fetchDeleteGroup = createAsyncThunk(
   "groups/deleteStudentGroup",
   async (deleteGroupRequest: DeleteGroupRequest, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = Cookies.get("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }

@@ -7,6 +7,7 @@ import { Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import Cookies from "js-cookie";
 
 export interface AppliedProject {
   projectName: string;
@@ -39,8 +40,7 @@ const GroupCard = (props: GroupResponse): JSX.Element => {
 
   const handleDelete = async () => {
     let sessionId = "";
-    if (typeof window !== "undefined")
-      sessionId = localStorage.getItem("userId") ?? "";
+    if (typeof window !== "undefined") sessionId = Cookies.get("userId") ?? "";
     else return;
     console.log("Deleting project with id: ", id);
     await store.dispatch(fetchDeleteGroup({ groupId: id }));

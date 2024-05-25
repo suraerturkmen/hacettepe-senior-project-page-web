@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
 import { ApplicationProperties } from "./CreateApplication";
+import Cookies from "js-cookie";
 
 interface ApplicationData {
   success: boolean;
@@ -28,12 +29,12 @@ export const fetchGetApplications = createAsyncThunk(
   "applications/getApplicationsByProfessorId",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = Cookies.get("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }
 
-      const sessionId = localStorage.getItem("userId");
+      const sessionId = Cookies.get("userId");
       if (!sessionId) {
         throw new Error("Session ID not found");
       }

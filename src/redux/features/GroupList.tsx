@@ -3,6 +3,7 @@ import axiosInstance from "@/Service/Instance";
 import { Project } from "./projectSlice";
 import { StudentProperties } from "./CreateGroup";
 import { ApplicationProperties } from "./CreateApplication";
+import Cookies from "js-cookie";
 
 export interface GroupResponse {
   id: string;
@@ -38,12 +39,12 @@ export const fetchGetGroups = createAsyncThunk(
   "groups/getGroupsByStudentId",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = Cookies.get("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }
 
-      const sessionId = localStorage.getItem("userId");
+      const sessionId = Cookies.get("userId");
       if (!sessionId) {
         throw new Error("Session ID not found");
       }

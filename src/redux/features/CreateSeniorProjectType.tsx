@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
-import { ProfessorsProperties, Project } from "./projectSlice";
 import { Timeline } from "./TimelineSlice";
+import Cookies from "js-cookie";
 
 export interface CreateSeniorProjectTermRequest {
   name: string;
@@ -45,7 +45,7 @@ export const fetchCreateSeniorProjectTerm = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = Cookies.get("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }

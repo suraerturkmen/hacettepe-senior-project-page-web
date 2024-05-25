@@ -1,5 +1,5 @@
 import { Delete, Edit } from "@mui/icons-material";
-import { Button, Dialog, Drawer } from "@mui/material";
+import { Button, Dialog, Drawer, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const StyledCard = styled("div")(({ theme }) => ({
@@ -43,6 +43,13 @@ export const StyledArea = styled("div")(({ theme }) => ({
   alignItems: "flex-start",
   flexDirection: "column",
   flex: 1,
+}));
+export const StyledDescription = styled(Typography)(({ theme }) => ({
+  display: "-webkit-box",
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: "vertical",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
 }));
 
 export const StyledDetails = styled("div")({

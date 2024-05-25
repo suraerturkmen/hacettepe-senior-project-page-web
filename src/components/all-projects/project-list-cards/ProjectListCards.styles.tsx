@@ -1,4 +1,4 @@
-import { Button, Dialog } from "@mui/material";
+import { Button, CircularProgress, Dialog } from "@mui/material";
 import { styled } from "@mui/material/styles";
 
 export const StyledProjectCardBoxes = styled("div")(({ theme }) => ({
@@ -30,6 +30,7 @@ export const StyledProjectCardListContainer = styled("div")(({ theme }) => ({
   flexDirection: "column",
   width: "100%",
   margin: "0 auto",
+  justifyContent: "center",
 }));
 
 export const StyledButton = styled(Button)(({ theme }) => ({
@@ -42,4 +43,12 @@ export const StyledButton = styled(Button)(({ theme }) => ({
     backgroundColor: "#4CAF50",
   },
   alignSelf: "center",
+}));
+
+export const StyledLoading = styled(CircularProgress)(({ theme }) => ({
+  display: "flex",
+  alignSelf: "center",
+  height: "100px",
+  fontSize: "24px",
+  color: "#790606",
 }));

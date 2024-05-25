@@ -11,6 +11,7 @@ import { set, useForm } from "react-hook-form";
 import RemoveIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
 import { StudentProperties } from "@/redux/features/CreateGroup";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 interface UpdateStudentGroupProps {
   defaultGroupName: string;
@@ -61,7 +62,7 @@ const UpdateStudentGroup = (props: UpdateStudentGroupProps): JSX.Element => {
 
   useEffect(() => {
     if (window !== undefined) {
-      const userId = localStorage.getItem("userId");
+      const userId = Cookies.get("userId");
       setSessionId(userId || "");
     }
   }, []);
@@ -93,7 +94,8 @@ const UpdateStudentGroup = (props: UpdateStudentGroupProps): JSX.Element => {
       />
     );
   });
-
+  const selectedUsernames = new Set(val.map((student) => student.username));
+  selectedUsernames.add(currentStudentName);
   return (
     <S.StyledProjectCardWrapper>
       <Typography variant="h2HeadlineBold" color="#D54949">
@@ -106,9 +108,12 @@ const UpdateStudentGroup = (props: UpdateStudentGroupProps): JSX.Element => {
             id="tags-standard"
             freeSolo
             filterSelectedOptions
-            options={students}
+            options={students.filter(
+              (option) => !selectedUsernames.has(option.username)
+            )}
             onChange={(e, newValue) => {
               setValue("groupMembers", newValue);
+              console.log("new", newValue);
               setVal(newValue as StudentProperties[]);
             }}
             getOptionLabel={(option: string | StudentProperties) => {

@@ -28,7 +28,6 @@ export const fetchGetAnnouncement = createAsyncThunk(
   "announcements/getAnnouncements",
   async (_, { rejectWithValue }) => {
     try {
-      console.log(localStorage.getItem("roles"));
       const response = await axiosInstance.post<AnnouncementData>(
         "announcements/getAnnouncements",
         _

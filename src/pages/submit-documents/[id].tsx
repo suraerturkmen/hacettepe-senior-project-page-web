@@ -6,10 +6,6 @@ import DocumentCard, {
   DocumentTypes,
 } from "@/components/submit-documents/document-card/DocumentCard";
 import { Typography } from "@mui/material";
-import {
-  ActiveSeniorProjectTermState,
-  fetchActiveSeniorProjectTerm,
-} from "@/redux/features/ActiveSeniorProjectTerm";
 import { store } from "@/redux/store";
 import {
   TimelineState,
@@ -17,11 +13,16 @@ import {
 } from "@/redux/features/TimelineSlice";
 import { GetServerSideProps } from "next";
 import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
+import {
+  AddGradeToDocumentRequest,
+  fetchAddGradeToDocument,
+} from "@/redux/features/AddGradeToDocument";
 
 interface Props {
   projectId: string;
   projectName: string;
   userType: UserType;
+  projectTypeId: string;
 }
 
 function setDocumentType(deliveryDate: Date): DocumentTypes {
@@ -40,9 +41,16 @@ function setDocumentType(deliveryDate: Date): DocumentTypes {
 }
 
 function SubmitDocumentPage(props: Props) {
-  const { projectId, projectName, userType } = props;
+  const { projectId, projectName, userType, projectTypeId } = props;
   const [documentCards, setDocumentCards] = useState<DocumentCardProps[]>([]);
-  const timelines = useTimeline();
+
+  const timelines = useTimeline(projectTypeId);
+
+  const handleGradeChange = async (
+    addGradeRequest: AddGradeToDocumentRequest
+  ) => {
+    await store.dispatch(fetchAddGradeToDocument(addGradeRequest));
+  };
 
   useEffect(() => {
     if (!timelines) return;
@@ -91,6 +99,7 @@ function SubmitDocumentPage(props: Props) {
             projectId={card.projectId}
             timelineId={card.timelineId}
             userType={userType}
+            handleGradeChange={handleGradeChange}
           />
         ))}
       </S.StyledDocumentCards>
@@ -111,6 +120,7 @@ function SubmitDocumentPage(props: Props) {
             projectId={card.projectId}
             timelineId={card.timelineId}
             userType={userType}
+            handleGradeChange={handleGradeChange}
           />
         ))}
       </S.StyledDocumentCards>
@@ -131,6 +141,7 @@ function SubmitDocumentPage(props: Props) {
             projectId={card.projectId}
             timelineId={card.timelineId}
             userType={userType}
+            handleGradeChange={handleGradeChange}
           />
         ))}
       </S.StyledDocumentCards>
@@ -147,27 +158,24 @@ SubmitDocumentPage.getLayout = (page: JSX.Element) => (
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { projectId, projectName, userType } = context.query;
+  const { projectId, projectName, userType, projectTypeId } = context.query;
 
   return {
     props: {
       projectId: projectId as string,
       projectName: projectName as string,
       userType: userType as UserType,
+      projectTypeId: projectTypeId as string,
     },
   };
 };
 
-function useTimeline(): TimelineState | undefined {
+function useTimeline(projectTypeId: string): TimelineState | undefined {
   const [timelineStateData, setTimelineStateData] = useState<TimelineState>();
-
-  const projectTypeId =
-    useActiveSeniorProjectTerm()?.activeSeniorProjectTermData?.data?.id || "";
 
   useEffect(() => {
     async function getData() {
       try {
-        if (!projectTypeId) return;
         const timelineRequest = {
           projectTypeId: projectTypeId,
         };
@@ -182,27 +190,4 @@ function useTimeline(): TimelineState | undefined {
   }, [projectTypeId]);
 
   return timelineStateData;
-}
-
-function useActiveSeniorProjectTerm():
-  | ActiveSeniorProjectTermState
-  | undefined {
-  const [activeSeniorProjectTermData, setActiveSeniorProjectTermData] =
-    useState<ActiveSeniorProjectTermState>();
-
-  useEffect(() => {
-    async function getData() {
-      try {
-        await store.dispatch(fetchActiveSeniorProjectTerm());
-        const activeSeniorProjectTermState =
-          store.getState().activeSeniorProjectTerm;
-        setActiveSeniorProjectTermData(activeSeniorProjectTermState);
-      } catch (error) {
-        console.error("Error fetching active senior project term:", error);
-      }
-    }
-    getData();
-  }, []);
-
-  return activeSeniorProjectTermData;
 }

@@ -11,10 +11,21 @@ export interface ProjectDetailCardProps {
   description: string;
   poster: string;
   isArrowVisible?: boolean;
+  isArchive: boolean;
+  projectTypeId: string;
 }
 
 const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
-  const { id, title, term, description, poster, isArrowVisible } = props;
+  const {
+    id,
+    title,
+    term,
+    description,
+    poster,
+    isArrowVisible,
+    isArchive,
+    projectTypeId,
+  } = props;
 
   const router = useRouter();
 
@@ -27,6 +38,7 @@ const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
         projectId: id,
         projectName: title,
         userType: userType as UserType,
+        projectTypeId: projectTypeId,
       },
     });
   };
@@ -36,7 +48,7 @@ const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
       {isArrowVisible && (
         <S.StyledUploadDocumentButton onClick={onDocumentClick}>
           <Typography variant="h5TaglineBold" color="#D54949">
-            Go to Upload Document
+            {isArchive ? "Go to Documents" : "Go to Upload Documents"}
           </Typography>
           <S.StyledArrowForwardIcon />
         </S.StyledUploadDocumentButton>

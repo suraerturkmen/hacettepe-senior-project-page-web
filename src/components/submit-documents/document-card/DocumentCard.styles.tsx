@@ -35,6 +35,7 @@ export const StyledUploadButton = styled(Button)(({ theme }) => ({
   cursor: "pointer",
   color: "#FFFFFF",
   width: "fit-content",
+  component: "span",
   ":hover": {
     backgroundColor: "#7D2E41",
   },
@@ -83,3 +84,43 @@ export const StyledUploadButtonArea = styled("div")({
   alignItems: "center",
   gap: "8px",
 });
+
+export const StyledGradeArea = styled("div")({
+  display: "flex",
+  gap: "8px",
+  alignItems: "flex-start",
+  justifyContent: "center",
+});
+
+export const StyledButtonAndGrade = styled("div")({
+  display: "flex",
+  gap: "16px",
+  flexDirection: "column",
+  alignItems: "center",
+});
+
+export const StyledSubmitButton = styled(Button)(({ theme }) => ({
+  backgroundColor: "#7D2E41",
+  color: "#FFFFFF",
+  padding: "16px",
+  borderRadius: "8px",
+  border: "none",
+  cursor: "pointer",
+  width: "fit-content",
+  ":hover": {
+    backgroundColor: "#7D2E41",
+  },
+}));
+
+export const StyledUpdateGradeButton = styled(Button)(({ theme }) => ({
+  backgroundColor: "#7D2E41",
+  color: "#FFFFFF",
+  padding: "8px",
+  borderRadius: "8px",
+  border: "none",
+  cursor: "pointer",
+  width: "fit-content",
+  ":hover": {
+    backgroundColor: "#7D2E41",
+  },
+}));

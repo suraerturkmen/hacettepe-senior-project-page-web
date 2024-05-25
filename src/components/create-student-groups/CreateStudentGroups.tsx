@@ -1,16 +1,11 @@
 import * as S from "@/components/create-student-groups/CreateStudentGroups.styles";
-import {
-  Typography,
-  TextField,
-  Button,
-  Autocomplete,
-  Chip,
-} from "@mui/material";
+import { Typography, TextField, Autocomplete, Chip } from "@mui/material";
 import { useEffect, useState } from "react";
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import RemoveIcon from "@mui/icons-material/RemoveCircleOutlineSharp";
 import { StudentProperties } from "@/redux/features/CreateGroup";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 interface CreateStudentGroupsProps {
   students: StudentProperties[];
@@ -31,7 +26,7 @@ const CreateStudentGroups = (props: CreateStudentGroupsProps): JSX.Element => {
 
   useEffect(() => {
     if (window !== undefined) {
-      const userId = localStorage.getItem("userId");
+      const userId = Cookies.get("userId");
       setSessionId(userId || "");
     }
   }, []);

@@ -8,6 +8,7 @@ import {
   UpdateProjectRequest,
   fetchUpdateProject,
 } from "@/redux/features/UpdateProject";
+import { ProjectStatus } from "@/redux/features/projectSlice";
 import { store } from "@/redux/store";
 import { GetServerSideProps } from "next";
 import { useEffect, useState } from "react";
@@ -20,6 +21,7 @@ interface Props {
   keywords?: string[];
   defaultStudentGroup?: string;
   professors?: string;
+  projectStatus: string;
 }
 
 function ProfessorProjectEditPage(props: Props) {
@@ -31,6 +33,7 @@ function ProfessorProjectEditPage(props: Props) {
     keywords,
     defaultStudentGroup,
     professors,
+    projectStatus,
   } = props;
   const newStudentLimit = parseInt(studentLimit);
 
@@ -55,6 +58,7 @@ function ProfessorProjectEditPage(props: Props) {
       defaultProfessors={professors || ""}
       allProfessors={professorsAllProfessors || []}
       currentProfessorUsername={currentProfessorUsername || ""}
+      projectStatus={projectStatus as ProjectStatus}
       onSubmit={onSubmit}
     />
   );
@@ -79,6 +83,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
     keywords,
     defaultStudentGroup,
     professors,
+    projectStatus,
   } = context.query;
 
   return {
@@ -90,6 +95,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       keywords: (keywords as string[]) || [],
       defaultStudentGroup: (defaultStudentGroup as string) || "",
       professors: (professors as string) || "",
+      projectStatus: projectStatus as string,
     },
   };
 };

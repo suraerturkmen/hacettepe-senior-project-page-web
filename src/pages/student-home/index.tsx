@@ -25,6 +25,7 @@ import {
   fetchGetAnnouncement,
 } from "@/redux/features/GetAnnouncement";
 import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
+import Cookies from "js-cookie";
 
 function StudentHomePage() {
   const itemCountPerPage = 5;
@@ -59,11 +60,11 @@ function StudentHomePage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const userIdFromLocalStorage = localStorage.getItem("userId") || "";
-      const rolesFromLocalStorage =
-        localStorage.getItem("roles") || JSON.stringify(["ROLE_USER"]);
-      const roles = JSON.parse(rolesFromLocalStorage);
-      setUserId(userIdFromLocalStorage);
+      const userIdFromCookies = Cookies.get("userId") || "";
+      const rolesFromCookies =
+        Cookies.get("roles") || JSON.stringify(["ROLE_USER"]);
+      const roles = JSON.parse(rolesFromCookies);
+      setUserId(userIdFromCookies);
       setRoles(roles);
     }
   }, []);
@@ -75,7 +76,7 @@ function StudentHomePage() {
       projectStateData?.data.map((project: Project) => ({
         id: project.id,
         title: project.title,
-        documents: [],
+        projectTypeId: project.projectTypeId,
       })) || [];
     setMyProjects(projects);
   }, [projectStateData]);
@@ -84,10 +85,12 @@ function StudentHomePage() {
     <S.StyledWrapper>
       <S.StyledFirstSection>
         <MyProjectOverview projects={myProjects} userType={UserType.Student} />
-        <TermTimeline
-          timelines={timelineData?.data || []}
-          termName="Senior Project 2023-2024"
-        />
+        {timelineData?.data && (
+          <TermTimeline
+            timelines={timelineData?.data || []}
+            termName="Senior Project 2023-2024"
+          />
+        )}
       </S.StyledFirstSection>
       <S.StyledAnnouncementSection>
         <Typography variant="h3TitleBold" color="#790606">
@@ -141,7 +144,7 @@ function useTimeline(): TimelineState | undefined {
   const [timelineStateData, setTimelineStateData] = useState<TimelineState>();
 
   const projectTypeId =
-    useActiveSeniorProjectTerm()?.activeSeniorProjectTermData.data.id || "";
+    useActiveSeniorProjectTerm()?.activeSeniorProjectTermData?.data?.id || "";
   useEffect(() => {
     async function getData() {
       try {
@@ -152,7 +155,6 @@ function useTimeline(): TimelineState | undefined {
         const timelineState = store.getState().timelines;
         setTimelineStateData(timelineState);
       } catch (error) {
-        // Handle error
         console.error("Error fetching timelines:", error);
       }
     }
@@ -176,7 +178,6 @@ function useActiveSeniorProjectTerm():
           store.getState().activeSeniorProjectTerm;
         setActiveSeniorProjectTermData(activeSeniorProjectTermState);
       } catch (error) {
-        // Handle error
         console.error("Error fetching active senior project term:", error);
       }
     }

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
+import Cookies from "js-cookie";
 
 export interface UploadDocumentRequest {
   documentName: string;
@@ -11,6 +12,7 @@ export interface Document {
   deliveryDate: string;
   projectId: string;
   file: string;
+  grade: number;
 }
 
 export interface FileData {
@@ -39,7 +41,7 @@ export const fetchDownloadDocument = createAsyncThunk(
   "documents/downloadDocument",
   async (updateRequest: UploadDocumentRequest, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = Cookies.get("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }

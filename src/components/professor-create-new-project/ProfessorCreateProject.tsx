@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import RemoveIcon from "@mui/icons-material/Remove";
+import Cookies from "js-cookie";
 
 interface ProfessorCreateProjectProps {
   allProfessors: ProfessorsProperties[];
@@ -41,7 +42,7 @@ function ProfessorCreateProject(props: ProfessorCreateProjectProps) {
 
   useEffect(() => {
     if (window !== undefined) {
-      const userId = localStorage.getItem("userId");
+      const userId = Cookies.get("userId");
       setSessionId(userId || "");
     }
   }, []);
@@ -102,7 +103,7 @@ function ProfessorCreateProject(props: ProfessorCreateProjectProps) {
           {allProfessors && (
             <Autocomplete
               multiple
-              id="professors"
+              id="Co-Supervisors"
               freeSolo
               filterSelectedOptions
               options={allProfessors}
@@ -126,7 +127,7 @@ function ProfessorCreateProject(props: ProfessorCreateProjectProps) {
                   variant="standard"
                   margin="normal"
                   fullWidth
-                  label="Select professors"
+                  label="Select Co-Supervisors"
                 />
               )}
             />

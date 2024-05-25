@@ -64,6 +64,17 @@ export const StyledActivateButton = styled(Button)({
   },
 });
 
+export const StyledDeactivateButton = styled(Button)({
+  backgroundColor: "#247690",
+  padding: "16px 24px",
+  border: "none",
+  borderRadius: "4px",
+  cursor: "pointer",
+  "&:hover": {
+    backgroundColor: "#5FA1B6",
+  },
+});
+
 export const StyledCreateProjectTypeButton = styled(Button)({
   backgroundColor: "#790606",
   padding: "16px 24px",

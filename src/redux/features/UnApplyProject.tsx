@@ -21,7 +21,7 @@ export interface ApplicationProperties {
 }
 
 export interface CreateApplicationRequest {
-  groupId: string;
+  studentId: string;
   projectId: string;
 }
 
@@ -47,8 +47,8 @@ const initialState: CreateApplicationState = {
   },
 };
 
-export const fetchCreateApplication = createAsyncThunk(
-  "applications/createApplicationByGroupToProject",
+export const fetchUnApplyProject = createAsyncThunk(
+  "applications/unApplyProject",
   async (createRequest: CreateApplicationRequest, { rejectWithValue }) => {
     try {
       const token = Cookies.get("jwtToken");
@@ -56,7 +56,7 @@ export const fetchCreateApplication = createAsyncThunk(
         throw new Error("JWT token not found");
       }
       const response = await axiosInstance.post<ApplicationData>(
-        "applications/createApplicationByGroupToProject",
+        "applications/unApplyProject",
         createRequest,
         {
           headers: {
@@ -72,15 +72,15 @@ export const fetchCreateApplication = createAsyncThunk(
   }
 );
 
-const createApplicationSlice = createSlice({
-  name: "createApplication",
+const unApplyProjectSlice = createSlice({
+  name: "unApplyProject",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchCreateApplication.fulfilled, (state, action) => {
+    builder.addCase(fetchUnApplyProject.fulfilled, (state, action) => {
       state.applicationData = action.payload;
     });
   },
 });
 
-export default createApplicationSlice.reducer;
+export default unApplyProjectSlice.reducer;

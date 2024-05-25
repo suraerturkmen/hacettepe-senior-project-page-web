@@ -10,6 +10,7 @@ import {
   fetchProjectsById,
 } from "@/redux/features/projectSlice";
 import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
+import Cookies from "js-cookie";
 
 function ProfessorMyProjectsPage() {
   const itemCountPerPage = 4;
@@ -32,11 +33,11 @@ function ProfessorMyProjectsPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const userIdFromLocalStorage = localStorage.getItem("userId") || "";
-      const rolesFromLocalStorage =
-        localStorage.getItem("roles") || JSON.stringify(["ROLE_USER"]);
-      const roles = JSON.parse(rolesFromLocalStorage);
-      setSessionId(userIdFromLocalStorage);
+      const userIdFromCookies = Cookies.get("userId") || "";
+      const rolesFromCookies =
+        Cookies.get("roles") || JSON.stringify(["ROLE_USER"]);
+      const roles = JSON.parse(rolesFromCookies);
+      setSessionId(userIdFromCookies);
       setUserRoles(roles);
     }
   }, []);

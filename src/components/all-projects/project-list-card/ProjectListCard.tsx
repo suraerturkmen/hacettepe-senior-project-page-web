@@ -1,7 +1,7 @@
 import Typography from "@mui/material/Typography";
 import * as S from "@/components/all-projects/project-list-card/ProjectListCard.styles";
 import { useRouter } from "next/router";
-import { Dialog, Drawer } from "@mui/material";
+import { Dialog, Drawer, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { GroupResponse } from "@/redux/features/GroupList";
 import {
@@ -9,6 +9,7 @@ import {
   ProjectStatus,
 } from "@/redux/features/projectSlice";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import Cookies from "js-cookie";
 
 export enum UserType {
   Student = "Student",
@@ -30,6 +31,7 @@ export interface AllProjectsCardProps {
   studentGroups?: GroupResponse[];
   professors?: ProfessorsProperties[];
   handleApply?: (groupId: string, projectId: string) => void;
+  handleUnApply?: (studentId: string, projectId: string) => void;
 }
 
 const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
@@ -48,6 +50,7 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
     studentGroups,
     professors,
     handleApply,
+    handleUnApply,
   } = props;
 
   const [open, setOpen] = useState(false);
@@ -79,7 +82,6 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
 
   const handleSelectGroup = (groupId: string) => {
     setOpen(false);
-    //window.location.reload;
     if (groupId !== "") {
       const selectedGroup = studentGroups?.find(
         (group) => group.id === groupId
@@ -91,11 +93,44 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
       ) {
         if (handleApply) {
           handleApply(groupId, id);
+          if (window !== undefined) {
+            window.location.reload();
+          }
         }
       } else {
         setErrorMessage("Your group achieved the maximum number of students.");
         setErrorOpen(true);
       }
+    }
+  };
+
+  const handleUnApplyButtonClick = () => {
+    if (handleUnApply) {
+      const studentId = Cookies.get("userId");
+      handleUnApply(studentId ?? "", id);
+      if (window !== undefined) {
+        window.location.reload();
+      }
+    }
+  };
+
+  const giveAppliedOrWorkingStatus = () => {
+    if (students?.length !== 0) {
+      return "IN PROGRESS";
+    } else if (isApplied) {
+      return "APPLIED";
+    } else {
+      return "APPLY";
+    }
+  };
+
+  const giveAppliedOrWorkingStatusButtonColor = () => {
+    if (students?.length !== 0) {
+      return "#C49403";
+    } else if (isApplied) {
+      return "#2E7D32";
+    } else {
+      return "#247690";
     }
   };
 
@@ -227,9 +262,11 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
               <Typography variant="bodyMedium" color="#7B809A">
                 Project Description:
               </Typography>
-              <Typography variant="bodyMedium" color="#344767">
-                {description}
-              </Typography>
+              <Tooltip title={description}>
+                <S.StyledDescription variant="bodyMedium" color="#344767">
+                  {description}
+                </S.StyledDescription>
+              </Tooltip>
             </S.StyledArea>
           )}
         </S.StyledDetails>
@@ -237,11 +274,13 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
       {userType === UserType.Student && (
         <S.StyledButton
           variant="contained"
-          $color={isApplied ? "#2E7D32" : "#247690"}
-          disabled={isApplied}
-          onClick={handleAppliedButtonClick}>
+          $color={giveAppliedOrWorkingStatusButtonColor()}
+          disabled={students?.length !== 0}
+          onClick={
+            isApplied ? handleUnApplyButtonClick : handleAppliedButtonClick
+          }>
           <Typography color="#FFFFFF">
-            {isApplied ? "APPLIED" : "APPLY"}
+            {giveAppliedOrWorkingStatus()}
           </Typography>
         </S.StyledButton>
       )}

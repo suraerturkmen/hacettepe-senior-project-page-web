@@ -4,6 +4,7 @@ import { HacettepeLogo } from "@/dummyData/dummyData";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { UserRole } from "@/layouts/DefaultLayouts";
+import Cookies from "js-cookie";
 
 interface Props {
   role: UserRole | null;
@@ -13,8 +14,15 @@ const Header = ({ role }: Props): JSX.Element => {
   const router = useRouter();
 
   const handleClick = () => {
-    localStorage.clear();
-    localStorage.setItem("role", UserRole.USER);
+    const clearAllCookies = () => {
+      const cookies = Cookies.get();
+      for (const cookie in cookies) {
+        Cookies.remove(cookie);
+      }
+    };
+
+    clearAllCookies();
+    Cookies.set("role", UserRole.USER);
     router.push("/").then(() => window.location.reload());
     console.log("Logged out");
   };

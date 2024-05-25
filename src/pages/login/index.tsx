@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { Typography } from "@mui/material";
 import { LoginLogo } from "@/dummyData/dummyData";
 import DefaultLayout, { UserRole } from "@/layouts/DefaultLayouts";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { login } from "@/redux/features/AuthSlice";
 import * as S from "@/components/login/Login.styles";
-import { AppDispatch } from "@/redux/store";
 import router from "next/router";
 import { store } from "@/redux/store";
+import Cookies from "js-cookie";
 
 export default function Login() {
   const {
@@ -26,8 +24,7 @@ export default function Login() {
     } catch (error) {
       console.error("Authentication Error:", error);
     }
-    const roles =
-      typeof window !== "undefined" ? localStorage.getItem("roles") : null;
+    const roles = typeof window !== "undefined" ? Cookies.get("roles") : null;
 
     if (roles) {
       const parsedRoles = JSON.parse(roles) as string[];
@@ -72,15 +69,6 @@ export default function Login() {
           </S.StyledTextFieldContainer>
           <S.StyledSignInButton type="submit">Sign In</S.StyledSignInButton>
         </form>
-        {/* <S.StyledOrArea>
-          <S.StyledHorizontalLine />
-          <S.StyledOrText>or</S.StyledOrText>
-          <S.StyledHorizontalLine />
-        </S.StyledOrArea>
-
-        <Typography variant="captionMedium" color="#514347" align="center">
-          Forgot Password
-        </Typography> */}
       </S.StyledInputAreasContainer>
     </S.StyledContainer>
   );

@@ -9,6 +9,7 @@ export interface Timeline {
   id: string;
   deliveryDate: Date;
   deliveryName: string;
+  grade: string;
 }
 
 interface TimelineData {

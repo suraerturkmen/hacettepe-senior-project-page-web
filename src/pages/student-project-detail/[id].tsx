@@ -11,10 +11,13 @@ interface Props {
   term: string;
   description: string;
   poster?: string;
+  isArchive: string;
+  projectTypeId: string;
 }
 
 function StudentProjectDetailPage(props: Props) {
-  const { id, title, term, description, poster } = props;
+  const { id, title, term, description, poster, isArchive, projectTypeId } =
+    props;
 
   return (
     <S.StyledContainer>
@@ -28,6 +31,8 @@ function StudentProjectDetailPage(props: Props) {
         description={description}
         poster={poster ?? ""}
         isArrowVisible={true}
+        isArchive={isArchive === "true"}
+        projectTypeId={projectTypeId}
       />
     </S.StyledContainer>
   );
@@ -42,7 +47,8 @@ StudentProjectDetailPage.getLayout = (page: JSX.Element) => (
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { id, title, term, description, poster } = context.query;
+  const { id, title, term, description, poster, isArchive, projectTypeId } =
+    context.query;
   return {
     props: {
       id: id as string,
@@ -50,6 +56,8 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       term: term as string,
       description: description as string,
       poster: (poster as string) || "",
+      isArchive: isArchive as string,
+      projectTypeId: projectTypeId as string,
     },
   };
 };

@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance, { setAuthToken } from "@/Service/Instance";
+import Cookies from "js-cookie";
 
 interface AuthState {
   token: string | null;
@@ -24,9 +25,9 @@ export const login = createAsyncThunk(
         password,
       });
       const { token, type, id, roles } = response.data;
-      localStorage.setItem("jwtToken", token);
-      localStorage.setItem("roles", JSON.stringify(roles));
-      localStorage.setItem("userId", id);
+      Cookies.set("jwtToken", token, { expires: 7 });
+      Cookies.set("roles", JSON.stringify(roles), { expires: 7 });
+      Cookies.set("userId", id, { expires: 7 });
       setAuthToken(token);
       return { token, type, id, roles };
     } catch (error) {
@@ -51,9 +52,19 @@ export const authSlice = createSlice({
       state.roles = null;
       state.type = null;
       state.id = null;
+      Cookies.remove("jwtToken");
+      Cookies.remove("roles");
+      Cookies.remove("userId");
     },
   },
-  extraReducers: (builder) => {},
+  extraReducers: (builder) => {
+    builder.addCase(login.fulfilled, (state, action) => {
+      state.token = action.payload.token;
+      state.type = action.payload.type;
+      state.id = action.payload.id;
+      state.roles = action.payload.roles;
+    });
+  },
 });
 
 export const { setToken, clearToken } = authSlice.actions;

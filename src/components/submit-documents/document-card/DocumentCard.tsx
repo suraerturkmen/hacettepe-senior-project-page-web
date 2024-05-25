@@ -1,7 +1,6 @@
 import * as S from "@/components/submit-documents/document-card/DocumentCard.styles";
-import { Button, Typography } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
-import axiosInstance from "@/Service/Instance";
+import { Button, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
 import {
   UploadDocumentRequest,
   fetchUploadDocument,
@@ -12,6 +11,9 @@ import {
 } from "@/redux/features/DownloadDocument";
 import { store } from "@/redux/store";
 import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
+import { useForm } from "react-hook-form";
+import DrawerWithButton from "@/components/drawers/drawer-with-button/DrawerWithButton";
+import ErrorDrawer from "@/components/drawers/error-drawer/ErrorDrawer";
 
 export enum DocumentTypes {
   current = "current",
@@ -27,102 +29,117 @@ export interface DocumentCardProps {
   timelineId: string;
   type: DocumentTypes;
   userType: UserType;
+  handleGradeChange?: (data: any) => void;
 }
 
-const DocumentCard = (props: DocumentCardProps): JSX.Element => {
+const DocumentCard = ({
+  type,
+  documentName,
+  dueDate,
+  projectId,
+  timelineId,
+  userType,
+  handleGradeChange,
+}: DocumentCardProps): JSX.Element => {
   const {
-    type,
-    documentName,
-    dueDate,
-    projectName,
-    projectId,
-    timelineId,
-    userType,
-  } = props;
-
-  const [uploadStatus, setUploadStatus] = useState("");
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const [file, setFile] = useState<File | null>(null);
   const [downloadResponse, setDownloadResponse] = useState<FileData | null>(
     null
   );
+  const [updateGrade, setUpdateGrade] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const [isError, setIsError] = useState(false);
+  const [grade, setGrade] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchDocument = async () => {
-      const request = {
-        documentName: `${projectId}_${timelineId}`,
-      };
+      const request = { documentName: `${projectId}_${timelineId}` };
       const response = await store.dispatch(fetchDownloadDocument(request));
       setDownloadResponse(response.payload as FileData);
+      setGrade(downloadResponse?.data?.grade || null);
     };
-
     fetchDocument();
-  }, [projectId, timelineId, uploadStatus]);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setFile(event.target.files[0]);
-    }
-  };
+  }, [downloadResponse?.data?.grade, projectId, timelineId]);
 
   const handleUpload = async () => {
     if (!file) {
-      setUploadStatus("No file selected");
+      setErrorMessage("No file selected");
+      setIsError(true);
       return;
     }
-
     const uploadRequest: UploadDocumentRequest = {
       projectId,
       timelineId,
       file,
     };
-
     try {
       await store.dispatch(fetchUploadDocument(uploadRequest));
-      setUploadStatus("Upload successful");
-      if (typeof window !== "undefined") {
-        // window.location.reload();
-      }
+      window.location.reload();
     } catch (error) {
       console.error("Error uploading file:", error);
-      setUploadStatus("Error uploading file");
+      setErrorMessage("Error uploading file");
+      setIsError(true);
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
+      setIsOpen(true);
     }
   };
 
   const handleDownload = async () => {
     try {
-      if (!downloadResponse || !downloadResponse.data) {
-        alert("No file to download");
+      if (!downloadResponse || !downloadResponse.data?.file) {
+        setErrorMessage("No file to open");
+        setIsError(true);
         return;
       }
-
       const binaryData = atob(downloadResponse.data.file);
       const arrayBuffer = new ArrayBuffer(binaryData.length);
       const uint8Array = new Uint8Array(arrayBuffer);
       for (let i = 0; i < binaryData.length; i++) {
         uint8Array[i] = binaryData.charCodeAt(i);
       }
-
       const pdfBlob = new Blob([arrayBuffer], { type: "application/pdf" });
       const url = window.URL.createObjectURL(pdfBlob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute(
-        "download",
-        `${downloadResponse.data.deliveryName}.pdf`
-      );
-      document.body.appendChild(link);
-      link.click();
-      window.URL.revokeObjectURL(url);
+      const newTab = window.open(url, "_blank");
+      if (!newTab) {
+        alert("Unable to open new tab. Please allow popups for this website.");
+      }
+      setTimeout(() => window.URL.revokeObjectURL(url), 100);
     } catch (error) {
-      console.error("Error downloading file:", error);
-      alert("Error downloading file");
+      console.error("Error opening file:", error);
+      setErrorMessage("Error opening file");
+      setIsError(true);
+    }
+  };
+
+  const onGradeSubmit = (data: any) => {
+    const grade = JSON.stringify(data.grade);
+    setGrade(data.grade);
+    const gradeRequest = {
+      documentName: `${projectId}_${timelineId}`,
+      grade,
+      projectId,
+      timelineId,
+    };
+    if (handleGradeChange) {
+      setUpdateGrade(false);
+      handleGradeChange(gradeRequest);
     }
   };
 
   const renderActionButton = () => {
     switch (type) {
       case DocumentTypes.current:
-        return (
+        return userType === UserType.Student ? (
           <>
             <input
               type="file"
@@ -131,45 +148,82 @@ const DocumentCard = (props: DocumentCardProps): JSX.Element => {
               style={{ display: "none" }}
               id="contained-button-file"
             />
-            {userType === UserType.Student && (
-              <>
+            <S.StyledButtonContainer>
+              <S.StyledDownloadButton
+                variant="contained"
+                onClick={handleDownload}>
+                Open Document
+              </S.StyledDownloadButton>
+              <S.StyledUploadButtonArea>
                 <label htmlFor="contained-button-file">
-                  <Button
+                  <S.StyledUploadButton
                     variant="contained"
-                    component="span"
-                    style={{ margin: "10px 0" }}>
-                    Select Document
-                  </Button>
+                    onClick={() =>
+                      document.getElementById("contained-button-file")?.click()
+                    }>
+                    Select and Upload Document
+                  </S.StyledUploadButton>
                 </label>
-                <S.StyledButtonContainer>
-                  <S.StyledDownloadButton
-                    variant="contained"
-                    onClick={handleDownload}>
-                    Download Document
-                  </S.StyledDownloadButton>
-                  <S.StyledUploadButtonArea>
-                    <S.StyledUploadButton
-                      variant="contained"
-                      onClick={handleUpload}>
-                      Upload Document
-                    </S.StyledUploadButton>
-                    <Typography variant="footnoteSmall">
-                      Max Size: 25MB
-                    </Typography>
-                  </S.StyledUploadButtonArea>
-                </S.StyledButtonContainer>
-                {uploadStatus && (
-                  <Typography color="error">{uploadStatus}</Typography>
-                )}
-              </>
+                <Typography variant="footnoteSmall">Max Size: 10MB</Typography>
+              </S.StyledUploadButtonArea>
+            </S.StyledButtonContainer>
+          </>
+        ) : null;
+      case DocumentTypes.passed:
+        return userType === UserType.Teacher ? (
+          <form onSubmit={handleSubmit(onGradeSubmit)}>
+            <S.StyledButtonAndGrade>
+              <S.StyledDownloadButton
+                variant="contained"
+                onClick={handleDownload}>
+                Open Past Document
+              </S.StyledDownloadButton>
+              {grade && !updateGrade ? (
+                <Typography variant="h6BodyTitleBold">
+                  Grade: {grade}
+                </Typography>
+              ) : (
+                <S.StyledGradeArea>
+                  <TextField
+                    id="grade"
+                    type="number"
+                    label="Grade"
+                    helperText="Enter grade"
+                    color="secondary"
+                    inputProps={{ max: 100 }}
+                    {...register("grade", {
+                      valueAsNumber: true,
+                      min: -1,
+                      max: 100,
+                      validate: (value) =>
+                        value <= 100 || "Grade must be 100 or less",
+                    })}
+                  />
+                  <S.StyledSubmitButton type="submit" variant="contained">
+                    Submit
+                  </S.StyledSubmitButton>
+                </S.StyledGradeArea>
+              )}
+              {grade && !updateGrade && (
+                <S.StyledUpdateGradeButton onClick={() => setUpdateGrade(true)}>
+                  Update Grade
+                </S.StyledUpdateGradeButton>
+              )}
+            </S.StyledButtonAndGrade>
+          </form>
+        ) : (
+          <>
+            <S.StyledDownloadButton
+              variant="contained"
+              onClick={handleDownload}>
+              Open Past Document
+            </S.StyledDownloadButton>
+            {downloadResponse?.data?.grade && (
+              <Typography variant="h6BodyTitleBold">
+                Grade: {downloadResponse.data.grade}
+              </Typography>
             )}
           </>
-        );
-      case DocumentTypes.passed:
-        return (
-          <S.StyledDownloadButton variant="contained" onClick={handleDownload}>
-            Download Past Document
-          </S.StyledDownloadButton>
         );
       case DocumentTypes.next:
         return (
@@ -184,6 +238,18 @@ const DocumentCard = (props: DocumentCardProps): JSX.Element => {
 
   return (
     <S.StyledDocumentCard>
+      <ErrorDrawer
+        errorMessage={errorMessage || ""}
+        isError={isError}
+        handleErrorMessageClose={() => setIsError(false)}
+      />
+      <DrawerWithButton
+        message="Are you sure you want to upload this document?"
+        isOpen={isOpen}
+        buttonName="Confirm Upload Document"
+        handleClose={() => setIsOpen(false)}
+        onClick={handleUpload}
+      />
       <S.StyledDocumentCardHeader></S.StyledDocumentCardHeader>
       <S.StyledDocumentCardBody>
         <S.StyledDocumentCardHeader>

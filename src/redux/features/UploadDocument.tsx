@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/documentInstance";
+import Cookies from "js-cookie";
 
 export interface UploadDocumentRequest {
   projectId: string;
@@ -41,7 +42,7 @@ export const fetchUploadDocument = createAsyncThunk(
   "documents/uploadDocument",
   async (uploadRequest: UploadDocumentRequest, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = Cookies.get("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }

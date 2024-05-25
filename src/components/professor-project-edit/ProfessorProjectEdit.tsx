@@ -3,9 +3,13 @@ import { Typography, TextField, Chip, Autocomplete } from "@mui/material";
 import { set, useForm } from "react-hook-form";
 import RemoveIcon from "@mui/icons-material/Remove";
 import { SetStateAction, use, useEffect, useState } from "react";
-import { ProfessorsProperties } from "@/redux/features/projectSlice";
+import {
+  ProfessorsProperties,
+  ProjectStatus,
+} from "@/redux/features/projectSlice";
 import { MuiChipsInput, MuiChipsInputChip } from "mui-chips-input";
 import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 export interface GroupProperties {
   id?: number;
@@ -22,6 +26,7 @@ interface ProfessorProjectEditProps {
   defaultProfessors: string;
   currentProfessorUsername: string;
   allProfessors: ProfessorsProperties[];
+  projectStatus: ProjectStatus;
   onSubmit: (data: any) => void;
 }
 
@@ -38,6 +43,7 @@ const ProfessorProjectEdit = (
     defaultProfessors,
     currentProfessorUsername,
     allProfessors,
+    projectStatus,
     onSubmit,
   } = props || {};
 
@@ -78,7 +84,7 @@ const ProfessorProjectEdit = (
 
   useEffect(() => {
     if (window !== undefined) {
-      const userId = localStorage.getItem("userId");
+      const userId = Cookies.get("userId");
       setSessionId(userId || "");
     }
   }, []);
@@ -164,7 +170,7 @@ const ProfessorProjectEdit = (
           {allProfessors && (
             <Autocomplete
               multiple
-              id="professors"
+              id="Co-Supervisors"
               freeSolo
               filterSelectedOptions
               options={allProfessors}
@@ -188,7 +194,7 @@ const ProfessorProjectEdit = (
                   variant="standard"
                   margin="normal"
                   fullWidth
-                  label="Select professors"
+                  label="Select Co-Supervisors"
                 />
               )}
             />
@@ -204,27 +210,29 @@ const ProfessorProjectEdit = (
               defaultValue={defaultStudentNumber || 0}
             />
           )}
-          {parsedDefaultStudentGroup && !!parsedDefaultStudentGroup?.id && (
-            <S.StyledStudentList>
-              <S.StyledHeaderArea>
-                <Typography variant="h5TaglineBold" color={"#344767"}>
-                  Group
-                </Typography>
-                <S.StyledRemoveArea
-                  onClick={() => {
-                    setParsedDefaultStudentGroup(null);
-                  }}>
-                  <S.StyledDeleteIcon />
-                  <Typography variant="captionBold" color="#F44334">
-                    Delete
+          {parsedDefaultStudentGroup &&
+            !!parsedDefaultStudentGroup?.id &&
+            ProjectStatus.Working === projectStatus && (
+              <S.StyledStudentList>
+                <S.StyledHeaderArea>
+                  <Typography variant="h5TaglineBold" color={"#344767"}>
+                    Group
                   </Typography>
-                </S.StyledRemoveArea>
-              </S.StyledHeaderArea>
-              {parsedDefaultStudentGroup.students?.map((studentName) => (
-                <Chip key={studentName} label={studentName} />
-              ))}
-            </S.StyledStudentList>
-          )}
+                  <S.StyledRemoveArea
+                    onClick={() => {
+                      setParsedDefaultStudentGroup(null);
+                    }}>
+                    <S.StyledDeleteIcon />
+                    <Typography variant="captionBold" color="#F44334">
+                      Delete
+                    </Typography>
+                  </S.StyledRemoveArea>
+                </S.StyledHeaderArea>
+                {parsedDefaultStudentGroup.students?.map((studentName) => (
+                  <Chip key={studentName} label={studentName} />
+                ))}
+              </S.StyledStudentList>
+            )}
           <MuiChipsInput
             id="keywords"
             label="Keywords"

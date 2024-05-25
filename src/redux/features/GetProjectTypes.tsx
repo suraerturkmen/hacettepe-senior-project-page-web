@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
 import { Timeline } from "./TimelineSlice";
+import Cookies from "js-cookie";
 
 export enum EProjectTypeStatus {
   ACTIVE = "ACTIVE",
@@ -41,12 +42,12 @@ export const fetchGetProjectTypes = createAsyncThunk(
   "projectTypes/getProjectTypes",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = Cookies.get("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }
 
-      const sessionId = localStorage.getItem("userId");
+      const sessionId = Cookies.get("userId");
       if (!sessionId) {
         throw new Error("Session ID not found");
       }

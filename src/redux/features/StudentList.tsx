@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
 import { StudentProperties } from "./CreateGroup";
+import Cookies from "js-cookie";
 
 export interface StudentResponse {
   students: StudentProperties[];
@@ -36,12 +37,12 @@ export const fetchGetStudents = createAsyncThunk(
   "users/getStudents",
   async (_, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = Cookies.get("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }
 
-      const sessionId = localStorage.getItem("userId");
+      const sessionId = Cookies.get("userId");
       if (!sessionId) {
         throw new Error("Session ID not found");
       }

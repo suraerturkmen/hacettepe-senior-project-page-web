@@ -27,6 +27,9 @@ import GetAnnouncement from "./features/GetAnnouncement";
 import UpdateAnnouncement from "./features/UpdateAnnouncement";
 import DownloadDocument from "./features/DownloadDocument";
 import GetUrlAndImages from "./features/GetUrlAndImages";
+import ArchivedSeniorProjectTerm from "./features/ArchivedSeniorProjectTerm";
+import DeactivateProjectTerm from "./features/DeactivateProjectTerm";
+import AddGradeToDocument from "./features/AddGradeToDocument";
 
 const rootReducer = combineReducers({
   projects: projectReducer,
@@ -47,6 +50,8 @@ const rootReducer = combineReducers({
   projectTypes: projectTypesReducer,
   createSeniorProjectType: CreateSeniorProjectType,
   activateSeniorProjectTerm: ActivateSeniorProjectTerm,
+  archivedSeniorProjectTerm: ArchivedSeniorProjectTerm,
+  deactivateProjectTerm: DeactivateProjectTerm,
   editSeniorProjectType: EditSeniorProjectType,
   getEmbeddings: GetEmbeddings,
   addEmbeddings: AddEmbeddingToProject,
@@ -57,6 +62,7 @@ const rootReducer = combineReducers({
   updateAnnouncement: UpdateAnnouncement,
   downloadDocument: DownloadDocument,
   urlAndImages: GetUrlAndImages,
+  gradeDocumentData: AddGradeToDocument,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

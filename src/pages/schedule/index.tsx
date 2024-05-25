@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import * as S from "@/components/admin-home/AdminHome.styles";
 import TermSchedules from "@/components/schedule/term-schedules/TermSchedules";
@@ -15,11 +15,43 @@ import {
   ScheduleDetail,
   TermScheduleProps,
 } from "@/components/schedule/term-schedule/TermSchedule";
+import ErrorDrawer from "@/components/drawers/error-drawer/ErrorDrawer";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 function SchedulePage() {
   const timelineData = useTimeline()?.timelineData;
   const activeSeniorProjectTermData = useActiveSeniorProjectTerm();
   const [termSchedule, setTermSchedule] = useState<TermScheduleProps[]>();
+  const [isError, setIsError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const router = useRouter();
+
+  const handleErrorMessageClose = () => {
+    setIsError(false);
+    const role = Cookies.get("role");
+    if (role === "ROLE_STUDENT") {
+      router.push("/student-home");
+    } else if (role === "ROLE_ADMIN") {
+      router.push("/admin-home");
+    } else if (role === "ROLE_PROFESSOR") {
+      router.push("/professor-home");
+    } else {
+      router.push("/");
+    }
+  };
+
+  useEffect(() => {
+    if (
+      activeSeniorProjectTermData?.activeSeniorProjectTermData?.success ===
+      false
+    ) {
+      setIsError(true);
+      setErrorMessage(
+        activeSeniorProjectTermData?.activeSeniorProjectTermData?.message ?? ""
+      );
+    }
+  }, [activeSeniorProjectTermData, router]);
 
   useEffect(() => {
     const tempTermScheduleDetail: ScheduleDetail = {
@@ -39,13 +71,18 @@ function SchedulePage() {
         "",
       terms: [tempTermScheduleDetail],
     };
-
     setTermSchedule([tempTermSchedule]);
   }, [timelineData, activeSeniorProjectTermData]);
 
   return (
     <S.StyledWrapper>
-      <TermSchedules termSchedules={termSchedule} />
+      <ErrorDrawer
+        errorMessage={errorMessage}
+        isError={isError}
+        handleErrorMessageClose={handleErrorMessageClose}
+      />
+      {isError && <S.StyledLoading />}
+      {!isError && <TermSchedules termSchedules={termSchedule} />}
     </S.StyledWrapper>
   );
 }
@@ -88,7 +125,6 @@ function useTimeline(): TimelineState | undefined {
   useEffect(() => {
     async function getData() {
       try {
-        if (!projectTypeId) return;
         const timelineRequest = {
           projectTypeId: projectTypeId,
         };

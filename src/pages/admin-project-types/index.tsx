@@ -13,7 +13,7 @@ import * as S from "@/components/admin-project-types/ProjectTypeList.styles";
 import { Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import ErrorDrawer from "@/components/drawers/error-drawer/ErrorDrawer";
-import { set } from "date-fns";
+import { fetchDeactivateSeniorProjectTerm } from "@/redux/features/DeactivateProjectTerm";
 
 function AdminProjectTypesPage() {
   const [activeTerms, setActiveTerms] = useState<ProjectTypeResponse[]>([]);
@@ -48,6 +48,16 @@ function AdminProjectTypesPage() {
     };
     console.log("request", request);
     await store.dispatch(fetchArchivedSeniorProjectTerm(request));
+    const archive = store.getState().archivedSeniorProjectTerm;
+    if (archive.archiveSeniorProjectTermData.success) {
+      console.log("Successfully activated project type");
+      setTimeout(() => {
+        if (window !== undefined) window.location.reload();
+      }, 50);
+    } else {
+      setErrorMessage(archive.archiveSeniorProjectTermData.message);
+      setOpen(true);
+    }
     setTimeout(() => {
       if (window !== undefined) window.location.reload();
     }, 50);
@@ -76,6 +86,22 @@ function AdminProjectTypesPage() {
     router.push("/admin-create-senior-project-term");
   };
 
+  const handleDeactivate = async (id: string) => {
+    const request = {
+      id: id,
+    };
+    await store.dispatch(fetchDeactivateSeniorProjectTerm(request));
+    const deactivate = store.getState().deactivateProjectTerm;
+    if (deactivate.deactiveSeniorProjectTermData.success) {
+      console.log("Successfully activated project type");
+      setTimeout(() => {
+        if (window !== undefined) window.location.reload();
+      }, 50);
+    } else {
+      setErrorMessage(deactivate.deactiveSeniorProjectTermData.message);
+      setOpen(true);
+    }
+  };
   return (
     <S.StyledPageContainer>
       <ErrorDrawer
@@ -94,6 +120,7 @@ function AdminProjectTypesPage() {
         archivedTerms={archivedTerms}
         handleArchive={handleArchive}
         handleActivate={handleActivate}
+        handleDeactivate={handleDeactivate}
       />
     </S.StyledPageContainer>
   );

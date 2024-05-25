@@ -1,5 +1,5 @@
 import { Delete, Edit, ArrowForward } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 import { styled } from "@mui/material/styles";
 
@@ -47,6 +47,14 @@ export const StyledDescriptionArea = styled("div")(({ theme }) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "center",
+}));
+
+export const StyledDescription = styled(Typography)(({ theme }) => ({
+  display: "-webkit-box",
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: "vertical",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
 }));
 
 export const StyledClickable = styled("div")({

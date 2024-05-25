@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
+import Cookies from "js-cookie";
 
 export interface ProfessorsProperties {
   id: string;
@@ -105,7 +106,7 @@ export const fetchProjectsById = createAsyncThunk(
   "projects/getMyProjects",
   async (idByProjectRequest: IdByProjectRequest, { rejectWithValue }) => {
     try {
-      const token = localStorage.getItem("jwtToken");
+      const token = Cookies.get("jwtToken");
       if (!token) {
         throw new Error("JWT token not found");
       }

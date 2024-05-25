@@ -10,6 +10,8 @@ import { fetchDeleteProject } from "@/redux/features/DeleteProject";
 import { store } from "@/redux/store";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
+import Cookies from "js-cookie";
+import { Tooltip } from "@mui/material";
 
 export interface CardProps {
   id: string;
@@ -43,13 +45,14 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
     professors,
     term,
     isArrowVisible,
+    projectTypeId,
   } = props;
 
   const router = useRouter();
+
   const handleDelete = () => {
     let sessionId = "";
-    if (typeof window !== "undefined")
-      sessionId = localStorage.getItem("userId") ?? "";
+    if (typeof window !== "undefined") sessionId = Cookies.get("userId") ?? "";
     else return;
     console.log("Deleting project with id: ", id);
     deleteProjectById(sessionId, id);
@@ -71,6 +74,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
           students: students,
         } as GroupProperties),
         professors: JSON.stringify(professors),
+        projectStatus: projectStatus,
       },
     });
   };
@@ -84,6 +88,8 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
         title: title,
         description: description,
         poster: poster,
+        isArchive: projectStatus === ProjectStatus.Past ? "true" : "false",
+        projectTypeId: projectTypeId,
       },
     });
   };
@@ -96,6 +102,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
         projectId: id,
         projectName: title,
         userType: userType,
+        projectTypeId: projectTypeId,
       },
     });
   };
@@ -116,12 +123,14 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
         </Typography>
         {userType === UserType.Teacher && (
           <S.StyledDeleteAndEdit>
-            <S.StyledClickable onClick={handleDelete}>
-              <S.StyledDeleteIcon />
-              <Typography variant="captionBold" color="#F44334">
-                Delete
-              </Typography>
-            </S.StyledClickable>
+            {projectStatus === ProjectStatus.Working && (
+              <S.StyledClickable onClick={handleDelete}>
+                <S.StyledDeleteIcon />
+                <Typography variant="captionBold" color="#F44334">
+                  Delete
+                </Typography>
+              </S.StyledClickable>
+            )}
             <S.StyledClickable onClick={handleEdit}>
               <S.StyledEditIcon />
               <Typography variant="captionBold" color="#344767">
@@ -153,9 +162,11 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
         <Typography variant="bodyMedium" color="#7B809A">
           Project Description:
         </Typography>
-        <Typography variant="captionBold" color="#344767">
-          {description}
-        </Typography>
+        <Tooltip title={description}>
+          <S.StyledDescription variant="captionBold" color="#344767">
+            {description}
+          </S.StyledDescription>
+        </Tooltip>
       </S.StyledDescriptionArea>
     </S.StyledCard>
   );
