@@ -77,3 +77,99 @@ export const StyledUploadDocumentButton = styled(Button)({
 export const StyledArrowForwardIcon = styled(ArrowForward)({
   color: "#D54949",
 });
+
+export const StyledLastDocumentArea = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+}));
+
+export const StyledSubmitButton = styled(Button)({
+  backgroundColor: "#D54949",
+  color: "#FFFFFF",
+  width: "fit-content",
+  alignSelf: "center",
+  ":hover": {
+    backgroundColor: "#D54949",
+  },
+});
+
+export const StyledButtonContainer = styled("div")({
+  display: "flex",
+  height: "fit-content",
+  gap: "16px",
+});
+
+export const StyledUploadButtonArea = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "8px",
+});
+
+export const StyledUploadButton = styled(Button)(({ theme }) => ({
+  backgroundColor: "#7D2E41",
+  padding: "16px",
+  borderRadius: "8px",
+  border: "none",
+  cursor: "pointer",
+  color: "#FFFFFF",
+  width: "fit-content",
+  component: "span",
+  ":hover": {
+    backgroundColor: "#7D2E41",
+  },
+}));
+
+export const StyledDownloadButton = styled(Button)(({ theme }) => ({
+  height: "fit-content",
+  backgroundColor: "#7E74F9",
+  color: "#FFFFFF",
+  padding: "16px",
+  borderRadius: "8px",
+  border: "none",
+  cursor: "pointer",
+  width: "fit-content",
+  ":hover": {
+    backgroundColor: "#7E74F9",
+  },
+}));
+
+export const StyledPosterArea = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+}));
+
+export const StyledDemoLinkArea = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+}));
+
+export const StyledWebsiteLinkArea = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+}));
+
+export const StyledUploadLastDocumentButton = styled(Button)({
+  backgroundColor: "#D54949",
+  color: "#FFFFFF",
+  padding: "16px",
+  width: "fit-content",
+  alignSelf: "center",
+  alignItems: "center",
+  textAlign: "center",
+  borderRadius: "8px",
+  ":hover": {
+    backgroundColor: "#D54949",
+  },
+});
+
+export const StyledUploadLastDocumentContainer = styled("div")({
+  display: "flex",
+  flexDirection: "column",
+  gap: "16px",
+  alignItems: "center",
+});

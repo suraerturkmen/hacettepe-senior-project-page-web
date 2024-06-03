@@ -4,13 +4,10 @@ import ProjectListCards from "@/components/my-projects/project-list-cards/Projec
 import * as S from "@/components/my-projects/project-list-cards/ProjectListCards.styles";
 import { CardProps } from "@/components/my-projects/project-list-card/ProjectListCard";
 import { store } from "@/redux/store";
-import {
-  ProjectState,
-  ProjectStatus,
-  fetchProjectsById,
-} from "@/redux/features/projectSlice";
 import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 import Cookies from "js-cookie";
+import { ProjectState, fetchProjectsById } from "@/redux/features/GetMyProject";
+import { ProjectStatus } from "@/redux/features/projectSlice";
 
 function ProfessorMyProjectsPage() {
   const itemCountPerPage = 4;
@@ -64,7 +61,7 @@ function ProfessorMyProjectsPage() {
           title: project.title,
           description: project.description,
           students: project.students,
-          projectStatus: ProjectStatus.Past,
+          projectStatus: ProjectStatus.Working,
           userType: UserType.Teacher,
           studentLimit: project.studentLimit,
           poster: project.poster,
@@ -156,7 +153,7 @@ function useFetchProfessorProjects(
       try {
         const idByProjectRequest = { sessionId, roles: roles };
         await store.dispatch(fetchProjectsById(idByProjectRequest));
-        const projectState = store.getState().projects;
+        const projectState = store.getState().myProjects;
         setProjectStateData(projectState);
       } catch (error) {
         console.error("Error fetching professor projects:", error);

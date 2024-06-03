@@ -1,8 +1,8 @@
 import * as S from "@/components/project-detail/ProjectDetailCard.styles";
-import { Typography } from "@mui/material";
+import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import { ProjectDetail } from "../professor-student-home-page/my-project-overview/MyProjectOverview";
 import { UserType } from "../all-projects/project-list-card/ProjectListCard";
+import { useState } from "react";
 
 export interface ProjectDetailCardProps {
   id?: string;
@@ -13,6 +13,8 @@ export interface ProjectDetailCardProps {
   isArrowVisible?: boolean;
   isArchive: boolean;
   projectTypeId: string;
+  demoLink?: string;
+  websiteLink?: string;
 }
 
 const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
@@ -25,9 +27,12 @@ const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
     isArrowVisible,
     isArchive,
     projectTypeId,
+    demoLink,
+    websiteLink,
   } = props;
 
   const router = useRouter();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const userType = isArrowVisible ? UserType.Student : UserType.Teacher;
   const onDocumentClick = () => {
@@ -43,8 +48,25 @@ const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
     });
   };
 
+  const handleOpenImageInDialog = () => {
+    setIsDialogOpen(true);
+  };
+
   return (
     <S.StyledCard>
+      <S.StyledDialog
+        open={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}>
+        <S.StyledDialogContent>
+          {poster && (
+            <S.StyledDialogImage
+              src={`data:image/png;base64,${poster}`}
+              alt="project poster"
+              onClick={handleOpenImageInDialog}
+            />
+          )}
+        </S.StyledDialogContent>
+      </S.StyledDialog>
       {isArrowVisible && (
         <S.StyledUploadDocumentButton onClick={onDocumentClick}>
           <Typography variant="h5TaglineBold" color="#D54949">
@@ -57,7 +79,13 @@ const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
         <Typography variant="h5TaglineBold" color="#344767">
           {title}
         </Typography>
-        {poster && <S.StyledImage src={poster} alt={title} />}
+        {poster && (
+          <S.StyledImage
+            src={`data:image/png;base64,${poster}`}
+            alt="project poster"
+            onClick={handleOpenImageInDialog}
+          />
+        )}
       </S.StyledImageTitleContainer>
       <S.StyledSection>
         <Typography variant="h5TaglineBold" color="#344767">
@@ -75,6 +103,35 @@ const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
           {description}
         </Typography>
       </S.StyledSection>
+      {demoLink && (
+        <S.StyledSection>
+          <Typography variant="h5TaglineBold" color="#344767">
+            Demo Link:
+          </Typography>
+          <Typography variant="captionBold" color="#344767">
+            <a
+              href={demoLink}
+              style={{ textDecoration: "none", color: "#344767" }}
+              target="_blank">
+              {demoLink}
+            </a>
+          </Typography>
+        </S.StyledSection>
+      )}
+      {websiteLink && (
+        <S.StyledSection>
+          <Typography variant="h5TaglineBold" color="#344767">
+            Website Link:
+          </Typography>
+          <Typography variant="captionBold" color="#344767">
+            <a
+              href={websiteLink}
+              style={{ textDecoration: "none", color: "#344767" }}>
+              {websiteLink}
+            </a>
+          </Typography>
+        </S.StyledSection>
+      )}
     </S.StyledCard>
   );
 };

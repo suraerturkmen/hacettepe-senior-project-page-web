@@ -237,7 +237,7 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
               ))}
             </S.StyledProfessors>
           </S.StyledArea>
-          {students && (
+          {students && students?.length > 0 && (
             <S.StyledArea>
               <Typography variant="bodyMedium" color={"#7B809A"}>
                 Students:

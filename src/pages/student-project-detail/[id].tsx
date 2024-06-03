@@ -1,23 +1,37 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import * as S from "@/components/project-detail/ProjectDetailCard.styles";
 import { Typography } from "@mui/material";
 import ProjectDetailCard from "@/components/project-detail/ProjectDetailCard";
 import { GetServerSideProps } from "next";
+import {
+  ProjectState,
+  fetchProjectByProjectId,
+} from "@/redux/features/GetProjectByProjectId";
+import { store } from "@/redux/store";
 
 interface Props {
   id: string;
-  title: string;
-  term: string;
-  description: string;
-  poster?: string;
   isArchive: string;
-  projectTypeId: string;
 }
 
 function StudentProjectDetailPage(props: Props) {
-  const { id, title, term, description, poster, isArchive, projectTypeId } =
-    props;
+  const { id, isArchive } = props;
+  const [projectStateData, setProjectStateData] = useState<ProjectState | null>(
+    null
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (id) {
+        await store.dispatch(fetchProjectByProjectId({ projectId: id }));
+        const projectState = store.getState().projectById;
+        setProjectStateData(projectState);
+      }
+    };
+
+    fetchData();
+  }, [id]);
 
   return (
     <S.StyledContainer>
@@ -26,13 +40,15 @@ function StudentProjectDetailPage(props: Props) {
       </Typography>
       <ProjectDetailCard
         id={id}
-        title={title}
-        term={term}
-        description={description}
-        poster={poster ?? ""}
-        isArrowVisible={true}
+        title={projectStateData?.projectData.data.title || ""}
+        term={projectStateData?.projectData.data.term || ""}
+        description={projectStateData?.projectData.data.description || ""}
+        poster={projectStateData?.projectData.data.poster || ""}
         isArchive={isArchive === "true"}
-        projectTypeId={projectTypeId}
+        projectTypeId={projectStateData?.projectData.data.projectTypeId || ""}
+        demoLink={projectStateData?.projectData.data.demoLink || ""}
+        websiteLink={projectStateData?.projectData.data.websiteLink || ""}
+        isArrowVisible={true}
       />
     </S.StyledContainer>
   );
@@ -47,17 +63,12 @@ StudentProjectDetailPage.getLayout = (page: JSX.Element) => (
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { id, title, term, description, poster, isArchive, projectTypeId } =
-    context.query;
+  const { id, isArchive } = context.query;
+
   return {
     props: {
       id: id as string,
-      title: title as string,
-      term: term as string,
-      description: description as string,
-      poster: (poster as string) || "",
       isArchive: isArchive as string,
-      projectTypeId: projectTypeId as string,
     },
   };
 };

@@ -11,7 +11,16 @@ import { store } from "@/redux/store";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 import Cookies from "js-cookie";
-import { Tooltip } from "@mui/material";
+import { TextField, Tooltip } from "@mui/material";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import {
+  UploadLastFilesRequest,
+  fetchUploadLastFiles,
+} from "@/redux/features/UploadPosterDemoLinkWebsiteLink";
+import { createFileFromBase64 } from "@/constants/ByteToPng";
+import ErrorDrawer from "@/components/drawers/error-drawer/ErrorDrawer";
+import DrawerWithButton from "@/components/drawers/drawer-with-button/DrawerWithButton";
 
 export interface CardProps {
   id: string;
@@ -28,6 +37,8 @@ export interface CardProps {
   projectTypeId: string;
   professors: ProfessorsProperties[];
   isArrowVisible?: boolean;
+  demoLink?: string;
+  websiteLink?: string;
 }
 
 const ProjectListCard = (props: CardProps): JSX.Element => {
@@ -46,17 +57,45 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
     term,
     isArrowVisible,
     projectTypeId,
+    demoLink,
+    websiteLink,
   } = props;
-
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>();
+  const [isError, setIsError] = useState(false);
+  const [uploadLastDocument, setUploadLastDocument] = useState(false);
+  const [message, setMessage] = useState("");
+  const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
+  const [handleFunction, setHandleFunction] = useState<() => void>(() => {});
+  const [buttonName, setButtonName] = useState<string>("");
 
-  const handleDelete = () => {
+  function handleDelete() {
     let sessionId = "";
     if (typeof window !== "undefined") sessionId = Cookies.get("userId") ?? "";
     else return;
-    console.log("Deleting project with id: ", id);
     deleteProjectById(sessionId, id);
     window.location.reload();
+  }
+
+  const handleClickDelete = () => {
+    setMessage(
+      "Are you sure you want to delete this project? All applications will be gone."
+    );
+    setIsDeleteDrawerOpen(true);
+    setHandleFunction(() => handleDelete);
+    setButtonName("Delete");
+  };
+
+  const handleConfirmAction = () => {
+    handleFunction();
+    setIsDeleteDrawerOpen(false);
   };
 
   const handleEdit = () => {
@@ -67,7 +106,6 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
         title: title,
         studentLimit: studentLimit,
         description: description,
-        poster: poster,
         keywords: keywords,
         defaultStudentGroup: JSON.stringify({
           id: groupId,
@@ -84,12 +122,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
       pathname: "/student-project-detail/[id]",
       query: {
         id: id,
-        term: term,
-        title: title,
-        description: description,
-        poster: poster,
         isArchive: projectStatus === ProjectStatus.Past ? "true" : "false",
-        projectTypeId: projectTypeId,
       },
     });
   };
@@ -107,8 +140,77 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
     });
   };
 
+  const handleOpen = async () => {
+    try {
+      if (!poster) {
+        setErrorMessage("No file to open");
+        setIsError(true);
+        return;
+      }
+      const { url, fileBlob, fileName } = createFileFromBase64(poster, title);
+      const newTab = window.open(url, "_blank");
+      if (!newTab) {
+        alert("Unable to open new tab. Please allow popups for this website.");
+      }
+      setTimeout(() => window.URL.revokeObjectURL(url), 100);
+    } catch (error) {
+      console.error("Error opening file:", error);
+      setErrorMessage("Error opening file");
+      setIsError(true);
+    }
+  };
+
+  const handleUpload = async (data: any) => {
+    setUploadLastDocument(false);
+    const byteCharacters = atob(poster);
+    const byteNumbers = new Array(byteCharacters.length);
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: "image/png" });
+
+    const posterFile = new File([blob], "poster.png", { type: "image/png" });
+
+    const uploadRequest: UploadLastFilesRequest = {
+      projectId: id,
+      demoLink: data.demoLink,
+      websiteLink: data.websiteLink,
+      posterFile: file || posterFile,
+    };
+    try {
+      await store.dispatch(fetchUploadLastFiles(uploadRequest));
+      //window.location.reload();
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setErrorMessage("Error uploading file");
+      setIsError(true);
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
+      setIsOpen(true);
+    }
+  };
+
+  console.log(userType, projectStatus);
   return (
     <S.StyledCard>
+      <ErrorDrawer
+        errorMessage={errorMessage ?? ""}
+        isError={isError}
+        handleErrorMessageClose={() => setIsError(false)}
+      />
+      <DrawerWithButton
+        message={message}
+        buttonName={buttonName}
+        isOpen={isDeleteDrawerOpen}
+        handleClose={() => setIsDeleteDrawerOpen(false)}
+        onClick={handleConfirmAction}
+      />
+
       {userType === UserType.Student && isArrowVisible && (
         <S.StyledUploadDocumentButton onClick={handleSubmitDocument}>
           <Typography variant="h5TaglineBold" color="#D54949">
@@ -124,7 +226,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
         {userType === UserType.Teacher && (
           <S.StyledDeleteAndEdit>
             {projectStatus === ProjectStatus.Working && (
-              <S.StyledClickable onClick={handleDelete}>
+              <S.StyledClickable onClick={handleClickDelete}>
                 <S.StyledDeleteIcon />
                 <Typography variant="captionBold" color="#F44334">
                   Delete
@@ -168,6 +270,97 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
           </S.StyledDescription>
         </Tooltip>
       </S.StyledDescriptionArea>
+      {poster && !uploadLastDocument && (
+        <S.StyledPosterArea>
+          <Typography variant="bodyMedium" color="#7B809A">
+            Poster:
+          </Typography>
+          <S.StyledDownloadButton variant="contained" onClick={handleOpen}>
+            Open Poster
+          </S.StyledDownloadButton>
+        </S.StyledPosterArea>
+      )}
+      {demoLink && !uploadLastDocument && (
+        <S.StyledDemoLinkArea>
+          <Typography variant="bodyMedium" color="#7B809A">
+            Demo Link:
+          </Typography>
+          <Typography variant="captionBold" color="#344767">
+            <a
+              href={demoLink}
+              style={{ textDecoration: "none", color: "#344767" }}>
+              {demoLink}
+            </a>
+          </Typography>
+        </S.StyledDemoLinkArea>
+      )}
+      {websiteLink && !uploadLastDocument && (
+        <S.StyledWebsiteLinkArea>
+          <Typography variant="bodyMedium" color="#7B809A">
+            Website Link:
+          </Typography>
+          <Typography variant="captionBold" color="#344767">
+            {websiteLink}
+          </Typography>
+        </S.StyledWebsiteLinkArea>
+      )}
+      {!uploadLastDocument && userType === UserType.Student && (
+        <S.StyledUploadLastDocumentButton
+          onClick={() => setUploadLastDocument(true)}
+          variant="contained">
+          <Typography variant="formButtonLargeLabel" color="FFFFFF">
+            Upload Last Document
+          </Typography>
+        </S.StyledUploadLastDocumentButton>
+      )}
+
+      {uploadLastDocument && userType === UserType.Student && (
+        <form onSubmit={handleSubmit(handleUpload)}>
+          <S.StyledUploadLastDocumentContainer>
+            <S.StyledButtonContainer>
+              <TextField
+                id="demoLink"
+                label="Demo Link"
+                helperText="Enter Demo Link"
+                color="secondary"
+                defaultValue={demoLink}
+                {...register("demoLink")}
+              />
+              <TextField
+                id="websiteLink"
+                label="Website Link"
+                helperText="Enter Website Link"
+                color="secondary"
+                defaultValue={websiteLink}
+                inputProps={{ maxLength: 100 }}
+                {...register("websiteLink")}
+              />
+              <input
+                type="file"
+                accept="image/png"
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+                id="contained-button-file"
+              />
+              <S.StyledUploadButtonArea>
+                <label htmlFor="contained-button-file">
+                  <S.StyledUploadButton
+                    variant="contained"
+                    onClick={() =>
+                      document.getElementById("contained-button-file")?.click()
+                    }>
+                    Select and Upload Poster
+                  </S.StyledUploadButton>
+                </label>
+                <Typography variant="footnoteSmall">Max Size: 10MB</Typography>
+              </S.StyledUploadButtonArea>
+            </S.StyledButtonContainer>
+            <S.StyledSubmitButton type="submit" variant="contained">
+              Submit
+            </S.StyledSubmitButton>
+          </S.StyledUploadLastDocumentContainer>
+        </form>
+      )}
     </S.StyledCard>
   );
 };

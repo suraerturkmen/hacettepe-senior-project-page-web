@@ -53,7 +53,6 @@ export const fetchDownloadDocument = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          //responseType: "blob",
         }
       );
 

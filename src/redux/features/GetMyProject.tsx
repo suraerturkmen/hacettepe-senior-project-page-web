@@ -1,25 +1,33 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axiosInstance from "@/Service/Instance";
-import { Project } from "./projectSlice";
 import Cookies from "js-cookie";
+import { Project } from "./projectSlice";
 
-export interface MyProjectRequest {
+export interface IdByProjectRequest {
   sessionId: string;
   roles: string[];
-}
-
-interface ProjectData {
-  success: boolean;
-  message: string;
-  data: Project[];
 }
 
 export interface ProjectState {
   projectData: {
     message: string;
+    number: number;
+    pageSize: number;
     success: boolean;
+    totalElements: number;
+    totalPages: number;
     data: Project[];
   };
+}
+
+export interface ProjectData {
+  success: boolean;
+  message: string;
+  data: Project[];
+  number: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
 }
 
 const initialState: ProjectState = {
@@ -27,12 +35,16 @@ const initialState: ProjectState = {
     success: false,
     message: "",
     data: [],
+    number: 0,
+    pageSize: 0,
+    totalElements: 0,
+    totalPages: 0,
   },
 };
 
-export const fetchMyProjects = createAsyncThunk(
+export const fetchProjectsById = createAsyncThunk(
   "projects/getMyProjects",
-  async (request: MyProjectRequest, { rejectWithValue }) => {
+  async (idByProjectRequest: IdByProjectRequest, { rejectWithValue }) => {
     try {
       const token = Cookies.get("jwtToken");
       if (!token) {
@@ -40,29 +52,30 @@ export const fetchMyProjects = createAsyncThunk(
       }
       const response = await axiosInstance.post<ProjectData>(
         "projects/getMyProjects",
-        request,
+        idByProjectRequest,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+
       return response.data;
     } catch (error: any) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data);
     }
   }
 );
 
-const myProjectSlice = createSlice({
-  name: "myProjects",
+const myprojectSlice = createSlice({
+  name: "myProject",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchMyProjects.fulfilled, (state, action) => {
+    builder.addCase(fetchProjectsById.fulfilled, (state, action) => {
       state.projectData = action.payload;
     });
   },
 });
 
-export default myProjectSlice.reducer;
+export default myprojectSlice.reducer;

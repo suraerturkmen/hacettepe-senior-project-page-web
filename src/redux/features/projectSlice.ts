@@ -25,11 +25,6 @@ export interface SearchRequest {
   pageSize: number;
 }
 
-export interface IdByProjectRequest {
-  sessionId: string;
-  roles: string[];
-}
-
 export interface Project {
   applicationIds: number[];
   students: string[];
@@ -38,10 +33,9 @@ export interface Project {
   groupId: string;
   id: string;
   title: string;
-  reportLink: string;
   term: string;
   working: boolean;
-  youtubeLink: string;
+  demoLink: string;
   projectStatus: ProjectStatus;
   keywords: string[];
   studentLimit: number;
@@ -50,9 +44,10 @@ export interface Project {
   myProject: boolean;
   applied: boolean;
   embedding: string;
+  websiteLink: string;
 }
 
-interface ProjectData {
+export interface ProjectData {
   success: boolean;
   message: string;
   data: Project[];
@@ -102,40 +97,12 @@ export const fetchProjects = createAsyncThunk(
   }
 );
 
-export const fetchProjectsById = createAsyncThunk(
-  "projects/getMyProjects",
-  async (idByProjectRequest: IdByProjectRequest, { rejectWithValue }) => {
-    try {
-      const token = Cookies.get("jwtToken");
-      if (!token) {
-        throw new Error("JWT token not found");
-      }
-      const response = await axiosInstance.post<ProjectData>(
-        "projects/getMyProjects",
-        idByProjectRequest,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      return response.data;
-    } catch (error: any) {
-      return rejectWithValue(error.response?.data);
-    }
-  }
-);
-
 const projectSlice = createSlice({
   name: "project",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(fetchProjects.fulfilled, (state, action) => {
-      state.projectData = action.payload;
-    });
-    builder.addCase(fetchProjectsById.fulfilled, (state, action) => {
       state.projectData = action.payload;
     });
   },

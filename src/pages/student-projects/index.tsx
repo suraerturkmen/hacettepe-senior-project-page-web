@@ -3,14 +3,11 @@ import DefaultLayout from "@/layouts/DefaultLayouts";
 import ProjectListCards from "@/components/my-projects/project-list-cards/ProjectListCards";
 import * as S from "@/components/my-projects/project-list-cards/ProjectListCards.styles";
 import { CardProps } from "@/components/my-projects/project-list-card/ProjectListCard";
-import {
-  ProjectState,
-  ProjectStatus,
-  fetchProjectsById,
-} from "@/redux/features/projectSlice";
+import { ProjectState, ProjectStatus } from "@/redux/features/projectSlice";
 import { store } from "@/redux/store";
 import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 import Cookies from "js-cookie";
+import { fetchProjectsById } from "@/redux/features/GetMyProject";
 
 function StudentMyProjectPage() {
   const itemCountPerPage = 4;
@@ -73,6 +70,8 @@ function StudentMyProjectPage() {
           term: project.term,
           projectTypeId: project.projectTypeId,
           professors: project.professors,
+          demoLink: project.demoLink,
+          websiteLink: project.websiteLink,
         }))
       );
 
@@ -91,6 +90,8 @@ function StudentMyProjectPage() {
           term: project.term,
           projectTypeId: project.projectTypeId,
           professors: project.professors,
+          demoLink: project.demoLink,
+          websiteLink: project.websiteLink,
         }))
       );
     }
@@ -158,7 +159,7 @@ function useFetchStudentProjects(
       try {
         const idByProjectRequest = { sessionId, roles: roles };
         await store.dispatch(fetchProjectsById(idByProjectRequest));
-        const projectState = store.getState().projects;
+        const projectState = store.getState().myProjects;
         setProjectStateData(projectState);
       } catch (error) {
         console.error("Error fetching professor projects:", error);

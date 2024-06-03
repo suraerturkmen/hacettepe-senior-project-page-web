@@ -18,10 +18,7 @@ import {
   Button,
 } from "@mui/material";
 import { store } from "@/redux/store";
-import {
-  GetEmbeddigProjectState,
-  fetchGetEmbeddings,
-} from "@/redux/features/AddNewProjectToAI";
+import { fetchGetEmbeddings } from "@/redux/features/AddNewProjectToAI";
 import { fetchAddEmbedding } from "@/redux/features/AddEmbeddingToProject";
 
 interface SearchForm {
@@ -45,7 +42,7 @@ async function usefetchAndAddEmbedding(project: Project) {
   async function fetchData() {
     if (embedding) {
       await store.dispatch(fetchAddEmbedding({ projectId, embedding }));
-      const addState = store.getState().addEmbeddings;
+      //const addState = store.getState().addEmbeddings;
     }
   }
   fetchData();
@@ -94,42 +91,36 @@ function Page() {
 
   const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setSearchType(newValue.toString());
-  };
-
-  const onSubmit = (data: SearchForm) => {
-    setSearchTerm(data.search);
+    setSearchTerm("");
     setCurrentPage(1);
   };
 
   return (
     <S.StyledContainer>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <S.StyledSearchContainer>
-          <FormControl>
-            <InputLabel>Term</InputLabel>
-          </FormControl>
-          <S.StyledSearchInputContainer>
-            <TextField
-              id="search"
-              label="Search"
-              variant="standard"
-              {...register("search")}
-            />
-            <Button variant="contained" type="submit">
-              Search
-            </Button>
-          </S.StyledSearchInputContainer>
-          <Tabs
-            value={searchType}
-            onChange={handleTabChange}
-            textColor="primary"
-            indicatorColor="primary">
-            <Tab label="TITLE" value="TITLE" />
-            <Tab label="AUTHORS" value="AUTHORS" />
-            <Tab label="KEYWORDS" value="KEYWORDS" />
-          </Tabs>
-        </S.StyledSearchContainer>
-      </form>
+      <S.StyledSearchContainer>
+        <FormControl>
+          <InputLabel>Term</InputLabel>
+        </FormControl>
+        <S.StyledSearchInputContainer>
+          <TextField
+            id="search"
+            label="Search"
+            variant="standard"
+            {...register("search")}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </S.StyledSearchInputContainer>
+        <Tabs
+          value={searchType}
+          onChange={handleTabChange}
+          textColor="primary"
+          indicatorColor="primary">
+          <Tab label="TITLE" value="TITLE" />
+          <Tab label="AUTHORS" value="AUTHORS" />
+          <Tab label="KEYWORDS" value="KEYWORDS" />
+        </Tabs>
+      </S.StyledSearchContainer>
       {currentProjects && <ProjectCards projects={currentProjects} />}
       <Pagination
         itemCountPerPage={itemCountPerPage}

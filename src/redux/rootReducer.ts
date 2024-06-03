@@ -1,7 +1,6 @@
 import { combineReducers } from "redux";
 import projectReducer from "./features/projectSlice";
 import authReducer from "./features/AuthSlice";
-import myProjectSliceReducer from "./features/MyProjectSlice";
 import timelineReducer from "./features/TimelineSlice";
 import ActiveSeniorProjectTerm from "./features/ActiveSeniorProjectTerm";
 import UpdateProject from "./features/UpdateProject";
@@ -30,11 +29,12 @@ import GetUrlAndImages from "./features/GetUrlAndImages";
 import ArchivedSeniorProjectTerm from "./features/ArchivedSeniorProjectTerm";
 import DeactivateProjectTerm from "./features/DeactivateProjectTerm";
 import AddGradeToDocument from "./features/AddGradeToDocument";
+import ProjectById from "./features/GetProjectByProjectId";
+import myprojectSliceReducer from "./features/GetMyProject";
 
 const rootReducer = combineReducers({
   projects: projectReducer,
   auth: authReducer,
-  myProjects: myProjectSliceReducer,
   timelines: timelineReducer,
   activeSeniorProjectTerm: ActiveSeniorProjectTerm,
   updateProject: UpdateProject,
@@ -63,6 +63,8 @@ const rootReducer = combineReducers({
   downloadDocument: DownloadDocument,
   urlAndImages: GetUrlAndImages,
   gradeDocumentData: AddGradeToDocument,
+  projectById: ProjectById,
+  myProjects: myprojectSliceReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

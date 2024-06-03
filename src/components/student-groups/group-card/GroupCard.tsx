@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import Cookies from "js-cookie";
+import DrawerWithButton from "@/components/drawers/drawer-with-button/DrawerWithButton";
 
 export interface AppliedProject {
   projectName: string;
@@ -24,6 +25,10 @@ const GroupCard = (props: GroupResponse): JSX.Element => {
   const { id, groupName, groupMembers, applications } = props;
   const [errorDelete, setErrorDelete] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [message, setMessage] = useState("");
+  const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
+  const [handleFunction, setHandleFunction] = useState<() => void>(() => {});
+  const [buttonName, setButtonName] = useState<string>("");
 
   const router = useRouter();
 
@@ -38,7 +43,7 @@ const GroupCard = (props: GroupResponse): JSX.Element => {
     });
   };
 
-  const handleDelete = async () => {
+  async function handleDelete() {
     let sessionId = "";
     if (typeof window !== "undefined") sessionId = Cookies.get("userId") ?? "";
     else return;
@@ -53,10 +58,32 @@ const GroupCard = (props: GroupResponse): JSX.Element => {
       setErrorDelete(true);
       setErrorMessage(deleteState.deleteResponse.message);
     }
+  }
+
+  const handleClickDelete = () => {
+    setMessage(
+      "Are you sure you want to delete this group? This action cannot be undone."
+    );
+    setIsDeleteDrawerOpen(true);
+    setHandleFunction(() => handleDelete);
+    setButtonName("Delete");
+  };
+
+  const handleConfirmAction = () => {
+    handleFunction();
+    setIsDeleteDrawerOpen(false);
   };
 
   return (
     <S.StyledCard>
+      <DrawerWithButton
+        message={message}
+        buttonName={buttonName}
+        isOpen={isDeleteDrawerOpen}
+        handleClose={() => setIsDeleteDrawerOpen(false)}
+        onClick={handleConfirmAction}
+      />
+
       <S.StyledDialog open={errorDelete} onClose={() => setErrorDelete(false)}>
         <S.StyledErrorContainer>
           <ErrorOutlineIcon style={{ color: "#F44334" }} />
@@ -124,7 +151,7 @@ const GroupCard = (props: GroupResponse): JSX.Element => {
           </Typography>
         </S.StyledEditSection>
         {
-          <S.StyledEditSection onClick={handleDelete}>
+          <S.StyledEditSection onClick={handleClickDelete}>
             <S.StyledDeleteIcon />
             <Typography variant="bodyBold" color="#F44334">
               Delete

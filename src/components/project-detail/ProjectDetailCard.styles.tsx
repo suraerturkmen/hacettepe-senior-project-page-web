@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, Dialog, DialogContent } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 
@@ -25,6 +25,7 @@ export const StyledImage = styled("img")({
   objectFit: "cover",
   objectPosition: "center",
   height: "350px",
+  cursor: "pointer",
 });
 
 export const StyledImageTitleContainer = styled("div")({
@@ -82,4 +83,29 @@ export const StyledUploadDocumentButton = styled(Button)({
 
 export const StyledArrowForwardIcon = styled(ArrowForwardIcon)({
   color: "#D54949",
+});
+
+export const StyledDialogContent = styled(DialogContent)({
+  display: "flex",
+  flexDirection: "column",
+  gap: "16px",
+  height: "100%",
+  alignItems: "center",
+});
+
+export const StyledDialog = styled(Dialog)({
+  "& .MuiDialog-container": {
+    "& .MuiPaper-root": {
+      width: "100%",
+      maxWidth: "800px",
+      borderRadius: "8px 8px 0 0",
+    },
+  },
+});
+
+export const StyledDialogImage = styled("img")({
+  objectFit: "cover",
+  objectPosition: "center",
+  height: "100%",
+  width: "100%",
 });

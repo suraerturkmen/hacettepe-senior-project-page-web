@@ -9,7 +9,6 @@ import { Typography } from "@mui/material";
 import Accordions from "@/reusable-components/accordions/Accordions";
 import Pagination from "@/reusable-components/pagination/Pagination";
 import { Project } from "@/redux/features/projectSlice";
-import { ProjectState, fetchMyProjects } from "@/redux/features/MyProjectSlice";
 import { store } from "@/redux/store";
 import {
   TimelineState,
@@ -26,6 +25,7 @@ import {
 } from "@/redux/features/GetAnnouncement";
 import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 import Cookies from "js-cookie";
+import { ProjectState, fetchProjectsById } from "@/redux/features/GetMyProject";
 
 function StudentHomePage() {
   const itemCountPerPage = 5;
@@ -127,7 +127,7 @@ function useMyProject(
           sessionId: userId,
           roles: roles,
         };
-        await store.dispatch(fetchMyProjects(myProjectRequest));
+        await store.dispatch(fetchProjectsById(myProjectRequest));
         const projectState = store.getState().myProjects;
         setProjectStateData(projectState);
       } catch (error) {
