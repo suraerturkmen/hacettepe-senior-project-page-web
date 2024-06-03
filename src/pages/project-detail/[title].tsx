@@ -18,6 +18,10 @@ import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import Slider, { Settings } from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import {
+  ProjectStateId,
+  fetchProjectByProjectId,
+} from "@/redux/features/GetProjectByProjectId";
 
 interface Props {
   id: string;
@@ -25,6 +29,7 @@ interface Props {
   term: string;
   description: string;
   poster?: string;
+  isArchive: string;
 }
 
 const SETTINGS: Settings = {
@@ -39,8 +44,10 @@ const SETTINGS: Settings = {
 };
 
 function ProjectDetailPage(props: Props) {
-  const { id, title, term, description, poster } = props;
+  const { id, title, term, description, poster, isArchive } = props;
   const [recommends, setRecommends] = useState<Project[]>();
+  const [projectStateData, setProjectStateData] =
+    useState<ProjectStateId | null>(null);
   const ids = useRecommendedIds(id);
 
   const recommendProjects = useRecommendedProjects(
@@ -51,6 +58,18 @@ function ProjectDetailPage(props: Props) {
     setRecommends(recommendProjects?.projectData.data);
   }, [recommendProjects]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      if (id) {
+        await store.dispatch(fetchProjectByProjectId({ projectId: id }));
+        const projectState = store.getState().projectById;
+        setProjectStateData(projectState);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
   console.log(recommends);
   return (
     <S.StyledContainer>
@@ -58,10 +77,16 @@ function ProjectDetailPage(props: Props) {
         Project Detail
       </Typography>
       <ProjectDetailCard
-        title={title}
-        term={term}
-        description={description}
-        poster={poster ?? ""}
+        id={id}
+        title={projectStateData?.projectData.data.title || ""}
+        term={projectStateData?.projectData.data.term || ""}
+        description={projectStateData?.projectData.data.description || ""}
+        poster={projectStateData?.projectData.data.poster || ""}
+        isArchive={isArchive === "true"}
+        projectTypeId={projectStateData?.projectData.data.projectTypeId || ""}
+        demoLink={projectStateData?.projectData.data.demoLink || ""}
+        websiteLink={projectStateData?.projectData.data.websiteLink || ""}
+        isArrowVisible={true}
       />
       <S.StyledProjectCardContainer>
         {recommends?.length ? (
@@ -97,7 +122,7 @@ ProjectDetailPage.getLayout = (page: JSX.Element) => (
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { id, title, term, description, poster } = context.query;
+  const { id, title, term, description, poster, isArchive } = context.query;
   return {
     props: {
       id: id as string,
@@ -105,6 +130,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (
       term: term as string,
       description: description as string,
       poster: (poster as string) || "",
+      isArchive: isArchive as string,
     },
   };
 };

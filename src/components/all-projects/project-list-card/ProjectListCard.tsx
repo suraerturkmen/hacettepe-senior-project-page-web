@@ -67,6 +67,7 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
         title: title,
         description: description,
         poster: poster,
+        isArchive: projectType === ProjectStatus.Past,
       },
     });
   };

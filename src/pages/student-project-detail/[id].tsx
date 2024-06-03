@@ -5,7 +5,7 @@ import { Typography } from "@mui/material";
 import ProjectDetailCard from "@/components/project-detail/ProjectDetailCard";
 import { GetServerSideProps } from "next";
 import {
-  ProjectState,
+  ProjectStateId,
   fetchProjectByProjectId,
 } from "@/redux/features/GetProjectByProjectId";
 import { store } from "@/redux/store";
@@ -17,9 +17,8 @@ interface Props {
 
 function StudentProjectDetailPage(props: Props) {
   const { id, isArchive } = props;
-  const [projectStateData, setProjectStateData] = useState<ProjectState | null>(
-    null
-  );
+  const [projectStateData, setProjectStateData] =
+    useState<ProjectStateId | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {

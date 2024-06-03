@@ -13,7 +13,7 @@ interface ProjectData {
   data: Project;
 }
 
-export interface ProjectState {
+export interface ProjectStateId {
   projectData: {
     message: string;
     success: boolean;
@@ -21,7 +21,7 @@ export interface ProjectState {
   };
 }
 
-const initialState: ProjectState = {
+const initialState: ProjectStateId = {
   projectData: {
     success: false,
     message: "",
