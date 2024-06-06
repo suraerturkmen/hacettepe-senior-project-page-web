@@ -180,7 +180,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
     };
     try {
       await store.dispatch(fetchUploadLastFiles(uploadRequest));
-      //swindow.location.reload();
+      //window.location.reload();
     } catch (error) {
       console.error("Error uploading file:", error);
       setErrorMessage("Error uploading file");

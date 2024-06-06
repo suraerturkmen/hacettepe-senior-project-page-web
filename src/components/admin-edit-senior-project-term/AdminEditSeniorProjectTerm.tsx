@@ -8,6 +8,8 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import { format } from "date-fns";
 
 interface mockTimeline {
+  id: string;
+  term: string;
   deliveryName: string;
   deliveryDate: Date;
 }
@@ -27,8 +29,10 @@ function AdminEditSeniorProjectTerm(props: AdminEditSeniorProjectTermProps) {
 
   const [timelines, setTimelines] = useState<mockTimeline[]>([]);
   const [timeline, setTimeline] = useState<mockTimeline>({
+    id: "",
     deliveryName: "",
     deliveryDate: new Date(),
+    term: ""
   });
   const {
     register,
@@ -55,7 +59,6 @@ function AdminEditSeniorProjectTerm(props: AdminEditSeniorProjectTermProps) {
   };
 
   const beforeSubmit = async (data: any) => {
-    console.log(data);
     data.timelines = timelines;
     onSubmit(data);
   };
@@ -66,6 +69,14 @@ function AdminEditSeniorProjectTerm(props: AdminEditSeniorProjectTermProps) {
     };
   };
 
+  const handleDateChange = (index: number) => (date: Date | null) => {
+    if (!date) return;
+    setTimelines((prevTimelines) =>
+      prevTimelines.map((tl, i) => (i === index ? { ...tl, deliveryDate: date } : tl))
+    );
+  };
+
+  console.log(timelines)
   return (
     <S.StyledProjectCardWrapper>
       <Typography variant="h4SubtitleBold" color="#7D2E41">
@@ -89,8 +100,8 @@ function AdminEditSeniorProjectTerm(props: AdminEditSeniorProjectTermProps) {
           </S.StyledTimelineHeader>
 
           {timelines.map((timeline, index) => (
-            <>
-              <S.StyledTimelinesContainer key={index}>
+            <div key={index}>
+              <S.StyledTimelinesContainer>
                 <S.StyledOneTimeline>
                   <S.StyledTimelineWrapper>
                     <Typography variant="bodyMedium" color="#B1ACAC">
@@ -102,20 +113,23 @@ function AdminEditSeniorProjectTerm(props: AdminEditSeniorProjectTermProps) {
                     <Typography variant="bodyMedium" color="#B1ACAC">
                       Delivery Date
                     </Typography>
-                    <Typography variant="bodyMedium">
-                      {format(timeline.deliveryDate, "MMM dd, yyyy")}
-                    </Typography>
+                    <DatePicker
+                      value={new Date(timelines[index].deliveryDate)}
+                      onChange={handleDateChange(index)}
+                      maxDate={index < timelines.length - 1 ? new Date(timelines[index + 1].deliveryDate) : new Date}
+                    />
                   </S.StyledTimelineWrapper>
                 </S.StyledOneTimeline>
               </S.StyledTimelinesContainer>
-              <S.StyledRemoveContainer onClick={handleRemoveTimeline(index)}>
+              <S.StyledRemoveContainer onClick={() => handleRemoveTimeline(index)}>
                 <RemoveIcon />
                 <Typography variant="h7Bold" color={"#7D2E41"}>
                   Delete Timeline
                 </Typography>
               </S.StyledRemoveContainer>
-            </>
+            </div>
           ))}
+
           <TextField
             label="Delivery Name"
             variant="outlined"
@@ -125,11 +139,11 @@ function AdminEditSeniorProjectTerm(props: AdminEditSeniorProjectTermProps) {
             }
           />
           <DatePicker
-            value={timeline.deliveryDate}
+            value={timelines.length > 0 ? new Date(timelines[timelines.length - 1].deliveryDate) : new Date()}
             onChange={(value) =>
               setTimeline({ ...timeline, deliveryDate: value || new Date() })
             }
-            minDate={timeline.deliveryDate}
+            minDate={timelines.length > 0 ? new Date(timelines[timelines.length - 1].deliveryDate) : new Date()}
           />
           <S.StyledAddContainer onClick={handleAddTimeline}>
             <AddIcon />
@@ -142,7 +156,7 @@ function AdminEditSeniorProjectTerm(props: AdminEditSeniorProjectTermProps) {
           </S.StyledButton>
         </form>
       </S.StyledInputFieldsWrapper>
-    </S.StyledProjectCardWrapper>
+    </S.StyledProjectCardWrapper >
   );
 }
 

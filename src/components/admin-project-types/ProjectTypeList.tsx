@@ -5,6 +5,7 @@ import TermTimeline from "../professor-student-home-page/TermTimeline/TermTimeli
 import { useState } from "react";
 import DrawerWithButton from "../drawers/drawer-with-button/DrawerWithButton";
 import { useRouter } from "next/router";
+import { Timeline } from "@/redux/features/TimelineSlice";
 
 interface ProjectTypeListProps {
   activeTerms: ProjectTypeResponse[];
@@ -80,6 +81,10 @@ const ProjectTypeList = (props: ProjectTypeListProps): JSX.Element => {
     });
   };
 
+  const sortTimelines = (timelines: Timeline[]) => {
+    return [...timelines].sort((a, b) => new Date(a.deliveryDate).getTime() - new Date(b.deliveryDate).getTime());
+  };
+
   return (
     <S.StyledWrapper>
       <DrawerWithButton
@@ -106,7 +111,7 @@ const ProjectTypeList = (props: ProjectTypeListProps): JSX.Element => {
                     Edit
                   </Typography>
                 </S.StyledEditSection>
-                <TermTimeline timelines={term.timelines} termName={term.name} />
+                <TermTimeline timelines={sortTimelines(term.timelines)} termName={term.name} />
                 <S.StyledActivateButton
                   variant="contained"
                   onClick={() => handleClickActivate(term.id)}>
@@ -138,7 +143,7 @@ const ProjectTypeList = (props: ProjectTypeListProps): JSX.Element => {
                     Edit
                   </Typography>
                 </S.StyledEditSection>
-                <TermTimeline timelines={term.timelines} termName={term.name} />
+                <TermTimeline timelines={sortTimelines(term.timelines)} termName={term.name} />
                 <S.StyledArchiveButton
                   variant="contained"
                   onClick={() => handleClickArchive(term.id)}>
@@ -162,7 +167,7 @@ const ProjectTypeList = (props: ProjectTypeListProps): JSX.Element => {
           </S.StyledProjectTypesHeader>
           {archivedTerms.map((term) => (
             <S.StyledProjectType key={term.id}>
-              <TermTimeline timelines={term.timelines} termName={term.name} />
+              <TermTimeline timelines={sortTimelines(term.timelines)} termName={term.name} />
               <S.StyledDeactivateButton
                 variant="contained"
                 onClick={() => handleClickDeactivate(term.id)}>

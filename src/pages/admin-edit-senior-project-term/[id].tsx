@@ -25,6 +25,7 @@ function AdminEditSeniorProjectTermPage(props: Props) {
   const onSubmit = async (data: EditSeniorProjectTermRequest) => {
     data.id = id;
     await store.dispatch(fetchEditSeniorProjectTerm(data));
+    console.log(data)
     const create = store.getState().editSeniorProjectType;
     if (create.seniorProjectData.success) {
       // create success drawer
