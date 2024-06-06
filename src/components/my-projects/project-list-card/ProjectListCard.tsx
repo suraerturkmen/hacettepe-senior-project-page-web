@@ -180,7 +180,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
     };
     try {
       await store.dispatch(fetchUploadLastFiles(uploadRequest));
-      //window.location.reload();
+      //swindow.location.reload();
     } catch (error) {
       console.error("Error uploading file:", error);
       setErrorMessage("Error uploading file");
@@ -195,7 +195,6 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
     }
   };
 
-  console.log(userType, projectStatus);
   return (
     <S.StyledCard>
       <ErrorDrawer
@@ -225,7 +224,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
         </Typography>
         {userType === UserType.Teacher && (
           <S.StyledDeleteAndEdit>
-            {projectStatus === ProjectStatus.Working && (
+            {projectStatus !== ProjectStatus.Past && (
               <S.StyledClickable onClick={handleClickDelete}>
                 <S.StyledDeleteIcon />
                 <Typography variant="captionBold" color="#F44334">
@@ -250,7 +249,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
           </S.StyledClickable>
         )}
       </S.StyledFirstLine>
-      {students && (
+      {students && students.length > 0 && (
         <S.StyledStudentsArea>
           <Typography variant="bodyMedium" color="#7B809A">
             Students:

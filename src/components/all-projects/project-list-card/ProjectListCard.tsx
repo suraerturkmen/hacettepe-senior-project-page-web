@@ -14,6 +14,7 @@ import Cookies from "js-cookie";
 export enum UserType {
   Student = "Student",
   Teacher = "Teacher",
+  Admin = "Admin",
 }
 
 export interface AllProjectsCardProps {
@@ -218,7 +219,7 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
         <S.StyledDetails>
           <S.StyledArea>
             <Typography variant="bodyMedium" style={{ color: "#7B809A" }}>
-              {professors?.length ?? 0 > 1 ? "Professors:" : "Professor:"}
+              {professors && professors?.length > 1 ? "Professors:" : "Professor:"}
             </Typography>
             <S.StyledProfessors>
               {professors?.map((professor, professorIndex) => (

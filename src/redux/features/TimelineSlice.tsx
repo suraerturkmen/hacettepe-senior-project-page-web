@@ -10,6 +10,7 @@ export interface Timeline {
   deliveryDate: Date;
   deliveryName: string;
   grade: string;
+  term: string;
 }
 
 interface TimelineData {

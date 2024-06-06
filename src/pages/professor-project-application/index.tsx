@@ -19,8 +19,10 @@ function ProfessorProjectApplicationPage() {
   const router = useRouter();
 
   const handleErrorMessageClose = () => {
-    setIsError(false);
     router.push("/professor-home");
+    setTimeout(() => {
+      setIsError(false);
+    }, 50);
   };
 
   useEffect(() => {

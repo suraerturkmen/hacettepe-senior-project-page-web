@@ -24,7 +24,7 @@ const MyProjectOverview = (props: MyProjectOverviewProps): JSX.Element => {
         id: project.id,
         projectId: project.id,
         projectName: project.title,
-        userType: userType as UserType,
+        userType: userType,
         projectTypeId: project.projectTypeId,
       },
     });
@@ -37,7 +37,7 @@ const MyProjectOverview = (props: MyProjectOverviewProps): JSX.Element => {
       </Typography>
       <S.StyledAllProjects>
         {projects.map((project, index) => (
-          <S.StyledProjectContainer key={index}>
+          <S.StyledProjectContainer key={project.title}>
             {project.title && (
               <S.StyledTypography variant="h7Bold" color="#344767">
                 {project.title}

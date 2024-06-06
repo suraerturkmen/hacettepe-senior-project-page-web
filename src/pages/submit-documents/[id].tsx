@@ -29,7 +29,7 @@ function setDocumentType(deliveryDate: Date): DocumentTypes {
   const currentDate = new Date();
 
   if (
-    deliveryDate.getTime() - 7 * 24 * 60 * 60 * 1000 >= currentDate.getTime() &&
+    deliveryDate.getTime() - 7 * 24 * 60 * 60 * 1000 <= currentDate.getTime() &&
     deliveryDate.getTime() >= currentDate.getTime()
   ) {
     return DocumentTypes.current;
@@ -102,6 +102,10 @@ function SubmitDocumentPage(props: Props) {
             handleGradeChange={handleGradeChange}
           />
         ))}
+        {currentDocumentCards && currentDocumentCards.length == 0 &&
+          <Typography variant="h7Bold" color="GrayText">
+            Currently, there is no open timeline for document upload.
+          </Typography>}
       </S.StyledDocumentCards>
       <S.StyledDivider />
       <S.StyledDocumentCards>
@@ -109,6 +113,7 @@ function SubmitDocumentPage(props: Props) {
           <Typography variant="h4SubtitleBold" color="#344767">
             Next Documents
           </Typography>
+
         </S.StyledDocumentCardsHeader>
         {nextDocumentCards.map((card) => (
           <DocumentCard
@@ -123,6 +128,10 @@ function SubmitDocumentPage(props: Props) {
             handleGradeChange={handleGradeChange}
           />
         ))}
+        {nextDocumentCards && nextDocumentCards.length == 0 &&
+          <Typography variant="h7Bold" color="GrayText">
+            There is no upcoming timeline for document upload
+          </Typography>}
       </S.StyledDocumentCards>
       <S.StyledDivider />
       <S.StyledDocumentCards>
@@ -144,8 +153,12 @@ function SubmitDocumentPage(props: Props) {
             handleGradeChange={handleGradeChange}
           />
         ))}
+        {passedDocumentCards && passedDocumentCards.length == 0 && <Typography variant="h7Bold" color="GrayText">
+          There is no passed timeline for document upload.
+        </Typography>}
+
       </S.StyledDocumentCards>
-    </S.StyledWrapper>
+    </S.StyledWrapper >
   );
 }
 

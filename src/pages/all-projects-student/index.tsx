@@ -100,7 +100,7 @@ function ProfessorAllProjectsPage() {
           title={`${term} Term Projects`}
           itemCountPerPage={itemCountPerPage}
           currentPage={currentPageProject}
-          totalPages={totalPages || 0}
+          totalPages={totalPages ?? 0}
           handlePageChange={handlePageChangeProject}
           userType={UserType.Student}
           studentGroups={studentGroups?.groupData.data}

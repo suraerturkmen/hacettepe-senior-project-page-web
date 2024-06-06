@@ -17,7 +17,6 @@ import { useEffect, useState } from "react";
 
 function ProfessorCreateNewProjectPage() {
   const onSubmit = async (data: CreateProjectRequest) => {
-    console.log(data);
     await store.dispatch(fetchCreateProject(data));
   };
 
@@ -26,13 +25,13 @@ function ProfessorCreateNewProjectPage() {
   const currentProfessorUsername = professorsResponse?.currentProfessorUsername;
   const activeSeniorProjectTermData =
     useActiveSeniorProjectTerm()?.activeSeniorProjectTermData.data;
-  const activeTerm = activeSeniorProjectTermData?.term || "";
-  const projectTypeId = activeSeniorProjectTermData?.id || "";
+  const activeTerm = activeSeniorProjectTermData?.term ?? "";
+  const projectTypeId = activeSeniorProjectTermData?.id ?? "";
 
   return (
     <ProfessorCreateProject
       allProfessors={professorsAllProfessors || []}
-      currentProfessorUsername={currentProfessorUsername || ""}
+      currentProfessorUsername={currentProfessorUsername ?? ""}
       term={activeTerm}
       projectTypeId={projectTypeId}
       onSubmit={onSubmit}
@@ -77,7 +76,6 @@ function useActiveSeniorProjectTerm():
           store.getState().activeSeniorProjectTerm;
         setActiveSeniorProjectTermData(activeSeniorProjectTermState);
       } catch (error) {
-        // Handle error
         console.error("Error fetching active senior project term:", error);
       }
     }

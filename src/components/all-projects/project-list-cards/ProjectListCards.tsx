@@ -19,6 +19,7 @@ interface ProjectCardsProps {
   handleApply?: (groupId: string, projectId: string) => void;
   handleUnApply?: (studentId: string, projectId: string) => void;
   appliedGroupId?: string;
+  isError?: boolean;
 }
 
 const ProjectCards = (props: ProjectCardsProps): JSX.Element => {
@@ -33,6 +34,7 @@ const ProjectCards = (props: ProjectCardsProps): JSX.Element => {
     studentGroups,
     handleApply,
     handleUnApply,
+    isError
   } = props;
   return (
     <S.StyledProjectCardWrapper>
@@ -41,18 +43,19 @@ const ProjectCards = (props: ProjectCardsProps): JSX.Element => {
           {title}
         </Typography>
       )}
+      {isError && <Typography variant="h7Bold" color="GrayText">
+        There is no project.
+      </Typography>}
       <S.StyledProjectCardBoxes>
-        {projects.map((project, index) => (
-          <>
-            <ProjectCard
-              key={index}
-              userType={userType}
-              studentGroups={studentGroups}
-              handleApply={handleApply}
-              handleUnApply={handleUnApply}
-              {...project}
-            />
-          </>
+        {projects.map((project) => (
+          <ProjectCard
+            key={project.title}
+            userType={userType}
+            studentGroups={studentGroups}
+            handleApply={handleApply}
+            handleUnApply={handleUnApply}
+            {...project}
+          />
         ))}
       </S.StyledProjectCardBoxes>
       <Pagination

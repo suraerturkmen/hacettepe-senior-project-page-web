@@ -18,6 +18,7 @@ function ProfessorAllProjectsPage() {
   const [errorMessage, setErrorMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [term, setTerm] = useState("");
+  const [projectNoError, setProjectNoError] = useState(false);
 
   const handlePageChangeProject = (page: number) => {
     setCurrentPageProject(page);
@@ -32,7 +33,7 @@ function ProfessorAllProjectsPage() {
   let sessionId = "";
 
   if (typeof window !== "undefined") {
-    sessionId = Cookies.get("userId") || "";
+    sessionId = Cookies.get("userId") ?? "";
   }
 
   const currentProjects = useFetchActiveSeniorProjects(
@@ -45,11 +46,15 @@ function ProfessorAllProjectsPage() {
     if (currentProjects?.projectData.success === false) {
       setIsError(true);
       setErrorMessage(currentProjects?.projectData.message || "");
+      setProjectNoError(true);
+
     } else {
-      setTerm(currentProjects?.projectData?.message || "");
+      setTerm(currentProjects?.projectData?.message ?? "");
       if (currentProjects?.projectData.data.length === 0) {
         setErrorMessage("No projects found");
         setIsError(true);
+        setProjectNoError(true);
+
       }
     }
   }, [currentProjects, router]);
@@ -83,23 +88,20 @@ function ProfessorAllProjectsPage() {
         isError={isError}
         handleErrorMessageClose={handleErrorMessageClose}
       />
-      {isError ? null : (
-        <>
-          <S.StyledButton variant="contained" onClick={handleCreateProject}>
-            Create Project
-          </S.StyledButton>
-          <ProjectListCards
-            projects={modifiedProjects || []}
-            title={`${term} Term Projects`}
-            itemCountPerPage={itemCountPerPage}
-            currentPage={currentPageProject}
-            totalPages={totalPages || 0}
-            handlePageChange={handlePageChangeProject}
-            userType={UserType.Teacher}
-          />
-        </>
-      )}
-    </S.StyledProjectCardListContainer>
+      <S.StyledButton variant="contained" onClick={handleCreateProject}>
+        Create Project
+      </S.StyledButton>
+      <ProjectListCards
+        projects={modifiedProjects || []}
+        title={`${term} Term Projects`}
+        itemCountPerPage={itemCountPerPage}
+        currentPage={currentPageProject}
+        totalPages={totalPages ?? 0}
+        handlePageChange={handlePageChangeProject}
+        userType={UserType.Teacher}
+        isError={projectNoError}
+      />
+    </S.StyledProjectCardListContainer >
   );
 }
 

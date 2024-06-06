@@ -44,7 +44,7 @@ const Header = ({ role }: Props): JSX.Element => {
             </Link>
             <Link href="/all-projects-student">
               <Typography variant="h5TaglineBold" component="span">
-                Opened Projects
+                Active Projects
               </Typography>
             </Link>
             <Link href="/student-groups">
@@ -69,7 +69,7 @@ const Header = ({ role }: Props): JSX.Element => {
             </Link>
             <Link href="/all-projects-professor">
               <Typography variant="h5TaglineBold" component="span">
-                Opened Projects
+                Active Projects
               </Typography>
             </Link>
             <Link href="/professor-project-application">
@@ -87,9 +87,14 @@ const Header = ({ role }: Props): JSX.Element => {
                 Home
               </Typography>
             </Link>
+            <Link href="/all-projects-admin">
+              <Typography variant="h5TaglineBold" component="span">
+                Active Projects
+              </Typography>
+            </Link>
             <Link href="/admin-project-types">
               <Typography variant="h5TaglineBold" component="span">
-                Project Types
+                Project Terms
               </Typography>
             </Link>
           </>
@@ -128,11 +133,13 @@ const Header = ({ role }: Props): JSX.Element => {
         </S.StyledTypography>
         <S.StyledButtonContainer>
           {roleBasedLinks()}
-          <Link href="/schedule">
-            <Typography variant="h5TaglineBold" component="span">
-              Timeline
-            </Typography>
-          </Link>
+          {(role === UserRole.USER || role === null) &&
+            < Link href="/schedule">
+              <Typography variant="h5TaglineBold" component="span">
+                Timeline
+              </Typography>
+            </Link>
+          }
           {role !== UserRole.USER && role != null ? (
             <Link href="/" onClick={handleClick}>
               <Typography variant="h5TaglineBold" component="span">
@@ -148,7 +155,7 @@ const Header = ({ role }: Props): JSX.Element => {
           )}
         </S.StyledButtonContainer>
       </S.StyledContentContainer>
-    </S.StyledAppBar>
+    </S.StyledAppBar >
   );
 };
 

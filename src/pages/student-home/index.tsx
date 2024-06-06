@@ -60,9 +60,9 @@ function StudentHomePage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const userIdFromCookies = Cookies.get("userId") || "";
+      const userIdFromCookies = Cookies.get("userId") ?? "";
       const rolesFromCookies =
-        Cookies.get("roles") || JSON.stringify(["ROLE_USER"]);
+        Cookies.get("roles") ?? JSON.stringify(["ROLE_USER"]);
       const roles = JSON.parse(rolesFromCookies);
       setUserId(userIdFromCookies);
       setRoles(roles);
@@ -88,7 +88,7 @@ function StudentHomePage() {
         {timelineData?.data && (
           <TermTimeline
             timelines={timelineData?.data || []}
-            termName="Senior Project 2023-2024"
+            termName={`Senior Project ${timelineData.data[0].term}`}
           />
         )}
       </S.StyledFirstSection>

@@ -27,7 +27,7 @@ const CreateStudentGroups = (props: CreateStudentGroupsProps): JSX.Element => {
   useEffect(() => {
     if (window !== undefined) {
       const userId = Cookies.get("userId");
-      setSessionId(userId || "");
+      setSessionId(userId ?? "");
     }
   }, []);
 
@@ -39,7 +39,7 @@ const CreateStudentGroups = (props: CreateStudentGroupsProps): JSX.Element => {
     onSubmit(data);
     setTimeout(() => {
       router.push("/student-groups");
-    }, 50);
+    }, 100);
   };
   const [val, setVal] = useState<StudentProperties[]>([]);
 

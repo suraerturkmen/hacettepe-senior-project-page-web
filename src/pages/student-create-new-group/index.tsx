@@ -21,7 +21,7 @@ function CreateStudentGroupsPage() {
   return (
     <CreateStudentGroups
       students={allStudents || []}
-      currentStudentName={currentStudent || ""}
+      currentStudentName={currentStudent ?? ""}
       onSubmit={onSubmit}
     />
   );

@@ -57,7 +57,7 @@ export const StyledProjectCardContainer = styled("div")({
     display: "flex",
     ".slick-slide > div": {
       display: "flex",
-      height: "100%",
+      height: "calc(100% - 10px)",
     },
   },
 

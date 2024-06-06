@@ -57,7 +57,9 @@ function ProfessorCreateProject(props: ProfessorCreateProjectProps) {
     if (!val) data.professors = [];
     console.log(data);
     onSubmit(data);
-    router.push("/all-projects-professor");
+    setTimeout(() => {
+      router.push("/all-projects-professor");
+    }, 100);
   };
 
   const [val, setVal] = useState<ProfessorsProperties[]>([]);
@@ -89,6 +91,7 @@ function ProfessorCreateProject(props: ProfessorCreateProjectProps) {
             label="Title"
             helperText="Enter title of the project"
             color="secondary"
+            required
             {...register("title")}
           />
           <TextField
@@ -98,6 +101,7 @@ function ProfessorCreateProject(props: ProfessorCreateProjectProps) {
             label="Description"
             helperText="Enter description of the project"
             color="secondary"
+            required
             {...register("description")}
           />
           {allProfessors && (
@@ -138,6 +142,7 @@ function ProfessorCreateProject(props: ProfessorCreateProjectProps) {
             label="Maximum student expected"
             helperText="Enter maximum number of students expected"
             color="secondary"
+            required
             {...register("studentLimit")}
           />
           <MuiChipsInput

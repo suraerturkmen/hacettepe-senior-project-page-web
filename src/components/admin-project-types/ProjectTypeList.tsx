@@ -30,7 +30,7 @@ const ProjectTypeList = (props: ProjectTypeListProps): JSX.Element => {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [buttonName, setButtonName] = useState<string>("");
   const [handleFunction, setHandleFunction] = useState<(id: string) => void>(
-    () => {}
+    () => { }
   );
   const router = useRouter();
 
@@ -125,12 +125,19 @@ const ProjectTypeList = (props: ProjectTypeListProps): JSX.Element => {
         <>
           <S.StyledProjectTypes>
             <S.StyledProjectTypesHeader>
+
               <Typography variant="h4SubtitleBold" color="#344767">
                 Active Term
               </Typography>
             </S.StyledProjectTypesHeader>
             {activeTerms.map((term) => (
               <S.StyledProjectType key={term.id}>
+                <S.StyledEditSection onClick={() => handleEdit(term)}>
+                  <S.StyledEditIcon />
+                  <Typography variant="bodyBold" color="#344767">
+                    Edit
+                  </Typography>
+                </S.StyledEditSection>
                 <TermTimeline timelines={term.timelines} termName={term.name} />
                 <S.StyledArchiveButton
                   variant="contained"

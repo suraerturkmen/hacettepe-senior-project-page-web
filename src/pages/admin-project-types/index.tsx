@@ -46,11 +46,10 @@ function AdminProjectTypesPage() {
     const request = {
       id: id,
     };
-    console.log("request", request);
     await store.dispatch(fetchArchivedSeniorProjectTerm(request));
     const archive = store.getState().archivedSeniorProjectTerm;
     if (archive.archiveSeniorProjectTermData.success) {
-      console.log("Successfully activated project type");
+      console.log("Successfully activated project term");
       setTimeout(() => {
         if (window !== undefined) window.location.reload();
       }, 50);
@@ -71,7 +70,7 @@ function AdminProjectTypesPage() {
     await store.dispatch(fetchActivateSeniorProjectTerm(request));
     const activate = store.getState().activateSeniorProjectTerm;
     if (activate.activeSeniorProjectTermData.success) {
-      console.log("Successfully activated project type");
+      console.log("Successfully activated project term");
       setTimeout(() => {
         if (window !== undefined) window.location.reload();
       }, 50);
@@ -93,7 +92,6 @@ function AdminProjectTypesPage() {
     await store.dispatch(fetchDeactivateSeniorProjectTerm(request));
     const deactivate = store.getState().deactivateProjectTerm;
     if (deactivate.deactiveSeniorProjectTermData.success) {
-      console.log("Successfully activated project type");
       setTimeout(() => {
         if (window !== undefined) window.location.reload();
       }, 50);
@@ -111,7 +109,7 @@ function AdminProjectTypesPage() {
       />
       <S.StyledCreateProjectTypeButton onClick={handleCreateSeniorProjectTerm}>
         <Typography variant="h5TaglineBold" color="#FFFFFF">
-          Create Project Type
+          Create Project Term
         </Typography>
       </S.StyledCreateProjectTypeButton>
       <ProjectTypeList
@@ -141,7 +139,7 @@ function useFetchGetProjectTypes() {
         const projectTypes = store.getState().projectTypes.projectTypeData.data;
         setProjectTypes(projectTypes);
       } catch (error) {
-        console.error("Error fetching project types", error);
+        console.error("Error fetching project terms", error);
       }
     }
     fetchData();

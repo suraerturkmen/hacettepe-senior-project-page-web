@@ -40,9 +40,7 @@ function Page() {
   )?.projectData;
 
   pagingData?.data.forEach((project) => {
-    console.log(project.embedding)
     if (!project.embedding) {
-      console.log("here")
       usefetchAndAddEmbedding(project);
     }
   });
@@ -73,6 +71,11 @@ function Page() {
     setCurrentPage(1);
   };
 
+  const handleSearchTerm = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+    setCurrentPage(1);
+  }
+
   return (
     <S.StyledContainer>
       <S.StyledSearchContainer>
@@ -86,7 +89,7 @@ function Page() {
             variant="standard"
             {...register("search")}
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={handleSearchTerm}
           />
         </S.StyledSearchInputContainer>
         <Tabs

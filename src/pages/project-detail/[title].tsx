@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import DefaultLayout from "@/layouts/DefaultLayouts";
+import DefaultLayout, { UserRole } from "@/layouts/DefaultLayouts";
 import * as S from "@/components/project-detail/ProjectDetailCard.styles";
 import { Typography } from "@mui/material";
 import ProjectDetailCard from "@/components/project-detail/ProjectDetailCard";
@@ -22,6 +22,8 @@ import {
   ProjectStateId,
   fetchProjectByProjectId,
 } from "@/redux/features/GetProjectByProjectId";
+import Cookies from "js-cookie";
+
 
 interface Props {
   id: string;
@@ -65,6 +67,29 @@ function ProjectDetailPage(props: Props) {
     setRecommends(recommendProjects?.projectData.data);
   }, [recommendProjects]);
 
+
+  const [userRole, setUserRole] = useState<UserRole | null>(null);
+  const roles = typeof window !== "undefined" ? Cookies.get("roles") : null;
+
+  useEffect(() => {
+    if (roles) {
+      const parsedRoles = JSON.parse(roles) as string[];
+      if (parsedRoles.includes(UserRole.ADMIN)) {
+        setUserRole(UserRole.ADMIN);
+        Cookies.set("role", UserRole.ADMIN);
+      } else if (parsedRoles.includes(UserRole.PROFESSOR)) {
+        setUserRole(UserRole.PROFESSOR);
+        Cookies.set("role", UserRole.PROFESSOR);
+      } else if (parsedRoles.includes(UserRole.STUDENT)) {
+        setUserRole(UserRole.STUDENT);
+        Cookies.set("role", UserRole.STUDENT);
+      } else {
+        setUserRole(UserRole.USER);
+        Cookies.set("role", UserRole.USER);
+      }
+    }
+  }, [roles]);
+
   return (
     <S.StyledContainer>
       <Typography variant="h3TitleBold" color="#344767">
@@ -72,18 +97,23 @@ function ProjectDetailPage(props: Props) {
       </Typography>
       <ProjectDetailCard
         id={id}
-        title={projectStateData?.projectData.data.title || ""}
-        term={projectStateData?.projectData.data.term || ""}
-        description={projectStateData?.projectData.data.description || ""}
-        poster={projectStateData?.projectData.data.poster || ""}
+        title={projectStateData?.projectData.data.title ?? ""}
+        term={projectStateData?.projectData.data.term ?? ""}
+        description={projectStateData?.projectData.data.description ?? ""}
+        poster={projectStateData?.projectData.data.poster ?? ""}
         isArchive={isArchive === "true"}
-        projectTypeId={projectStateData?.projectData.data.projectTypeId || ""}
-        demoLink={projectStateData?.projectData.data.demoLink || ""}
-        websiteLink={projectStateData?.projectData.data.websiteLink || ""}
+        projectTypeId={projectStateData?.projectData.data.projectTypeId ?? ""}
+        demoLink={projectStateData?.projectData.data.demoLink ?? ""}
+        websiteLink={projectStateData?.projectData.data.websiteLink ?? ""}
         isArrowVisible={false}
       />
+      {recommends && recommends?.length > 0 && (userRole === null || userRole === UserRole.USER) &&
+        <Typography variant="h3TitleBold" color="#344767">
+          Recommends
+        </Typography >
+      }
       <S.StyledProjectCardContainer>
-        {recommends?.length ? (
+        {recommends?.length ? ((userRole === null || userRole === UserRole.USER) &&
           <Slider {...SETTINGS}>
             {recommends.map((project) => (
               <ProjectCard
@@ -99,12 +129,13 @@ function ProjectDetailPage(props: Props) {
                   ...project.professors.map((professor) => professor.username),
                 ]}
                 projectStatus={project.projectStatus}
+                relatedTopics={project.keywords}
               />
             ))}
           </Slider>
         ) : null}
       </S.StyledProjectCardContainer>
-    </S.StyledContainer>
+    </S.StyledContainer >
   );
 }
 

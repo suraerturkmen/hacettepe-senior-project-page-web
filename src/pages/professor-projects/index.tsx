@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, use } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import DefaultLayout from "@/layouts/DefaultLayouts";
 import ProjectListCards from "@/components/my-projects/project-list-cards/ProjectListCards";
 import * as S from "@/components/my-projects/project-list-cards/ProjectListCards.styles";
@@ -14,8 +14,12 @@ function ProfessorMyProjectsPage() {
   const [currentPageWorkingProject, setCurrentPageWorkingProject] = useState(1);
   const [currentPageArchivedProject, setCurrentPageArchivedProject] =
     useState(1);
+  const [currentPageNotStartedProject, setCurrentPageNotStartedProject] =
+    useState(1);
   const [workingProjects, setWorkingProjects] = useState<CardProps[]>([]);
   const [archivedProjects, setArchivedProjects] = useState<CardProps[]>([]);
+  const [notStartedProjects, setNotStartedProjects] = useState<CardProps[]>([]);
+
 
   const handlePageChangeWorkingProject = (page: number) => {
     setCurrentPageWorkingProject(page);
@@ -25,6 +29,10 @@ function ProfessorMyProjectsPage() {
     setCurrentPageArchivedProject(page);
   };
 
+  const handlePageChangeNotStartedProject = (page: number) => {
+    setCurrentPageNotStartedProject(page);
+  };
+
   const [sessionId, setSessionId] = useState<string>("");
   const [userRoles, setUserRoles] = useState<string[]>([]);
 
@@ -32,7 +40,7 @@ function ProfessorMyProjectsPage() {
     if (typeof window !== "undefined") {
       const userIdFromCookies = Cookies.get("userId") || "";
       const rolesFromCookies =
-        Cookies.get("roles") || JSON.stringify(["ROLE_USER"]);
+        Cookies.get("roles") ?? JSON.stringify(["ROLE_USER"]);
       const roles = JSON.parse(rolesFromCookies);
       setSessionId(userIdFromCookies);
       setUserRoles(roles);
@@ -54,6 +62,10 @@ function ProfessorMyProjectsPage() {
         projectStateData.data?.filter(
           (project) => project.projectStatus === ProjectStatus.Past
         ) || [];
+
+      const notStartedProjectsData = projectStateData.data?.filter(
+        (project) => project.projectStatus === ProjectStatus.InApplicationProcess
+      ) || [];
 
       setWorkingProjects(
         workingProjectsData.map((project) => ({
@@ -90,10 +102,30 @@ function ProfessorMyProjectsPage() {
           professors: project.professors,
         }))
       );
+
+      setNotStartedProjects(
+        notStartedProjectsData.map((project) => ({
+          id: project.id,
+          title: project.title,
+          description: project.description,
+          students: project.students,
+          projectStatus: ProjectStatus.InApplicationProcess,
+          userType: UserType.Teacher,
+          studentLimit: project.studentLimit,
+          poster: project.poster,
+          keywords: project.keywords,
+          groupId: project.groupId,
+          term: project.term,
+          projectTypeId: project.projectTypeId,
+          professors: project.professors,
+        }))
+      );
     }
   }, [projectStateData]);
   const [pagingWorkingData, setPagingWorkingData] = useState<CardProps[]>([]);
   const [pagingArchivedData, setPagingArchivedData] = useState<CardProps[]>([]);
+  const [pagingNotStarted, setPagingNotStatedData] = useState<CardProps[]>([]);
+
 
   useEffect(() => {
     const startIndex = (currentPageWorkingProject - 1) * itemCountPerPage;
@@ -113,6 +145,15 @@ function ProfessorMyProjectsPage() {
     setPagingArchivedData(tempArchivedProjects);
   }, [archivedProjects, currentPageArchivedProject]);
 
+  useEffect(() => {
+    const startIndex = (currentPageNotStartedProject - 1) * itemCountPerPage;
+    const endIndex = startIndex + itemCountPerPage;
+
+    const tempNotStartedProjects = notStartedProjects.slice(startIndex, endIndex);
+
+    setPagingNotStatedData(tempNotStartedProjects);
+  }, [notStartedProjects, currentPageNotStartedProject]);
+
   return (
     <S.StyledProjectCardListContainer>
       <ProjectListCards
@@ -122,6 +163,15 @@ function ProfessorMyProjectsPage() {
         currentPage={currentPageWorkingProject}
         totalPages={workingProjects.length}
         handlePageChange={handlePageChangeWorkingProject}
+        userType={UserType.Teacher}
+      />
+      <ProjectListCards
+        projects={pagingNotStarted}
+        title="Not Started Projects"
+        itemCountPerPage={itemCountPerPage}
+        currentPage={currentPageNotStartedProject}
+        totalPages={notStartedProjects.length}
+        handlePageChange={handlePageChangeNotStartedProject}
         userType={UserType.Teacher}
       />
       <ProjectListCards

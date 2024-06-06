@@ -8,6 +8,8 @@ import { store } from "@/redux/store";
 import { UserType } from "@/components/all-projects/project-list-card/ProjectListCard";
 import Cookies from "js-cookie";
 import { fetchProjectsById } from "@/redux/features/GetMyProject";
+import ErrorDrawer from "@/components/drawers/error-drawer/ErrorDrawer";
+import { useRouter } from "next/router";
 
 function StudentMyProjectPage() {
   const itemCountPerPage = 4;
@@ -16,6 +18,9 @@ function StudentMyProjectPage() {
     useState(1);
   const [workingProjects, setWorkingProjects] = useState<CardProps[]>([]);
   const [archivedProjects, setArchivedProjects] = useState<CardProps[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isError, setIsError] = useState<boolean>(false);
+  const router = useRouter();
 
   const handlePageChangeWorkingProject = (page: number) => {
     setCurrentPageWorkingProject(page);
@@ -30,72 +35,87 @@ function StudentMyProjectPage() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const userIdFromCookies = Cookies.get("userId") || "";
+      const userIdFromCookies = Cookies.get("userId") ?? "";
       const rolesFromCookies =
-        Cookies.get("roles") || JSON.stringify(["ROLE_USER"]);
+        Cookies.get("roles") ?? JSON.stringify(["ROLE_USER"]);
       const roles = JSON.parse(rolesFromCookies);
       setSessionId(userIdFromCookies);
       setUserRoles(roles);
     }
   }, []);
 
-  const projectStateData = useFetchStudentProjects(
-    sessionId,
-    userRoles
-  )?.projectData;
+  const handleErrorMessageClose = () => {
+    setIsError(false);
+    router.push("/student-home")
+  };
 
-  useMemo(() => {
-    if (projectStateData) {
-      const workingProjectsData =
-        projectStateData.data?.filter(
-          (project) => project.projectStatus === ProjectStatus.Working
-        ) || [];
-      const archivedProjectsData =
-        projectStateData.data?.filter(
-          (project) => project.projectStatus === ProjectStatus.Past
-        ) || [];
+  useEffect(() => {
+    async function fetchProjects() {
+      if (sessionId && userRoles.length > 0) {
+        try {
+          const idByProjectRequest = { sessionId, roles: userRoles };
+          await store.dispatch(fetchProjectsById(idByProjectRequest));
+          const projectState = store.getState().myProjects as ProjectState;
 
-      setWorkingProjects(
-        workingProjectsData.map((project) => ({
-          id: project.id,
-          title: project.title,
-          description: project.description,
-          students: project.students,
-          projectStatus: ProjectStatus.Past,
-          userType: UserType.Student,
-          studentLimit: project.studentLimit,
-          poster: project.poster,
-          keywords: project.keywords,
-          groupId: project.groupId,
-          term: project.term,
-          projectTypeId: project.projectTypeId,
-          professors: project.professors,
-          demoLink: project.demoLink,
-          websiteLink: project.websiteLink,
-        }))
-      );
+          const workingProjectsData = projectState.projectData.data?.filter(
+            (project) => project.projectStatus === ProjectStatus.Working
+          ) || [];
 
-      setArchivedProjects(
-        archivedProjectsData.map((project) => ({
-          id: project.id,
-          title: project.title,
-          description: project.description,
-          students: project.students,
-          projectStatus: ProjectStatus.Past,
-          userType: UserType.Student,
-          studentLimit: project.studentLimit,
-          poster: project.poster,
-          keywords: project.keywords,
-          groupId: project.groupId,
-          term: project.term,
-          projectTypeId: project.projectTypeId,
-          professors: project.professors,
-          demoLink: project.demoLink,
-          websiteLink: project.websiteLink,
-        }))
-      );
+          const archivedProjectsData = projectState.projectData.data?.filter(
+            (project) => project.projectStatus === ProjectStatus.Past
+          ) || [];
+
+          setWorkingProjects(workingProjectsData.map((project) => ({
+            id: project.id,
+            title: project.title,
+            description: project.description,
+            students: project.students,
+            projectStatus: ProjectStatus.Working,
+            userType: UserType.Student,
+            studentLimit: project.studentLimit,
+            poster: project.poster,
+            keywords: project.keywords,
+            groupId: project.groupId,
+            term: project.term,
+            projectTypeId: project.projectTypeId,
+            professors: project.professors,
+            demoLink: project.demoLink,
+            websiteLink: project.websiteLink,
+          })));
+
+          setArchivedProjects(archivedProjectsData.map((project) => ({
+            id: project.id,
+            title: project.title,
+            description: project.description,
+            students: project.students,
+            projectStatus: ProjectStatus.Past,
+            userType: UserType.Student,
+            studentLimit: project.studentLimit,
+            poster: project.poster,
+            keywords: project.keywords,
+            groupId: project.groupId,
+            term: project.term,
+            projectTypeId: project.projectTypeId,
+            professors: project.professors,
+            demoLink: project.demoLink,
+            websiteLink: project.websiteLink,
+          })));
+
+          if (workingProjectsData.length === 0 && archivedProjectsData.length === 0) {
+            setIsError(true);
+            setErrorMessage("You do not have any projects");
+          }
+        } catch (error) {
+          console.error("Error fetching student projects:", error);
+          setIsError(true);
+          setErrorMessage("Error fetching projects. Please try again later.");
+        }
+      }
     }
-  }, [projectStateData]);
+
+    fetchProjects();
+  }, [sessionId, userRoles]);
+
 
   const [pagingWorkingData, setPagingWorkingData] = useState<CardProps[]>([]);
   const [pagingArchivedData, setPagingArchivedData] = useState<CardProps[]>([]);
@@ -120,6 +140,12 @@ function StudentMyProjectPage() {
 
   return (
     <S.StyledProjectCardListContainer>
+      <ErrorDrawer
+        errorMessage={errorMessage}
+        isError={isError}
+        handleErrorMessageClose={handleErrorMessageClose}
+      />
+
       <ProjectListCards
         projects={pagingWorkingData}
         title="Working Projects"

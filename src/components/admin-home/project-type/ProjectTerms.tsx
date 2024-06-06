@@ -14,7 +14,7 @@ const ProjectTerms = (props: ProjectTermProps): JSX.Element => {
   return (
     <S.StyledContainer>
       <Typography variant="h5TaglineBold" color="#344767">
-        Project Type Overview
+        Project Term Overview
       </Typography>
       <S.StyledAllProjects>
         {terms.map((term, index) => (
