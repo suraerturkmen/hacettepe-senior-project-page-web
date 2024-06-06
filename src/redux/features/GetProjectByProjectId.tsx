@@ -53,18 +53,9 @@ export const fetchProjectByProjectId = createAsyncThunk(
   "projects/getProjectByProjectId",
   async (idByProjectRequest: IdByProjectRequest, { rejectWithValue }) => {
     try {
-      const token = Cookies.get("jwtToken");
-      if (!token) {
-        throw new Error("JWT token not found");
-      }
       const response = await axiosInstance.post<ProjectData>(
         "projects/getProjectByProjectId",
         idByProjectRequest.projectId,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
       );
 
       return response.data;

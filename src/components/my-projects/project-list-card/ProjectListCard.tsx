@@ -73,7 +73,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
   const [uploadLastDocument, setUploadLastDocument] = useState(false);
   const [message, setMessage] = useState("");
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
-  const [handleFunction, setHandleFunction] = useState<() => void>(() => {});
+  const [handleFunction, setHandleFunction] = useState<() => void>(() => { });
   const [buttonName, setButtonName] = useState<string>("");
 
   function handleDelete() {
@@ -147,7 +147,7 @@ const ProjectListCard = (props: CardProps): JSX.Element => {
         setIsError(true);
         return;
       }
-      const { url, fileBlob, fileName } = createFileFromBase64(poster, title);
+      const { url } = createFileFromBase64(poster, title);
       const newTab = window.open(url, "_blank");
       if (!newTab) {
         alert("Unable to open new tab. Please allow popups for this website.");

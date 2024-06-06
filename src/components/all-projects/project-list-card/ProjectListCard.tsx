@@ -45,8 +45,6 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
     studentLimit,
     isApplied = false,
     isMyProject = false,
-    poster,
-    term,
     studentGroups,
     professors,
     handleApply,
@@ -63,11 +61,8 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
       pathname: "/project-detail/[title]",
       query: {
         id: id,
-        term: term,
         title: title,
-        description: description,
-        poster: poster,
-        isArchive: projectType === ProjectStatus.Past,
+        isArchive: projectType === ProjectStatus.Past ? "true" : "false",
       },
     });
   };

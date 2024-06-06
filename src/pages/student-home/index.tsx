@@ -84,7 +84,7 @@ function StudentHomePage() {
   return (
     <S.StyledWrapper>
       <S.StyledFirstSection>
-        <MyProjectOverview projects={myProjects} userType={UserType.Student} />
+        {myProjects.length !== 0 && <MyProjectOverview projects={myProjects} userType={UserType.Student} />}
         {timelineData?.data && (
           <TermTimeline
             timelines={timelineData?.data || []}

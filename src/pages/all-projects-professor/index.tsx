@@ -25,7 +25,6 @@ function ProfessorAllProjectsPage() {
 
   const handleErrorMessageClose = () => {
     setIsError(false);
-    router.push("/professor-home");
   };
 
   const router = useRouter();

@@ -15,7 +15,6 @@ import {
   TextField,
   Tab,
   Tabs,
-  Button,
 } from "@mui/material";
 import { store } from "@/redux/store";
 import { fetchGetEmbeddings } from "@/redux/features/AddNewProjectToAI";
@@ -26,34 +25,10 @@ interface SearchForm {
 }
 
 const itemCountPerPage = 6;
-
-async function usefetchAndAddEmbedding(project: Project) {
-  await store.dispatch(
-    fetchGetEmbeddings({
-      abstract: project.description,
-      keywords: project.keywords,
-    })
-  );
-  const embeddingState = store.getState().getEmbeddings;
-  const embedding = embeddingState?.projectData?.embeddings;
-
-  const projectId = project.id;
-
-  async function fetchData() {
-    if (embedding) {
-      await store.dispatch(fetchAddEmbedding({ projectId, embedding }));
-      //const addState = store.getState().addEmbeddings;
-    }
-  }
-  fetchData();
-
-  return embedding;
-}
-
 function Page() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchType, setSearchType] = useState("TITLE");
-  const { register, handleSubmit } = useForm<SearchForm>();
+  const { register } = useForm<SearchForm>();
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -65,7 +40,9 @@ function Page() {
   )?.projectData;
 
   pagingData?.data.forEach((project) => {
+    console.log(project.embedding)
     if (!project.embedding) {
+      console.log("here")
       usefetchAndAddEmbedding(project);
     }
   });
@@ -81,6 +58,7 @@ function Page() {
     description: project.description,
     relatedTopics: project.keywords,
     poster: project.poster,
+    projectStatus: project.projectStatus
   }));
 
   const totalElements = pagingData?.totalElements;
@@ -166,4 +144,21 @@ function usePaginationProject(
   }, [pageNumber, pageSize, searchType, searchTerm]);
 
   return projectStateData;
+}
+
+async function usefetchAndAddEmbedding(project: Project) {
+  await store.dispatch(
+    fetchGetEmbeddings({
+      abstract: project.description,
+      keywords: project.keywords,
+    })
+  );
+  const embeddingState = store.getState().getEmbeddings;
+  const embedding = embeddingState?.projectData?.embeddings;
+  const projectId = project.id;
+
+  if (embedding) {
+    await store.dispatch(fetchAddEmbedding({ projectId, embedding }));
+  }
+  return embedding;
 }

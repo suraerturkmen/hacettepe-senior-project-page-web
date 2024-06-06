@@ -25,10 +25,6 @@ import {
 
 interface Props {
   id: string;
-  title: string;
-  term: string;
-  description: string;
-  poster?: string;
   isArchive: string;
 }
 
@@ -44,7 +40,7 @@ const SETTINGS: Settings = {
 };
 
 function ProjectDetailPage(props: Props) {
-  const { id, title, term, description, poster, isArchive } = props;
+  const { id, isArchive } = props;
   const [recommends, setRecommends] = useState<Project[]>();
   const [projectStateData, setProjectStateData] =
     useState<ProjectStateId | null>(null);
@@ -55,10 +51,6 @@ function ProjectDetailPage(props: Props) {
   );
 
   useEffect(() => {
-    setRecommends(recommendProjects?.projectData.data);
-  }, [recommendProjects]);
-
-  useEffect(() => {
     const fetchData = async () => {
       if (id) {
         await store.dispatch(fetchProjectByProjectId({ projectId: id }));
@@ -66,11 +58,13 @@ function ProjectDetailPage(props: Props) {
         setProjectStateData(projectState);
       }
     };
-
     fetchData();
   }, [id]);
 
-  console.log(recommends);
+  useEffect(() => {
+    setRecommends(recommendProjects?.projectData.data);
+  }, [recommendProjects]);
+
   return (
     <S.StyledContainer>
       <Typography variant="h3TitleBold" color="#344767">
@@ -86,7 +80,7 @@ function ProjectDetailPage(props: Props) {
         projectTypeId={projectStateData?.projectData.data.projectTypeId || ""}
         demoLink={projectStateData?.projectData.data.demoLink || ""}
         websiteLink={projectStateData?.projectData.data.websiteLink || ""}
-        isArrowVisible={true}
+        isArrowVisible={false}
       />
       <S.StyledProjectCardContainer>
         {recommends?.length ? (
@@ -104,6 +98,7 @@ function ProjectDetailPage(props: Props) {
                   ...project.students,
                   ...project.professors.map((professor) => professor.username),
                 ]}
+                projectStatus={project.projectStatus}
               />
             ))}
           </Slider>
@@ -122,14 +117,10 @@ ProjectDetailPage.getLayout = (page: JSX.Element) => (
 export const getServerSideProps: GetServerSideProps<Props> = async (
   context
 ) => {
-  const { id, title, term, description, poster, isArchive } = context.query;
+  const { id, isArchive } = context.query;
   return {
     props: {
       id: id as string,
-      title: title as string,
-      term: term as string,
-      description: description as string,
-      poster: (poster as string) || "",
       isArchive: isArchive as string,
     },
   };
@@ -159,14 +150,18 @@ function useRecommendedProjects(ids: string[][]): ProjectState | undefined {
 
   useEffect(() => {
     const newRequest = ids.map((id) => id[1]);
-    setRequest(newRequest);
+    if (newRequest != null && newRequest.length !== 0) {
+      setRequest(newRequest);
+    }
   }, [ids]);
 
   useEffect(() => {
     async function getData() {
-      await store.dispatch(
-        fetchProjectIdsProjectList({ projectIds: request ?? [] })
-      );
+      if (request[0]) {
+        await store.dispatch(
+          fetchProjectIdsProjectList({ projectIds: request ?? [] })
+        );
+      }
       const recommendProjectsState = store.getState().recommendedProjects;
       setRecommendProjects(recommendProjectsState);
     }

@@ -1,5 +1,5 @@
 import * as S from "@/components/project-detail/ProjectDetailCard.styles";
-import { Dialog, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { UserType } from "../all-projects/project-list-card/ProjectListCard";
 import { useState } from "react";
@@ -67,7 +67,7 @@ const ProjectDetailCard = (props: ProjectDetailCardProps): JSX.Element => {
           )}
         </S.StyledDialogContent>
       </S.StyledDialog>
-      {isArrowVisible && (
+      {isArrowVisible && userType && (
         <S.StyledUploadDocumentButton onClick={onDocumentClick}>
           <Typography variant="h5TaglineBold" color="#D54949">
             {isArchive ? "Go to Documents" : "Go to Upload Documents"}

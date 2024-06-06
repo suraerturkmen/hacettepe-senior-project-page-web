@@ -3,6 +3,7 @@ import * as S from "@/components/project-list/project-card/ProjectCard.styles";
 import { defaultImageUrl } from "@/dummyData/dummyData";
 import { useRouter } from "next/router";
 import { Tooltip } from "@mui/material";
+import { ProjectStatus } from "@/redux/features/projectSlice";
 
 export interface CardProps {
   id: string;
@@ -13,6 +14,7 @@ export interface CardProps {
   relatedTopics?: string[];
   poster?: string;
   width?: string;
+  projectStatus: ProjectStatus;
 }
 
 const ProjectCard = (props: CardProps): JSX.Element => {
@@ -25,6 +27,7 @@ const ProjectCard = (props: CardProps): JSX.Element => {
     relatedTopics,
     poster,
     width,
+    projectStatus
   } = props;
 
   const router = useRouter();
@@ -32,16 +35,14 @@ const ProjectCard = (props: CardProps): JSX.Element => {
     if (!id) return;
     const query = {
       id: id,
-      term: term ? term : "",
-      title: title ? title : "",
-      description: description ? description : "",
-      poster: poster ? poster : "",
+      title: title,
+      isArchive: projectStatus === ProjectStatus.Past ? "true" : "false"
     };
 
     const queryString = new URLSearchParams(query).toString();
     const path = `/project-detail/${encodeURIComponent(title)}?${queryString}`;
 
-    window.open(path, "_blank");
+    window.open(path);
   };
 
   return (
