@@ -34,7 +34,7 @@ const ProjectCards = (props: ProjectCardsProps): JSX.Element => {
     studentGroups,
     handleApply,
     handleUnApply,
-    isError
+    isError,
   } = props;
   return (
     <S.StyledProjectCardWrapper>
@@ -43,9 +43,11 @@ const ProjectCards = (props: ProjectCardsProps): JSX.Element => {
           {title}
         </Typography>
       )}
-      {isError && <Typography variant="h7Bold" color="GrayText">
-        There is no project.
-      </Typography>}
+      {isError && (
+        <Typography variant="h7Bold" color="#808080">
+          There is no project.
+        </Typography>
+      )}
       <S.StyledProjectCardBoxes>
         {projects.map((project) => (
           <ProjectCard

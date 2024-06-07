@@ -147,7 +147,7 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
               <Typography variant="h5TaglineBold" style={{ color: "#344767" }}>
                 Group Name:
               </Typography>
-              <Typography variant="body1" style={{ color: "GrayText" }}>
+              <Typography variant="body1" style={{ color: "#808080" }}>
                 {group.groupName}
               </Typography>
             </S.StyledSection>
@@ -159,7 +159,7 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
               </Typography>
               {group.groupMembers.map((groupMember, memberIndex) => (
                 <div key={memberIndex}>
-                  <Typography variant="body1" style={{ color: "GrayText" }}>
+                  <Typography variant="body1" style={{ color: "#808080" }}>
                     {groupMember.username}
                   </Typography>
                 </div>
@@ -219,7 +219,9 @@ const ProjectListCard = (props: AllProjectsCardProps): JSX.Element => {
         <S.StyledDetails>
           <S.StyledArea>
             <Typography variant="bodyMedium" style={{ color: "#7B809A" }}>
-              {professors && professors?.length > 1 ? "Professors:" : "Professor:"}
+              {professors && professors?.length > 1
+                ? "Professors:"
+                : "Professor:"}
             </Typography>
             <S.StyledProfessors>
               {professors?.map((professor, professorIndex) => (

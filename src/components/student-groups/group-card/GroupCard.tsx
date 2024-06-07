@@ -98,7 +98,7 @@ const GroupCard = (props: GroupResponse): JSX.Element => {
           <Typography variant="h5TaglineBold" color="#344767">
             Group Name:
           </Typography>
-          <Typography variant="bodyMedium" color="GrayText">
+          <Typography variant="bodyMedium" color="#808080">
             {groupName}
           </Typography>
         </S.StyledSection>
@@ -108,7 +108,7 @@ const GroupCard = (props: GroupResponse): JSX.Element => {
           </Typography>
           {groupMembers.map((groupMember, index) => (
             <S.StyledMemberList key={index}>
-              <Typography variant="bodyMedium" color="GrayText">
+              <Typography variant="bodyMedium" color="#808080">
                 {groupMember.username}
               </Typography>
             </S.StyledMemberList>
@@ -123,7 +123,7 @@ const GroupCard = (props: GroupResponse): JSX.Element => {
             </Typography>
             {applications.map((appliedProject, index) => (
               <S.StyledApplicationList key={index}>
-                <Typography variant="bodyMedium" color="GrayText">
+                <Typography variant="bodyMedium" color="#808080">
                   {appliedProject.project.title}
                 </Typography>
                 <Typography
@@ -137,7 +137,7 @@ const GroupCard = (props: GroupResponse): JSX.Element => {
         )}
         {applications.length === 0 && (
           <S.StyledNoAppliedProjects>
-            <Typography variant="bodyMedium" color="GrayText">
+            <Typography variant="bodyMedium" color="#808080">
               No applied projects
             </Typography>
           </S.StyledNoAppliedProjects>

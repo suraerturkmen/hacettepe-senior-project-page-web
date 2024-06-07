@@ -31,10 +31,13 @@ function StudentGroupsPage() {
           My Groups
         </Typography>
       </S.StyledHeaderContainer>
-      {groups && groups.length === 0 && <Typography variant="h7Bold" color="GrayText">
-        You don't have any groups.
-      </Typography>}
-      <GroupCards groups={groups || []} />
+      {(groups && groups.length === 0) || !groups ? (
+        <Typography variant="h7Bold" color="#808080">
+          {"You don't have any groups."}
+        </Typography>
+      ) : (
+        <GroupCards groups={groups} />
+      )}
     </S.StyledContainer>
   );
 }

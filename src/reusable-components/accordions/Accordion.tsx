@@ -50,7 +50,7 @@ export const Accordion = (props: Announcement) => {
                 .slice(0, 4)
                 .join(" ")}
             </Typography>
-            <Typography variant="bodyMedium" color="GrayText">
+            <Typography variant="bodyMedium" color="#808080">
               {title}
             </Typography>
           </S.StyledContentSection>
